@@ -23,7 +23,7 @@
         }
 
         body {
-            background-color: #05070b;
+            background-color: #05070c;
             color: #ffffff;
             min-height: 100vh;
             display: flex;
@@ -34,7 +34,7 @@
             overflow-x: hidden;
         }
 
-        /* 🔮 АМБИЕНТНЫЙ СВЕТ ЗА СТЕКЛОМ (ЧТОБЫ СТЕКЛО РЕАЛЬНО РАЗМЫВАЛО СВЕТ) */
+        /* 🔮 ЯРКИЙ ФОНОВЫЙ СВЕТ (ЧТОБЫ МАТОВОСТЬ БЫЛА ОТЧЕТЛИВО ВИДНА) */
         .ambient-mesh {
             position: fixed;
             top: 0;
@@ -49,52 +49,50 @@
         .ambient-orb {
             position: absolute;
             border-radius: 50%;
-            filter: blur(140px);
-            opacity: 0.38;
-            animation: float 14s ease-in-out infinite alternate;
+            filter: blur(100px);
+            opacity: 0.55;
+            animation: float 12s ease-in-out infinite alternate;
         }
 
-        .orb-1 {
-            width: 650px;
-            height: 450px;
-            background: #1e3a8a;
-            top: -100px;
-            left: 50%;
-            transform: translateX(-50%);
-        }
-
-        .orb-2 {
-            width: 500px;
+        .orb-top-left {
+            width: 480px;
             height: 380px;
-            background: #312e81;
-            bottom: 10%;
-            right: 15%;
-            animation-delay: -5s;
+            background: #2563eb;
+            top: -40px;
+            left: 15%;
         }
 
-        .orb-3 {
-            width: 420px;
-            height: 320px;
-            background: #0f172a;
-            bottom: 15%;
-            left: 10%;
-            animation-delay: -9s;
+        .orb-center {
+            width: 550px;
+            height: 420px;
+            background: #4f46e5;
+            top: 30%;
+            right: 15%;
+            animation-delay: -4s;
+        }
+
+        .orb-bottom {
+            width: 500px;
+            height: 350px;
+            background: #1d4ed8;
+            bottom: -50px;
+            left: 30%;
+            animation-delay: -8s;
         }
 
         @keyframes float {
             0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(30px, 40px) scale(1.08); }
+            100% { transform: translate(40px, 30px) scale(1.1); }
         }
 
-        /* ОСНОВНОЙ КОНТЕЙНЕР */
         .container {
             width: 100%;
-            max-width: 920px;
+            max-width: 900px;
             position: relative;
             z-index: 10;
         }
 
-        /* ВЕРХНИЙ БАР */
+        /* 🔝 ВЕРХНЯЯ ШАПКА */
         .header {
             display: flex;
             justify-content: space-between;
@@ -109,42 +107,53 @@
             gap: 12px;
         }
 
+        /* 🍏 МАТОВАЯ СТЕКЛЯННАЯ ИКОНКА ЛОГОТИПА */
         .brand-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.16);
+            width: 36px;
+            height: 36px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.28);
+            backdrop-filter: blur(20px) saturate(190%);
+            -webkit-backdrop-filter: blur(20px) saturate(190%);
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.4);
+            box-shadow: 
+                0 8px 20px rgba(0, 0, 0, 0.3),
+                inset 0 1px 1px rgba(255, 255, 255, 0.6),
+                inset 0 -1px 1px rgba(255, 255, 255, 0.1);
         }
 
         .brand-icon svg {
-            width: 17px;
-            height: 17px;
+            width: 18px;
+            height: 18px;
             stroke: #ffffff;
         }
 
         .brand-title {
-            font-size: 18px;
+            font-size: 19px;
             font-weight: 800;
             letter-spacing: -0.4px;
         }
 
+        /* 🍏 МАТОВЫЙ СТЕКЛЯННЫЙ СТАТУС */
         .status-pill {
             display: inline-flex;
             align-items: center;
             gap: 8px;
             font-size: 12px;
             font-weight: 600;
-            color: rgba(255, 255, 255, 0.75);
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 6px 14px;
+            color: #ffffff;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(20px) saturate(190%);
+            -webkit-backdrop-filter: blur(20px) saturate(190%);
+            padding: 7px 16px;
             border-radius: 99rem;
-            backdrop-filter: blur(10px);
+            box-shadow: 
+                0 8px 20px rgba(0, 0, 0, 0.25),
+                inset 0 1px 1px rgba(255, 255, 255, 0.5);
         }
 
         .status-dot {
@@ -155,23 +164,24 @@
             box-shadow: 0 0 10px #22c55e;
         }
 
-        /* 🍏 НАСТОЯЩАЯ СТЕКЛЯННАЯ ПАНЕЛЬ LIQUID GLASS */
+        /* 🍏 ГЛАВНАЯ СТЕКЛЯННАЯ ПАНЕЛЬ */
         .glass-deck {
             position: relative;
-            border-radius: 28px;
+            border-radius: 30px;
             background: 
-                linear-gradient(180deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.015) 100%) padding-box,
+                linear-gradient(180deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%) padding-box,
                 linear-gradient(135deg, 
-                    rgba(255, 255, 255, 0.5) 0%, 
-                    rgba(255, 255, 255, 0.15) 35%, 
-                    rgba(255, 255, 255, 0.02) 65%, 
-                    rgba(255, 255, 255, 0.25) 100%) border-box;
+                    rgba(255, 255, 255, 0.65) 0%, 
+                    rgba(255, 255, 255, 0.2) 35%, 
+                    rgba(255, 255, 255, 0.03) 65%, 
+                    rgba(255, 255, 255, 0.35) 100%) border-box;
             border: 1px solid transparent;
-            backdrop-filter: blur(32px) saturate(190%);
-            -webkit-backdrop-filter: blur(32px) saturate(190%);
+            backdrop-filter: blur(36px) saturate(200%) contrast(120%);
+            -webkit-backdrop-filter: blur(36px) saturate(200%) contrast(120%);
             box-shadow: 
-                0 30px 70px -10px rgba(0, 0, 0, 0.75),
-                inset 0 1px 1px 0 rgba(255, 255, 255, 0.35);
+                0 30px 80px -10px rgba(0, 0, 0, 0.7),
+                inset 0 1px 1px 0 rgba(255, 255, 255, 0.5),
+                inset 0 -1px 1px 0 rgba(255, 255, 255, 0.1);
             padding: 40px 38px 36px;
         }
 
@@ -185,7 +195,7 @@
             font-weight: 700;
             letter-spacing: 1.4px;
             text-transform: uppercase;
-            color: rgba(255, 255, 255, 0.5);
+            color: rgba(255, 255, 255, 0.55);
             margin-bottom: 6px;
         }
 
@@ -198,35 +208,39 @@
 
         .tool-desc {
             font-size: 14px;
-            color: rgba(255, 255, 255, 0.55);
+            color: rgba(255, 255, 255, 0.6);
             line-height: 1.5;
         }
 
-        /* 🔍 ИНЛАЙН ПОИСКОВАЯ СТРОКА */
+        /* 🔍 МАТОВАЯ ПОИСКОВАЯ СТРОКА */
         .search-container {
             display: flex;
             align-items: center;
-            background: rgba(0, 0, 0, 0.35);
-            border: 1px solid rgba(255, 255, 255, 0.14);
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.2);
             border-radius: 18px;
             padding: 6px 8px 6px 20px;
             margin-bottom: 20px;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             transition: all 0.25s var(--ease);
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+            box-shadow: 
+                inset 0 2px 4px rgba(0, 0, 0, 0.3),
+                inset 0 1px 1px rgba(255, 255, 255, 0.15);
         }
 
         .search-container:focus-within {
-            border-color: rgba(255, 255, 255, 0.45);
-            background: rgba(0, 0, 0, 0.55);
+            border-color: rgba(255, 255, 255, 0.55);
+            background: rgba(0, 0, 0, 0.4);
             box-shadow: 
                 inset 0 2px 4px rgba(0, 0, 0, 0.3),
-                0 0 0 1px rgba(255, 255, 255, 0.2);
+                0 0 25px rgba(255, 255, 255, 0.12);
         }
 
         .search-icon {
             width: 19px;
             height: 19px;
-            stroke: rgba(255, 255, 255, 0.4);
+            stroke: rgba(255, 255, 255, 0.45);
             margin-right: 12px;
             flex-shrink: 0;
         }
@@ -243,15 +257,15 @@
         }
 
         .search-input::placeholder {
-            color: rgba(255, 255, 255, 0.28);
+            color: rgba(255, 255, 255, 0.35);
         }
 
         .search-btn {
             background: #ffffff;
             color: #06070a;
             border: none;
-            border-radius: 12px;
-            padding: 11px 20px;
+            border-radius: 13px;
+            padding: 11px 22px;
             font-size: 13px;
             font-weight: 700;
             cursor: pointer;
@@ -260,13 +274,13 @@
             align-items: center;
             gap: 8px;
             flex-shrink: 0;
-            box-shadow: 0 4px 14px rgba(255, 255, 255, 0.18);
+            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.25);
         }
 
         .search-btn:hover {
             background: #f8fafc;
             transform: scale(1.02);
-            box-shadow: 0 6px 18px rgba(255, 255, 255, 0.28);
+            box-shadow: 0 6px 20px rgba(255, 255, 255, 0.4);
         }
 
         .search-btn:active {
@@ -280,7 +294,7 @@
             opacity: 0.5;
         }
 
-        /* 💡 ИНТЕРАКТИВНЫЕ ЧИПЫ-ПРЕСЕТЫ */
+        /* 💡 МАТОВЫЕ ПРЕСЕТЫ */
         .presets-row {
             display: flex;
             align-items: center;
@@ -292,34 +306,37 @@
         .preset-label {
             font-size: 11px;
             font-weight: 600;
-            color: rgba(255, 255, 255, 0.35);
+            color: rgba(255, 255, 255, 0.4);
             text-transform: uppercase;
             letter-spacing: 0.6px;
             margin-right: 4px;
         }
 
         .preset-chip {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 8px;
-            padding: 5px 10px;
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-radius: 10px;
+            padding: 6px 12px;
             font-size: 12px;
             font-weight: 500;
-            color: rgba(255, 255, 255, 0.65);
+            color: rgba(255, 255, 255, 0.75);
             cursor: pointer;
             transition: all 0.18s var(--ease);
+            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.2);
         }
 
         .preset-chip:hover {
-            background: rgba(255, 255, 255, 0.09);
-            border-color: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.35);
             color: #ffffff;
             transform: translateY(-1px);
         }
 
         /* 📋 ОБЛАСТЬ РЕЗУЛЬТАТОВ */
         .results-area {
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
             padding-top: 24px;
         }
 
@@ -329,7 +346,7 @@
             align-items: center;
             font-size: 12px;
             font-weight: 600;
-            color: rgba(255, 255, 255, 0.4);
+            color: rgba(255, 255, 255, 0.45);
             text-transform: uppercase;
             letter-spacing: 0.6px;
             margin-bottom: 16px;
@@ -345,20 +362,25 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            border-radius: 14px;
-            padding: 15px 18px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 16px;
+            padding: 16px 20px;
             text-decoration: none;
             color: #ffffff;
             transition: all 0.2s var(--ease);
+            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.25);
         }
 
         .card-link:hover {
             transform: translateY(-2px);
-            background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(255, 255, 255, 0.3);
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: rgba(255, 255, 255, 0.4);
+            box-shadow: 
+                0 10px 25px rgba(0, 0, 0, 0.3),
+                inset 0 1px 1px rgba(255, 255, 255, 0.4);
         }
 
         .card-name {
@@ -368,29 +390,32 @@
 
         .card-action {
             font-size: 12px;
-            color: rgba(255, 255, 255, 0.45);
+            color: rgba(255, 255, 255, 0.5);
         }
 
         .data-table {
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            gap: 10px;
         }
 
         .data-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 14px;
-            padding: 14px 18px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 16px;
+            padding: 15px 20px;
+            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.2);
         }
 
         .data-k {
             font-size: 13px;
             font-weight: 500;
-            color: rgba(255, 255, 255, 0.45);
+            color: rgba(255, 255, 255, 0.5);
         }
 
         .data-v {
@@ -410,22 +435,25 @@
         }
 
         .preview-box {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border-radius: 16px;
             padding: 18px;
+            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.15);
         }
 
         .preview-title {
             font-size: 13px;
             font-weight: 600;
-            color: rgba(255, 255, 255, 0.85);
+            color: #ffffff;
             margin-bottom: 4px;
         }
 
         .preview-text {
             font-size: 12px;
-            color: rgba(255, 255, 255, 0.38);
+            color: rgba(255, 255, 255, 0.45);
             line-height: 1.45;
         }
 
@@ -443,21 +471,22 @@
             to { transform: rotate(360deg); }
         }
 
-        /* 🪟 ПЛАВАЮЩИЙ GLASS DOCK */
+        /* 🪟 НАСТОЯЩИЙ МАТОВЫЙ СТЕКЛЯННЫЙ DOCK */
         .menu {
             position: fixed;
             left: 50%;
             bottom: 24px;
             transform: translateX(-50%);
             width: calc(100% - 32px);
-            max-width: 480px;
-            backdrop-filter: blur(20px) saturate(180%);
-            -webkit-backdrop-filter: blur(20px) saturate(180%);
-            background: rgba(14, 18, 26, 0.7);
-            border: 1px solid rgba(255, 255, 255, 0.14);
+            max-width: 490px;
+            backdrop-filter: blur(28px) saturate(200%) contrast(120%);
+            -webkit-backdrop-filter: blur(28px) saturate(200%) contrast(120%);
+            background: rgba(15, 20, 30, 0.6);
+            border: 1px solid rgba(255, 255, 255, 0.25);
             box-shadow: 
-                0 20px 40px rgba(0, 0, 0, 0.6),
-                inset 0 1px 1px rgba(255, 255, 255, 0.35);
+                0 25px 50px rgba(0, 0, 0, 0.75),
+                inset 0 1px 1px rgba(255, 255, 255, 0.5),
+                inset 0 -1px 1px rgba(255, 255, 255, 0.1);
             padding: 6px;
             border-radius: 99rem;
             display: flex;
@@ -472,7 +501,7 @@
             align-items: center;
             flex: 1 1 0;
             min-width: 0;
-            color: rgba(255, 255, 255, 0.45);
+            color: rgba(255, 255, 255, 0.55);
             text-decoration: none;
             padding: 10px 4px;
             border-radius: 999rem;
@@ -482,7 +511,7 @@
 
         .menu a:hover {
             color: #ffffff;
-            background-color: rgba(255, 255, 255, 0.08);
+            background-color: rgba(255, 255, 255, 0.1);
         }
 
         .menu a svg {
@@ -503,9 +532,11 @@
         }
 
         .menu a.active {
-            background: rgba(255, 255, 255, 0.15);
+            background: rgba(255, 255, 255, 0.2);
             color: #ffffff;
-            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.4);
+            box-shadow: 
+                inset 0 1px 1px rgba(255, 255, 255, 0.6),
+                0 4px 15px rgba(0, 0, 0, 0.4);
         }
 
         @media (max-width: 768px) {
@@ -517,11 +548,11 @@
 </head>
 <body>
 
-    <!-- 🔮 Световые сферы позади стекла -->
+    <!-- 🔮 Яркие фоновые источники света для преломления -->
     <div class="ambient-mesh">
-        <div class="ambient-orb orb-1"></div>
-        <div class="ambient-orb orb-2"></div>
-        <div class="ambient-orb orb-3"></div>
+        <div class="ambient-orb orb-top-left"></div>
+        <div class="ambient-orb orb-center"></div>
+        <div class="ambient-orb orb-bottom"></div>
     </div>
 
     <div class="container">
@@ -529,7 +560,7 @@
         <header class="header">
             <div class="brand">
                 <div class="brand-icon">
-                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <circle cx="11" cy="11" r="8"></circle>
                         <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                     </svg>
@@ -564,7 +595,7 @@
                 </button>
             </div>
 
-            <!-- Интерактивные пресеты -->
+            <!-- Пресеты -->
             <div class="presets-row" id="presetsRow">
                 <span class="preset-label">Примеры:</span>
                 <span class="preset-chip" onclick="applyPreset('durov')">durov</span>
@@ -644,7 +675,6 @@
             document.getElementById('resultsTitle').innerText = 'Возможности платформы';
             document.getElementById('scanStatus').innerText = 'Готов к запросу';
 
-            // Обновляем чипы примеров
             let presetsHtml = '<span class="preset-label">Примеры:</span>';
             presets.forEach(p => {
                 presetsHtml += `<span class="preset-chip" onclick="applyPreset('${p}')">${p}</span>`;
