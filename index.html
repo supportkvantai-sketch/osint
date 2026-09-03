@@ -6,7 +6,7 @@
     <title>Sherlock</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Подключаем Unbounded (широкий растянутый шрифт) -->
+    <!-- Широкий растянутый шрифт Unbounded -->
     <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;800;900&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
     <style>
@@ -36,12 +36,10 @@
             -webkit-tap-highlight-color: transparent;
         }
 
+        /* 🚫 БЕЗ ВИНЬЕТОК: ЧИСТЫЙ РОВНЫЙ ФОН */
         body {
             background-color: var(--bg);
-            background-image: 
-                radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, 0.015) 0%, transparent 60%),
-                linear-gradient(180deg, #08090c 0%, #050608 100%);
-            background-attachment: fixed;
+            background-image: none;
             color: var(--text-main);
             min-height: 100vh;
             display: flex;
@@ -105,7 +103,7 @@
             left: 0;
             bottom: 0;
             width: 280px;
-            background: rgba(11, 13, 17, 0.95);
+            background: rgba(11, 13, 17, 0.96);
             border-right: 1px solid var(--border);
             backdrop-filter: blur(30px);
             z-index: 110;
@@ -258,7 +256,7 @@
             flex-direction: column;
         }
 
-        /* 🌟 ТОТ САМЫЙ РАСТЯНУТЫЙ И ТОЛСТЫЙ ШРИФТ */
+        /* 🌟 РАСТЯНУТЫЙ ТОЛСТЫЙ ШРИФТ */
         .main-title {
             font-family: var(--font-stretched);
             font-size: 26px;
@@ -275,7 +273,7 @@
             width: 100%;
         }
 
-        /* 🚫 ПОЛЕ ВВОДА: НИКАКОЙ ПОДСВЕТКИ, ОБВОДКИ ИЛИ ВСПЛЫВАНИЯ */
+        /* 🚫 ПОЛЕ ВВОДА: СТАТИЧНОЕ, БЕЗ ПОДСВЕТКИ */
         .field-input {
             flex: 1;
             height: 44px;
@@ -292,7 +290,7 @@
         .field-input:focus {
             outline: none;
             box-shadow: none;
-            border-color: var(--border); /* Цвет остается полностью статичным */
+            border-color: var(--border);
             background: var(--surface);
         }
 
@@ -300,14 +298,14 @@
             color: rgba(255, 255, 255, 0.25);
         }
 
-        /* 🌟 КНОПКА В ТОЧНОМ СТИЛЕ ПУНКТОВ МЕНЮ (СТАТИЧНАЯ) */
+        /* 🌟 КНОПКА ПОИСКА: СРАЗУ АКТИВНАЯ И ГОРИТ В СТИЛЕ МЕНЮ */
         .menu-style-btn {
-            background: var(--surface);
-            border: 1px solid var(--border);
+            background: linear-gradient(90deg, rgba(247, 228, 121, 0.08) 0%, rgba(18, 20, 27, 0.8) 100%);
+            border: 1px solid rgba(247, 228, 121, 0.35);
             border-radius: 10px;
             height: 44px;
             padding: 0 24px;
-            color: #606472;
+            color: var(--main-color);
             font-size: 13.5px;
             font-weight: 600;
             letter-spacing: 0.02em;
@@ -316,13 +314,13 @@
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            transition: color 0.25s ease, border-color 0.25s ease, background 0.25s ease;
+            box-shadow: 0 0 16px rgba(247, 228, 121, 0.12), inset 0 0 10px rgba(247, 228, 121, 0.05);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease;
         }
 
         .menu-style-btn:hover {
-            color: var(--main-color);
-            border-color: rgba(247, 228, 121, 0.25);
-            background: linear-gradient(90deg, rgba(247, 228, 121, 0.04) 0%, var(--surface) 100%);
+            border-color: var(--main-color);
+            box-shadow: 0 0 20px rgba(247, 228, 121, 0.22), inset 0 0 12px rgba(247, 228, 121, 0.08);
         }
 
         /* 📋 РЕЗУЛЬТАТЫ */
@@ -455,7 +453,7 @@
             display: none;
             width: 14px;
             height: 14px;
-            border: 2px solid rgba(255, 255, 255, 0.2);
+            border: 2px solid rgba(247, 228, 121, 0.2);
             border-top-color: var(--main-color);
             border-radius: 50%;
             animation: spin 0.6s linear infinite;
@@ -633,8 +631,8 @@
                 <div class="blank-state">Укажите цель для инициализации поиска</div>
             `;
 
+            // Закрываем меню, клавиатуру НЕ открываем (без input.focus)
             setTimeout(toggleMenu, 160);
-            input.focus();
         }
 
         function copyData(val) {
