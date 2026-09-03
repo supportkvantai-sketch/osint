@@ -6,7 +6,6 @@
     <title>Sherlock</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <!-- Широкий растянутый шрифт Unbounded -->
     <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;800;900&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
     <style>
@@ -36,7 +35,6 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* 🚫 БЕЗ ВИНЬЕТОК: ЧИСТЫЙ РОВНЫЙ ФОН */
         body {
             background-color: var(--bg);
             background-image: none;
@@ -74,10 +72,12 @@
             fill: none;
         }
 
-        .hud-menu-btn:hover,
-        .hud-menu-btn.active {
-            color: var(--main-color);
-            filter: drop-shadow(0 0 8px rgba(247, 228, 121, 0.5));
+        @media (hover: hover) and (pointer: fine) {
+            .hud-menu-btn:hover,
+            .hud-menu-btn.active {
+                color: var(--main-color);
+                filter: drop-shadow(0 0 8px rgba(247, 228, 121, 0.5));
+            }
         }
 
         /* 🪟 ВЫЕЗЖАЮЩАЯ СЛЕВА ПАНЕЛЬ С ГЛАЙДЕРОМ */
@@ -240,7 +240,7 @@
         .radio-container input:nth-of-type(4):checked ~ .glider-container .glider { transform: translateY(300%); }
         .radio-container input:nth-of-type(5):checked ~ .glider-container .glider { transform: translateY(400%); }
 
-        /* ⎯⎯⎯ ОТКРЫТАЯ РАБОЧАЯ ОБЛАСТЬ ⎯⎯⎯ */
+        /* ⎯⎯⎯ РАБОЧАЯ ОБЛАСТЬ ⎯⎯⎯ */
         .workspace {
             width: 100%;
             max-width: 680px;
@@ -256,7 +256,6 @@
             flex-direction: column;
         }
 
-        /* 🌟 РАСТЯНУТЫЙ ТОЛСТЫЙ ШРИФТ */
         .main-title {
             font-family: var(--font-stretched);
             font-size: 26px;
@@ -273,7 +272,6 @@
             width: 100%;
         }
 
-        /* 🚫 ПОЛЕ ВВОДА: СТАТИЧНОЕ, БЕЗ ПОДСВЕТКИ */
         .field-input {
             flex: 1;
             height: 44px;
@@ -298,7 +296,7 @@
             color: rgba(255, 255, 255, 0.25);
         }
 
-        /* 🌟 КНОПКА ПОИСКА: СРАЗУ АКТИВНАЯ И ГОРИТ В СТИЛЕ МЕНЮ */
+        /* 🌟 КНОПКА ПОИСКА: СРАЗУ ГОРИТ */
         .menu-style-btn {
             background: linear-gradient(90deg, rgba(247, 228, 121, 0.08) 0%, rgba(18, 20, 27, 0.8) 100%);
             border: 1px solid rgba(247, 228, 121, 0.35);
@@ -315,12 +313,29 @@
             justify-content: center;
             flex-shrink: 0;
             box-shadow: 0 0 16px rgba(247, 228, 121, 0.12), inset 0 0 10px rgba(247, 228, 121, 0.05);
-            transition: border-color 0.2s ease, box-shadow 0.2s ease;
+            transition: filter 0.2s ease, opacity 0.2s ease;
+            user-select: none;
         }
 
-        .menu-style-btn:hover {
-            border-color: var(--main-color);
-            box-shadow: 0 0 20px rgba(247, 228, 121, 0.22), inset 0 0 12px rgba(247, 228, 121, 0.08);
+        /* 🖱️ НА ПК ПРИ НАВЕДЕНИИ — ТОЛЬКО ЗАТЕМНЯЕТСЯ, БЕЗ ПОВТОРНОЙ ПОДСВЕТКИ */
+        @media (hover: hover) and (pointer: fine) {
+            .menu-style-btn:hover {
+                filter: brightness(0.85);
+                opacity: 0.9;
+            }
+        }
+
+        /* 📱 НА ТЕЛЕФОНЕ — ПОЛНАЯ СТАТИКА, НИКАКИХ ИЗМЕНЕНИЙ ПРИ НАЖАТИИ */
+        @media (hover: none) {
+            .menu-style-btn,
+            .menu-style-btn:active,
+            .menu-style-btn:focus,
+            .menu-style-btn:hover {
+                filter: none;
+                opacity: 1;
+                border-color: rgba(247, 228, 121, 0.35);
+                box-shadow: 0 0 16px rgba(247, 228, 121, 0.12), inset 0 0 10px rgba(247, 228, 121, 0.05);
+            }
         }
 
         /* 📋 РЕЗУЛЬТАТЫ */
@@ -339,7 +354,6 @@
             text-transform: uppercase;
         }
 
-        /* СЕТКА (СУБДОМЕНЫ / ПРОФИЛИ) — СТАТИКА */
         .deck-grid {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
@@ -358,11 +372,21 @@
             text-decoration: none;
             font-size: 13px;
             font-weight: 500;
-            transition: border-color 0.2s ease;
         }
 
-        .deck-card:hover {
-            border-color: rgba(255, 255, 255, 0.16);
+        @media (hover: hover) and (pointer: fine) {
+            .deck-card {
+                transition: border-color 0.2s ease;
+            }
+            .deck-card:hover {
+                border-color: rgba(255, 255, 255, 0.16);
+            }
+            .deck-card svg {
+                transition: stroke 0.2s ease;
+            }
+            .deck-card:hover svg {
+                stroke: #ffffff;
+            }
         }
 
         .deck-card svg {
@@ -370,14 +394,8 @@
             height: 13px;
             stroke: var(--text-muted);
             flex-shrink: 0;
-            transition: stroke 0.2s ease;
         }
 
-        .deck-card:hover svg {
-            stroke: #ffffff;
-        }
-
-        /* ТАБЛИЦА (DNS / IP / EMAIL) — СТАТИКА */
         .data-table {
             background: var(--surface);
             border: 1px solid var(--border);
@@ -426,11 +444,15 @@
             align-items: center;
             padding: 4px;
             border-radius: 4px;
-            transition: color 0.15s ease;
         }
 
-        .copy-btn:hover {
-            color: #ffffff;
+        @media (hover: hover) and (pointer: fine) {
+            .copy-btn {
+                transition: color 0.15s ease;
+            }
+            .copy-btn:hover {
+                color: #ffffff;
+            }
         }
 
         .copy-btn svg {
@@ -631,7 +653,6 @@
                 <div class="blank-state">Укажите цель для инициализации поиска</div>
             `;
 
-            // Закрываем меню, клавиатуру НЕ открываем (без input.focus)
             setTimeout(toggleMenu, 160);
         }
 
