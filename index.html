@@ -3,26 +3,28 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Sherlock — Intelligence HUD</title>
+    <title>Sherlock — Terminal HUD</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
     <style>
         :root {
             --main-color: #f7e479;
+            --main-color-glow: rgba(247, 228, 121, 0.45);
             --main-color-opacity: rgba(247, 228, 121, 0.12);
             --total-radio: 5;
 
-            --bg: #07080b;
-            --glass-bg: rgba(13, 16, 23, 0.72);
-            --glass-card: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --glass-border-hover: rgba(247, 228, 121, 0.35);
+            --bg: #040507;
+            --panel-bg: rgba(11, 14, 20, 0.7);
+            --panel-border: rgba(255, 255, 255, 0.08);
+            --panel-border-glow: rgba(247, 228, 121, 0.35);
 
-            --text: #f0f2f5;
-            --text-dim: #7d8392;
-            --font-ui: 'Outfit', -apple-system, sans-serif;
+            --text-main: #f8fafc;
+            --text-dim: #656a79;
+
+            --font-display: 'Space Grotesk', sans-serif;
+            --font-ui: 'Inter', sans-serif;
             --font-mono: 'JetBrains Mono', monospace;
             --ease: cubic-bezier(0.16, 1, 0.3, 1);
         }
@@ -38,100 +40,89 @@
         body {
             background-color: var(--bg);
             background-image: 
-                radial-gradient(circle at 15% 15%, rgba(247, 228, 121, 0.03) 0%, transparent 40%),
-                radial-gradient(circle at 85% 85%, rgba(20, 26, 40, 0.6) 0%, transparent 50%),
-                linear-gradient(180deg, #07080b 0%, #050608 100%);
+                radial-gradient(ellipse at 50% 10%, rgba(247, 228, 121, 0.05) 0%, transparent 50%),
+                radial-gradient(circle at 10% 90%, rgba(17, 24, 39, 0.7) 0%, transparent 60%),
+                linear-gradient(180deg, #050608 0%, #030406 100%);
             background-attachment: fixed;
-            color: var(--text);
+            color: var(--text-main);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            position: relative;
             overflow-x: hidden;
         }
 
-        /* ⎯⎯⎯ ПАРЯЩИЕ ЭЛЕМЕНТЫ HUD (ВМЕСТО ВЕРХНЕГО БАРА) ⎯⎯⎯ */
-        .hud-controls {
+        /* 🔘 ЧИСТАЯ SVG КНОПКА МЕНЮ (ПЛАВНЫЙ ПЕРЕХОД В ЖЕЛТЫЙ) */
+        .hud-nav-trigger {
             position: fixed;
-            top: 24px;
-            left: 24px;
-            right: 24px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 50;
-            pointer-events: none;
-        }
-
-        .hud-trigger-btn {
-            pointer-events: auto;
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 14px;
-            height: 46px;
-            padding: 0 18px;
-            color: var(--text);
-            font-size: 13px;
-            font-weight: 600;
-            letter-spacing: 0.05em;
-            text-transform: uppercase;
-            display: inline-flex;
-            align-items: center;
-            gap: 10px;
+            top: 28px;
+            left: 28px;
+            z-index: 90;
+            background: transparent;
+            border: none;
+            padding: 8px;
             cursor: pointer;
-            transition: all 0.2s var(--ease);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.45);
+            transition: color 0.35s var(--ease), filter 0.35s var(--ease), transform 0.35s var(--ease);
         }
 
-        .hud-trigger-btn:hover {
-            border-color: var(--glass-border-hover);
-            color: var(--main-color);
-            transform: translateY(-1px);
-        }
-
-        .hud-trigger-btn svg {
-            width: 18px;
-            height: 18px;
+        .hud-nav-trigger svg {
+            width: 26px;
+            height: 26px;
+            stroke-width: 2.2;
             stroke: currentColor;
-            stroke-width: 2;
+            fill: none;
+            transition: stroke 0.35s var(--ease);
         }
 
-        .hud-badge {
-            pointer-events: auto;
-            background: var(--glass-bg);
-            backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 14px;
-            height: 46px;
-            padding: 0 18px;
+        .hud-nav-trigger:hover,
+        .hud-nav-trigger.active {
+            color: var(--main-color);
+            filter: drop-shadow(0 0 10px var(--main-color-glow));
+            transform: scale(1.08);
+        }
+
+        /* ТАКТИЧЕСКИЙ СТАТУС СПРАВА */
+        .hud-status-badge {
+            position: fixed;
+            top: 32px;
+            right: 28px;
+            z-index: 50;
             display: flex;
             align-items: center;
             gap: 8px;
             font-family: var(--font-mono);
             font-size: 11px;
+            letter-spacing: 0.08em;
             color: var(--text-dim);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            text-transform: uppercase;
+            user-select: none;
         }
 
-        .hud-dot {
-            width: 6px;
-            height: 6px;
+        .hud-status-dot {
+            width: 5px;
+            height: 5px;
             border-radius: 50%;
             background: var(--main-color);
-            box-shadow: 0 0 10px var(--main-color);
+            box-shadow: 0 0 8px var(--main-color);
         }
 
-        /* ⎯⎯⎯ ВЫЕЗЖАЮЩЕЕ СЛЕВА МЕНЮ С ВАШИМ ГЛАЙДЕРОМ ⎯⎯⎯ */
+        /* 🪟 ВЫЕЗЖАЮЩАЯ СЛЕВА ПАНЕЛЬ С ВАШИМ ГЛАЙДЕРОМ */
         .drawer-backdrop {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(12px);
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
             opacity: 0;
             visibility: hidden;
             transition: all 0.3s var(--ease);
-            z-index: 90;
+            z-index: 100;
         }
 
         .drawer-backdrop.active {
@@ -144,14 +135,14 @@
             top: 0;
             left: 0;
             bottom: 0;
-            width: 300px;
-            background: rgba(10, 12, 18, 0.88);
-            border-right: 1px solid var(--glass-border);
-            backdrop-filter: blur(35px) saturate(180%);
-            -webkit-backdrop-filter: blur(35px) saturate(180%);
-            box-shadow: 25px 0 60px rgba(0, 0, 0, 0.7);
-            z-index: 100;
-            padding: 30px 20px;
+            width: 290px;
+            background: rgba(8, 10, 15, 0.88);
+            border-right: 1px solid var(--panel-border);
+            backdrop-filter: blur(35px) saturate(190%);
+            -webkit-backdrop-filter: blur(35px) saturate(190%);
+            box-shadow: 20px 0 60px rgba(0, 0, 0, 0.85);
+            z-index: 110;
+            padding: 32px 20px;
             display: flex;
             flex-direction: column;
             transform: translateX(-100%);
@@ -162,43 +153,48 @@
             transform: translateX(0);
         }
 
-        .drawer-head {
+        .drawer-top {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding-bottom: 22px;
-            border-bottom: 1px solid var(--glass-border);
-            margin-bottom: 20px;
+            padding-bottom: 24px;
+            border-bottom: 1px solid var(--panel-border);
+            margin-bottom: 24px;
         }
 
-        .drawer-title {
+        .drawer-brand {
+            font-family: var(--font-display);
             font-size: 15px;
             font-weight: 700;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
+            letter-spacing: 0.1em;
             color: var(--main-color);
+            text-transform: uppercase;
         }
 
-        .close-btn {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid var(--glass-border);
+        .drawer-close-btn {
+            background: transparent;
+            border: none;
             color: var(--text-dim);
-            width: 32px;
-            height: 32px;
-            border-radius: 9px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s;
+            padding: 4px;
+            transition: color 0.2s;
         }
 
-        .close-btn:hover {
+        .drawer-close-btn:hover {
             color: #fff;
-            border-color: var(--glass-border-hover);
         }
 
-        /* 🌟 ВАШ CSS КОМПОНЕНТ: ЛАЗЕРНЫЙ РАДИО-СЕЛЕКТОР */
+        .drawer-close-btn svg {
+            width: 18px;
+            height: 18px;
+            stroke: currentColor;
+            stroke-width: 2;
+        }
+
+        /* 🌟 ВАШ CSS КОМПОНЕНТ: ЛАЗЕРНЫЙ ГЛАЙДЕР С РАДИО-КНОПКАМИ */
         .radio-container {
             --main-color: #f7e479;
             --main-color-opacity: rgba(247, 228, 121, 0.12);
@@ -226,10 +222,10 @@
             background: linear-gradient(
                 0deg,
                 rgba(0, 0, 0, 0) 0%,
-                rgba(255, 255, 255, 0.12) 50%,
+                rgba(255, 255, 255, 0.15) 50%,
                 rgba(0, 0, 0, 0) 100%
             );
-            width: 1px;
+            width: 1.5px;
         }
 
         .radio-container .glider-container .glider {
@@ -242,14 +238,14 @@
                 var(--main-color) 50%,
                 rgba(0, 0, 0, 0) 100%
             );
-            transition: transform 0.4s cubic-bezier(0.37, 1.4, 0.66, 1);
+            transition: transform 0.45s cubic-bezier(0.37, 1.4, 0.66, 1);
         }
 
         .radio-container .glider-container .glider::before {
             content: "";
             position: absolute;
             height: 60%;
-            width: 300%;
+            width: 350%;
             top: 50%;
             transform: translateY(-50%);
             background: var(--main-color);
@@ -261,7 +257,7 @@
             position: absolute;
             left: 0;
             height: 100%;
-            width: 160px;
+            width: 170px;
             background: linear-gradient(
                 90deg,
                 var(--main-color-opacity) 0%,
@@ -274,8 +270,8 @@
             cursor: pointer;
             padding: 1rem 1.2rem;
             position: relative;
-            color: #727785;
-            font-size: 14px;
+            color: #646a79;
+            font-size: 13.5px;
             font-weight: 600;
             letter-spacing: 0.02em;
             display: flex;
@@ -286,8 +282,8 @@
         }
 
         .radio-container label svg {
-            width: 17px;
-            height: 17px;
+            width: 16px;
+            height: 16px;
             stroke-width: 2;
             stroke: currentColor;
             fill: none;
@@ -297,66 +293,94 @@
             color: var(--main-color);
         }
 
+        .radio-container input:checked + label svg {
+            filter: drop-shadow(0 0 6px var(--main-color-glow));
+        }
+
         .radio-container input:nth-of-type(1):checked ~ .glider-container .glider { transform: translateY(0); }
         .radio-container input:nth-of-type(2):checked ~ .glider-container .glider { transform: translateY(100%); }
         .radio-container input:nth-of-type(3):checked ~ .glider-container .glider { transform: translateY(200%); }
         .radio-container input:nth-of-type(4):checked ~ .glider-container .glider { transform: translateY(300%); }
         .radio-container input:nth-of-type(5):checked ~ .glider-container .glider { transform: translateY(400%); }
 
-        /* ⎯⎯⎯ ОСНОВНОЙ РАБОЧИЙ ХАБ ⎯⎯⎯ */
-        .workspace {
+        /* 💻 СЕРЬЕЗНЫЙ HUD ТЕРМИНАЛ (MAJESTIC СТИЛЬ) */
+        .hud-workspace {
             width: 100%;
-            max-width: 780px;
+            max-width: 820px;
             margin: 0 auto;
-            padding: 120px 24px 80px;
-            flex: 1;
+            padding: 120px 20px 80px;
             display: flex;
             flex-direction: column;
+            gap: 30px;
         }
 
-        .module-indicator {
+        /* МОНОЛИТНЫЙ СТЕКЛЯННЫЙ ТЕРМИНАЛ */
+        .hud-glass-panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--panel-border);
+            border-radius: 20px;
+            padding: 36px 36px 32px;
+            backdrop-filter: blur(30px) saturate(180%);
+            -webkit-backdrop-filter: blur(30px) saturate(180%);
+            box-shadow: 
+                0 25px 50px -12px rgba(0, 0, 0, 0.7),
+                inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            position: relative;
+        }
+
+        .hud-glass-panel::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 36px;
+            right: 36px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(247, 228, 121, 0.25), transparent);
+        }
+
+        .hud-panel-head {
             display: flex;
             align-items: baseline;
             justify-content: space-between;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
 
-        .module-headline {
-            font-size: 28px;
+        .hud-title {
+            font-family: var(--font-display);
+            font-size: 32px;
             font-weight: 700;
             letter-spacing: -0.02em;
             color: #ffffff;
             text-transform: uppercase;
         }
 
-        .module-id {
+        .hud-mod-id {
             font-family: var(--font-mono);
             font-size: 11px;
             color: var(--text-dim);
-            letter-spacing: 0.06em;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
         }
 
-        /* ⎯⎯⎯ СТЕКЛЯННОЕ ПОЛЕ ВВОДА ⎯⎯⎯ */
-        .input-glass-box {
+        /* СТРОКА ВВОДА С НЕОНОВОЙ КНОПКОЙ */
+        .hud-input-wrap {
             position: relative;
-            background: var(--glass-bg);
-            backdrop-filter: blur(28px);
-            -webkit-backdrop-filter: blur(28px);
-            border: 1px solid var(--glass-border);
-            border-radius: 18px;
-            padding: 7px 7px 7px 20px;
+            background: rgba(0, 0, 0, 0.45);
+            border: 1px solid var(--panel-border);
+            border-radius: 14px;
+            padding: 6px 6px 6px 20px;
             display: flex;
             align-items: center;
             transition: all 0.25s var(--ease);
-            box-shadow: 0 16px 40px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.08);
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
         }
 
-        .input-glass-box:focus-within {
-            border-color: var(--glass-border-hover);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 20px rgba(247, 228, 121, 0.15), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+        .hud-input-wrap:focus-within {
+            border-color: var(--panel-border-glow);
+            box-shadow: 0 0 25px rgba(247, 228, 121, 0.12), inset 0 2px 4px rgba(0, 0, 0, 0.4);
         }
 
-        .hud-input {
+        .hud-field {
             flex: 1;
             background: transparent;
             border: none;
@@ -367,44 +391,49 @@
             min-width: 0;
         }
 
-        .hud-input::placeholder {
-            color: rgba(255, 255, 255, 0.25);
+        .hud-field::placeholder {
+            color: rgba(255, 255, 255, 0.2);
         }
 
-        .action-btn {
+        /* НЕОНОВАЯ КНОПКА ЗАПУСКА */
+        .hud-action-btn {
             background: var(--main-color);
-            color: #07080b;
+            color: #06070a;
             border: none;
-            border-radius: 12px;
-            height: 44px;
-            padding: 0 22px;
-            font-size: 13.5px;
+            border-radius: 10px;
+            height: 42px;
+            padding: 0 24px;
+            font-size: 13px;
             font-weight: 700;
-            letter-spacing: 0.02em;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: center;
             transition: all 0.2s var(--ease);
+            box-shadow: 0 4px 18px var(--main-color-glow);
             flex-shrink: 0;
-            box-shadow: 0 4px 15px rgba(247, 228, 121, 0.25);
         }
 
-        .action-btn:hover {
-            transform: scale(1.02);
-            box-shadow: 0 6px 20px rgba(247, 228, 121, 0.4);
+        .hud-action-btn:hover {
+            background: #fff;
+            transform: translateY(-1px);
+            box-shadow: 0 6px 25px rgba(255, 255, 255, 0.4);
         }
 
-        .action-btn:active {
+        .hud-action-btn:active {
             transform: scale(0.98);
         }
 
-        /* ⎯⎯⎯ ТЕРМИНАЛ ВЫВОДА РЕЗУЛЬТАТОВ ⎯⎯⎯ */
-        .terminal-zone {
-            margin-top: 38px;
+        /* 📋 РЕЗУЛЬТАТЫ */
+        .hud-results-zone {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
         }
 
-        .terminal-meta-bar {
+        .hud-meta-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -413,55 +442,51 @@
             color: var(--text-dim);
             letter-spacing: 0.08em;
             text-transform: uppercase;
-            padding-bottom: 12px;
-            border-bottom: 1px solid var(--glass-border);
-            margin-bottom: 18px;
+            padding: 0 6px;
         }
 
-        /* 🌟 ВАШ CSS КОМПОНЕНТ: СТЕКЛЯННЫЕ КАРТОЧКИ (ADAPTIVE GRID) */
-        .glass-deck {
+        /* ВАШИ СТЕКЛЯННЫЕ КАРТОЧКИ (СУБДОМЕНЫ / ПРОФИЛИ) */
+        .glass-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-            gap: 12px;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 10px;
         }
 
-        .glass-card-item {
-            position: relative;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.01) 100%);
-            border: 1px solid var(--glass-border);
-            border-radius: 14px;
-            padding: 16px 18px;
+        .glass-hud-card {
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.05) 0%, rgba(255, 255, 255, 0.01) 100%);
+            border: 1px solid var(--panel-border);
+            border-radius: 12px;
+            padding: 15px 18px;
             display: flex;
-            justify-content: space-between;
             align-items: center;
+            justify-content: space-between;
             text-decoration: none;
             color: #ffffff;
             backdrop-filter: blur(14px);
-            -webkit-backdrop-filter: blur(14px);
             transition: all 0.25s var(--ease);
-            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.05);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.35);
         }
 
-        .glass-card-item:hover {
-            transform: translateY(-3px);
-            border-color: var(--glass-border-hover);
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.1) 0%, rgba(247, 228, 121, 0.03) 100%);
-            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.4), 0 0 15px rgba(247, 228, 121, 0.1);
+        .glass-hud-card:hover {
+            border-color: var(--panel-border-glow);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(247, 228, 121, 0.04) 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), 0 0 16px rgba(247, 228, 121, 0.1);
         }
 
-        .card-inner-title {
-            font-size: 14px;
+        .card-caption {
+            font-size: 13.5px;
             font-weight: 600;
         }
 
-        .card-inner-sub {
+        .card-subtext {
             font-family: var(--font-mono);
-            font-size: 11.5px;
+            font-size: 11px;
             color: var(--text-dim);
-            margin-top: 2px;
+            margin-top: 3px;
         }
 
-        .card-external-arrow {
+        .card-icon {
             width: 14px;
             height: 14px;
             stroke: var(--text-dim);
@@ -469,78 +494,76 @@
             transition: all 0.2s;
         }
 
-        .glass-card-item:hover .card-external-arrow {
+        .glass-hud-card:hover .card-icon {
             stroke: var(--main-color);
             transform: translate(2px, -2px);
         }
 
-        /* СТРОКИ ДАННЫХ ДЛЯ DNS / IP / EMAIL */
-        .glass-data-table {
-            background: var(--glass-bg);
-            border: 1px solid var(--glass-border);
-            border-radius: 16px;
+        /* ТАБЛИЦА СТРОК ДЛЯ DNS / IP / EMAIL */
+        .glass-data-stack {
+            background: rgba(11, 14, 20, 0.5);
+            border: 1px solid var(--panel-border);
+            border-radius: 14px;
             overflow: hidden;
             backdrop-filter: blur(20px);
-            box-shadow: 0 12px 32px rgba(0, 0, 0, 0.4);
         }
 
-        .data-unit-row {
+        .data-hud-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 22px;
-            border-bottom: 1px solid var(--glass-border);
+            padding: 14px 20px;
+            border-bottom: 1px solid var(--panel-border);
             transition: background 0.15s;
         }
 
-        .data-unit-row:last-child {
+        .data-hud-row:last-child {
             border-bottom: none;
         }
 
-        .data-unit-row:hover {
+        .data-hud-row:hover {
             background: rgba(255, 255, 255, 0.02);
         }
 
-        .data-unit-key {
+        .data-prop-name {
             font-size: 13px;
             color: var(--text-dim);
             font-weight: 500;
         }
 
-        .data-unit-val-wrap {
+        .data-prop-val-wrap {
             display: flex;
             align-items: center;
             gap: 12px;
-            max-width: 68%;
+            max-width: 65%;
         }
 
-        .data-unit-val {
+        .data-prop-val {
             font-family: var(--font-mono);
             font-size: 13px;
             color: #ffffff;
             word-break: break-all;
             text-align: right;
-            font-weight: 500;
         }
 
-        .copy-click-btn {
+        .hud-copy-btn {
             background: transparent;
             border: none;
             color: var(--text-dim);
             cursor: pointer;
             display: flex;
             align-items: center;
-            padding: 5px;
-            border-radius: 6px;
+            padding: 4px;
+            border-radius: 5px;
             transition: all 0.15s;
         }
 
-        .copy-click-btn:hover {
+        .hud-copy-btn:hover {
             color: var(--main-color);
             background: rgba(247, 228, 121, 0.1);
         }
 
-        .copy-click-btn svg {
+        .hud-copy-btn svg {
             width: 14px;
             height: 14px;
             stroke: currentColor;
@@ -549,23 +572,24 @@
         }
 
         /* ПУСТОЕ СОСТОЯНИЕ */
-        .empty-placeholder-box {
+        .hud-blank-state {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            padding: 70px 0;
+            padding: 60px 0;
             color: var(--text-dim);
-            font-size: 13px;
+            font-size: 12.5px;
             font-family: var(--font-mono);
+            letter-spacing: 0.05em;
         }
 
-        .spinner-loader {
+        .hud-spinner {
             display: none;
-            width: 16px;
-            height: 16px;
+            width: 15px;
+            height: 15px;
             border: 2px solid rgba(0, 0, 0, 0.2);
-            border-top-color: #07080b;
+            border-top-color: #06070a;
             border-radius: 50%;
             animation: spin 0.6s linear infinite;
         }
@@ -575,112 +599,119 @@
         }
 
         /* ТОСТ УВЕДОМЛЕНИЕ */
-        .toast {
+        .hud-toast {
             position: fixed;
             bottom: 28px;
             left: 50%;
             transform: translateX(-50%) translateY(20px);
             background: var(--main-color);
-            color: #07080b;
-            font-size: 12px;
+            color: #06070a;
+            font-size: 11.5px;
             font-weight: 700;
-            padding: 9px 20px;
+            letter-spacing: 0.04em;
+            padding: 8px 18px;
             border-radius: 99px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.7);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8), 0 0 20px var(--main-color-glow);
             opacity: 0;
             pointer-events: none;
             transition: all 0.25s var(--ease);
             z-index: 120;
         }
 
-        .toast.show {
+        .hud-toast.visible {
             opacity: 1;
             transform: translateX(-50%) translateY(0);
         }
 
-        /* 📱 МОБИЛЬНАЯ ОПТИМИЗАЦИЯ ПОД СМАРТФОНЫ */
-        @media (max-width: 650px) {
-            .hud-controls {
-                top: 16px;
-                left: 16px;
-                right: 16px;
+        /* 📱 МОБИЛЬНАЯ ВЕРСИЯ */
+        @media (max-width: 600px) {
+            .hud-nav-trigger {
+                top: 20px;
+                left: 20px;
             }
-            .hud-badge span:last-child {
+            .hud-status-badge {
                 display: none;
             }
-            .workspace {
-                padding: 90px 16px 60px;
+            .hud-workspace {
+                padding: 80px 14px 40px;
             }
-            .module-headline {
+            .hud-glass-panel {
+                padding: 24px 18px;
+                border-radius: 16px;
+            }
+            .hud-title {
                 font-size: 24px;
             }
-            .glass-deck {
+            .glass-grid {
                 grid-template-columns: 1fr;
             }
             .side-drawer {
-                width: 275px;
+                width: 270px;
             }
         }
     </style>
 </head>
 <body>
 
-    <!-- ПАРЯЩИЕ HUD-КНОПКИ -->
-    <div class="hud-controls">
-        <button class="hud-trigger-btn" onclick="toggleDrawer()">
-            <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="3" y1="12" x2="21" y2="12"></line>
-                <line x1="3" y1="6" x2="21" y2="6"></line>
-                <line x1="3" y1="18" x2="21" y2="18"></line>
-            </svg>
-            <span>Меню</span>
-        </button>
+    <!-- 🔘 ЧИСТАЯ МИНИМАЛИСТИЧНАЯ SVG КНОПКА МЕНЮ -->
+    <button class="hud-nav-trigger" id="menuBtn" onclick="toggleMenu()" title="Открыть меню">
+        <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
+            <line x1="3" y1="6" x2="21" y2="6"></line>
+            <line x1="3" y1="12" x2="16" y2="12"></line>
+            <line x1="3" y1="18" x2="20" y2="18"></line>
+        </svg>
+    </button>
 
-        <div class="hud-badge">
-            <div class="hud-dot"></div>
-            <span>SYS_ONLINE // 1.0.4</span>
-        </div>
+    <!-- ТАКТИЧЕСКИЙ СТАТУС СПРАВА -->
+    <div class="hud-status-badge">
+        <div class="hud-status-dot"></div>
+        <span>SHERLOCK // HUD ACTIVE</span>
     </div>
 
-    <!-- ЗАТЕМНЕНИЕ ФОНА -->
-    <div class="drawer-backdrop" id="drawerBackdrop" onclick="toggleDrawer()"></div>
+    <!-- ТЕМНЫЙ БЭКДРОП ДЛЯ МЕНЮ -->
+    <div class="drawer-backdrop" id="drawerBackdrop" onclick="toggleMenu()"></div>
 
     <!-- ВЫЕЗЖАЮЩАЯ СЛЕВА ПАНЕЛЬ С ВАШИМ РАДИО-ГЛАЙДЕРОМ -->
     <aside class="side-drawer" id="sideDrawer">
-        <div class="drawer-head">
-            <span class="drawer-title">Навигация</span>
-            <button class="close-btn" onclick="toggleDrawer()">✕</button>
+        <div class="drawer-top">
+            <span class="drawer-brand">Инструменты</span>
+            <button class="drawer-close-btn" onclick="toggleMenu()">
+                <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
         </div>
 
         <div class="radio-container">
-            <input type="radio" id="radio-user" name="tool" value="username" checked onchange="handleModuleSelect(this)">
-            <label for="radio-user">
-                <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                <span>Никнейм</span>
-            </label>
-
-            <input type="radio" id="radio-dns" name="tool" value="dns" onchange="handleModuleSelect(this)">
-            <label for="radio-dns">
-                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1 4-10z"></path></svg>
-                <span>DNS записи</span>
-            </label>
-
-            <input type="radio" id="radio-subs" name="tool" value="subdomains" onchange="handleModuleSelect(this)">
-            <label for="radio-subs">
+            <input type="radio" id="tool-sub" name="osint-radio" value="subdomains" checked onchange="selectTool(this)">
+            <label for="tool-sub">
                 <svg viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
                 <span>Субдомены</span>
             </label>
 
-            <input type="radio" id="radio-ip" name="tool" value="ip" onchange="handleModuleSelect(this)">
-            <label for="radio-ip">
+            <input type="radio" id="tool-user" name="osint-radio" value="username" onchange="selectTool(this)">
+            <label for="tool-user">
+                <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                <span>Никнейм</span>
+            </label>
+
+            <input type="radio" id="tool-dns" name="osint-radio" value="dns" onchange="selectTool(this)">
+            <label for="tool-dns">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                <span>DNS записи</span>
+            </label>
+
+            <input type="radio" id="tool-ip" name="osint-radio" value="ip" onchange="selectTool(this)">
+            <label for="tool-ip">
                 <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
                 <span>IP хост</span>
             </label>
 
-            <input type="radio" id="radio-mail" name="tool" value="email" onchange="handleModuleSelect(this)">
-            <label for="radio-mail">
+            <input type="radio" id="tool-mail" name="osint-radio" value="email" onchange="selectTool(this)">
+            <label for="tool-mail">
                 <svg viewBox="0 0 24 24"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
-                <span>Email почта</span>
+                <span>Почтовый адрес</span>
             </label>
 
             <div class="glider-container">
@@ -689,126 +720,169 @@
         </div>
     </aside>
 
-    <!-- ОСНОВНАЯ КОНСОЛЬ -->
-    <main class="workspace">
-        <div class="module-indicator">
-            <h1 class="module-headline" id="moduleTitle">Никнейм</h1>
-            <span class="module-id" id="moduleId">MODULE // USR_QUERY</span>
-        </div>
-
-        <div class="input-glass-box">
-            <input type="text" id="targetInput" class="hud-input" placeholder="Введите никнейм..." autocomplete="off" spellcheck="false">
-            <button class="action-btn" id="runBtn" onclick="runScan()">
-                <span id="btnText">Поиск</span>
-                <div class="spinner-loader" id="spinner"></div>
-            </button>
-        </div>
-
-        <div class="terminal-zone">
-            <div class="terminal-meta-bar">
-                <span id="statusCount">Ожидание ввода</span>
-                <span id="statusCode">READY</span>
+    <!-- 💻 ОСНОВНОЙ РАБОЧИЙ ТЕРМИНАЛ -->
+    <main class="hud-workspace">
+        <div class="hud-glass-panel">
+            <div class="hud-panel-head">
+                <h1 class="hud-title" id="hudTitle">Субдомены</h1>
+                <span class="hud-mod-id" id="hudCode">MODULE // SSL_CRT_LOGS</span>
             </div>
 
-            <div id="outputArea">
-                <div class="empty-placeholder-box">
+            <div class="hud-input-wrap">
+                <input type="text" id="targetField" class="hud-field" placeholder="Корневой домен (например: spotify.com)..." autocomplete="off" spellcheck="false">
+                <button class="hud-action-btn" id="hudBtn" onclick="runInvestigation()">
+                    <span id="btnText">Поиск</span>
+                    <div class="hud-spinner" id="spinner"></div>
+                </button>
+            </div>
+        </div>
+
+        <div class="hud-results-zone">
+            <div class="hud-meta-row">
+                <span id="metaCounter">СТАТУС: ОЖИДАНИЕ ВВОДА</span>
+                <span id="metaState">STANDBY</span>
+            </div>
+
+            <div id="resultsViewport">
+                <div class="hud-blank-state">
                     <span>— Задайте цель поиска в строке выше —</span>
                 </div>
             </div>
         </div>
     </main>
 
-    <div class="toast" id="toast">Скопировано в буфер</div>
+    <div class="hud-toast" id="toast">Скопировано в буфер</div>
 
     <script>
-        let currentModule = 'username';
+        let currentTool = 'subdomains';
 
-        const modulesConfig = {
+        const config = {
+            subdomains: {
+                title: 'Субдомены',
+                code: 'MODULE // SSL_CRT_LOGS',
+                placeholder: 'Корневой домен (например: spotify.com)...'
+            },
             username: {
                 title: 'Никнейм',
-                id: 'MODULE // USR_QUERY',
-                placeholder: 'Введите никнейм...'
+                code: 'MODULE // USR_SEARCH',
+                placeholder: 'Введите логин цели (например: durov)...'
             },
             dns: {
                 title: 'DNS записи',
-                id: 'MODULE // DOH_LOOKUP',
-                placeholder: 'Домен для анализа (например: github.com)...'
-            },
-            subdomains: {
-                title: 'Субдомены',
-                id: 'MODULE // SSL_CRT_LOGS',
-                placeholder: 'Корневой домен (например: spotify.com)...'
+                code: 'MODULE // DOH_RESOLVE',
+                placeholder: 'Домен для проверки (например: github.com)...'
             },
             ip: {
                 title: 'IP хост',
-                id: 'MODULE // NET_GEO_HOST',
-                placeholder: 'IP адрес или хост (например: 1.1.1.1)...'
+                code: 'MODULE // GEO_INTEL',
+                placeholder: 'IP адрес (например: 1.1.1.1)...'
             },
             email: {
-                title: 'Email почта',
-                id: 'MODULE // RFC_VALIDATE',
-                placeholder: 'Почтовый адрес (например: dev@apple.com)...'
+                title: 'Почтовый адрес',
+                code: 'MODULE // RFC_VALIDATE',
+                placeholder: 'Email почта (например: dev@apple.com)...'
             }
         };
 
-        function toggleDrawer() {
-            document.getElementById('sideDrawer').classList.toggle('active');
-            document.getElementById('drawerBackdrop').classList.toggle('active');
+        function toggleMenu() {
+            const drawer = document.getElementById('sideDrawer');
+            const backdrop = document.getElementById('drawerBackdrop');
+            const menuBtn = document.getElementById('menuBtn');
+
+            const isOpen = drawer.classList.toggle('active');
+            backdrop.classList.toggle('active');
+            menuBtn.classList.toggle('active', isOpen);
         }
 
-        function handleModuleSelect(radio) {
-            currentModule = radio.value;
-            const c = modulesConfig[currentModule];
+        function selectTool(radio) {
+            currentTool = radio.value;
+            const c = config[currentTool];
 
-            document.getElementById('moduleTitle').innerText = c.title;
-            document.getElementById('moduleId').innerText = c.id;
+            document.getElementById('hudTitle').innerText = c.title;
+            document.getElementById('hudCode').innerText = c.code;
 
-            const input = document.getElementById('targetInput');
+            const input = document.getElementById('targetField');
             input.placeholder = c.placeholder;
             input.value = '';
 
-            document.getElementById('statusCount').innerText = 'Ожидание ввода';
-            document.getElementById('statusCode').innerText = 'READY';
-            document.getElementById('outputArea').innerHTML = `
-                <div class="empty-placeholder-box">
+            document.getElementById('metaCounter').innerText = 'СТАТУС: ОЖИДАНИЕ ВВОДА';
+            document.getElementById('metaState').innerText = 'STANDBY';
+            document.getElementById('resultsViewport').innerHTML = `
+                <div class="hud-blank-state">
                     <span>— Задайте цель поиска в строке выше —</span>
                 </div>
             `;
 
-            // Закрываем меню плавно
-            setTimeout(toggleDrawer, 180);
+            setTimeout(toggleMenu, 180);
             input.focus();
         }
 
         function copyValue(val) {
             navigator.clipboard.writeText(val);
             const toast = document.getElementById('toast');
-            toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 1600);
+            toast.classList.add('visible');
+            setTimeout(() => toast.classList.remove('visible'), 1600);
         }
 
-        document.getElementById('targetInput').addEventListener('keydown', (e) => {
-            if (e.key === 'Enter') runScan();
+        document.getElementById('targetField').addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') runInvestigation();
         });
 
-        async function runScan() {
-            const query = document.getElementById('targetInput').value.trim();
+        async function runInvestigation() {
+            const query = document.getElementById('targetField').value.trim();
             if (!query) return;
 
             const btnText = document.getElementById('btnText');
             const spinner = document.getElementById('spinner');
-            const outputArea = document.getElementById('outputArea');
-            const statusCount = document.getElementById('statusCount');
-            const statusCode = document.getElementById('statusCode');
+            const resultsViewport = document.getElementById('resultsViewport');
+            const metaCounter = document.getElementById('metaCounter');
+            const metaState = document.getElementById('metaState');
 
             btnText.style.display = 'none';
             spinner.style.display = 'block';
-            statusCode.innerText = 'SCANNING...';
+            metaState.innerText = 'PROCESSING...';
 
             try {
                 let html = '';
 
-                if (currentModule === 'username') {
+                if (currentTool === 'subdomains') {
+                    const cleanDomain = query.replace('https://', '').replace('http://', '').split('/')[0].trim();
+                    const res = await fetch(`https://crt.sh/?q=%25.${encodeURIComponent(cleanDomain)}&output=json`);
+                    const data = await res.json();
+                    const subSet = new Set();
+
+                    data.slice(0, 36).forEach(item => {
+                        item.name_value.split('\n').forEach(s => {
+                            s = s.trim().toLowerCase();
+                            if (!s.includes('*') && s.endsWith(cleanDomain)) subSet.add(s);
+                        });
+                    });
+
+                    const list = Array.from(subSet);
+                    if (list.length > 0) {
+                        metaCounter.innerText = `НАЙДЕНО: ${list.length} ПОДДОМЕНОВ`;
+                        metaState.innerText = 'COMPLETE';
+
+                        html += '<div class="glass-grid">';
+                        for (const sub of list) {
+                            html += `
+                                <div class="glass-hud-card" onclick="copyValue('${sub}')" style="cursor: pointer;">
+                                    <span class="card-caption" style="font-family: var(--font-mono); font-size: 12.5px;">${sub}</span>
+                                    <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                        <rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect>
+                                        <path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path>
+                                    </svg>
+                                </div>
+                            `;
+                        }
+                        html += '</div>';
+                    } else {
+                        html = '<div class="hud-blank-state"><span>В открытых реестрах записей не обнаружено</span></div>';
+                        metaCounter.innerText = '0 СОВПАДЕНИЙ';
+                        metaState.innerText = 'EMPTY';
+                    }
+                }
+                else if (currentTool === 'username') {
                     const u = query.replace('@', '');
                     const platforms = [
                         { name: "GitHub", url: `https://github.com/${u}` },
@@ -825,18 +899,18 @@
                         { name: "SoundCloud", url: `https://soundcloud.com/${u}` }
                     ];
 
-                    statusCount.innerText = `ПЛАТФОРМ: ${platforms.length}`;
-                    statusCode.innerText = 'COMPLETE';
+                    metaCounter.innerText = `ПЛАТФОРМ: ${platforms.length}`;
+                    metaState.innerText = 'COMPLETE';
 
-                    html += '<div class="glass-deck">';
+                    html += '<div class="glass-grid">';
                     for (const p of platforms) {
                         html += `
-                            <a href="${p.url}" target="_blank" rel="noopener noreferrer" class="glass-card-item">
+                            <a href="${p.url}" target="_blank" rel="noopener noreferrer" class="glass-hud-card">
                                 <div>
-                                    <div class="card-inner-title">${p.name}</div>
-                                    <div class="card-inner-sub">/${u}</div>
+                                    <div class="card-caption">${p.name}</div>
+                                    <div class="card-subtext">/${u}</div>
                                 </div>
-                                <svg class="card-external-arrow" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                                <svg class="card-icon" viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
                                     <line x1="7" y1="17" x2="17" y2="7"></line>
                                     <polyline points="7 7 17 7 17 17"></polyline>
                                 </svg>
@@ -845,7 +919,7 @@
                     }
                     html += '</div>';
                 }
-                else if (currentModule === 'dns') {
+                else if (currentTool === 'dns') {
                     const cleanDomain = query.replace('https://', '').replace('http://', '').split('/')[0].trim();
                     const types = ['A', 'AAAA', 'MX', 'TXT', 'NS'];
                     let found = 0;
@@ -861,11 +935,11 @@
                                 found++;
                                 const valStr = data.Answer.map(a => a.data).join(', ');
                                 rows += `
-                                    <div class="data-unit-row">
-                                        <span class="data-unit-key">${t}</span>
-                                        <div class="data-unit-val-wrap">
-                                            <span class="data-unit-val">${valStr}</span>
-                                            <button class="copy-click-btn" title="Копировать" onclick="copyValue('${valStr.replace(/'/g, "\\'")}')">
+                                    <div class="data-hud-row">
+                                        <span class="data-prop-name">${t}</span>
+                                        <div class="data-prop-val-wrap">
+                                            <span class="data-prop-val">${valStr}</span>
+                                            <button class="hud-copy-btn" title="Копировать" onclick="copyValue('${valStr.replace(/'/g, "\\'")}')">
                                                 <svg viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>
                                             </button>
                                         </div>
@@ -876,58 +950,22 @@
                     }
 
                     if (found > 0) {
-                        html = `<div class="glass-data-table">${rows}</div>`;
-                        statusCount.innerText = `ДОМЕН: ${cleanDomain}`;
-                        statusCode.innerText = 'RESOLVED';
+                        html = `<div class="glass-data-stack">${rows}</div>`;
+                        metaCounter.innerText = `ДОМЕН: ${cleanDomain}`;
+                        metaState.innerText = 'RESOLVED';
                     } else {
-                        html = '<div class="empty-placeholder-box"><span>Записи DNS не обнаружены</span></div>';
-                        statusCount.innerText = '0 СОВПАДЕНИЙ';
-                        statusCode.innerText = 'EMPTY';
+                        html = '<div class="hud-blank-state"><span>Записи DNS не обнаружены</span></div>';
+                        metaCounter.innerText = '0 СОВПАДЕНИЙ';
+                        metaState.innerText = 'EMPTY';
                     }
                 }
-                else if (currentModule === 'subdomains') {
-                    const cleanDomain = query.replace('https://', '').replace('http://', '').split('/')[0].trim();
-                    const res = await fetch(`https://crt.sh/?q=%25.${encodeURIComponent(cleanDomain)}&output=json`);
-                    const data = await res.json();
-                    const subSet = new Set();
-
-                    data.slice(0, 36).forEach(item => {
-                        item.name_value.split('\n').forEach(s => {
-                            s = s.trim().toLowerCase();
-                            if (!s.includes('*') && s.endsWith(cleanDomain)) subSet.add(s);
-                        });
-                    });
-
-                    const list = Array.from(subSet);
-                    if (list.length > 0) {
-                        statusCount.innerText = `НАЙДЕНО: ${list.length}`;
-                        statusCode.innerText = 'EXTRACTED';
-
-                        html += '<div class="glass-deck">';
-                        for (const sub of list) {
-                            html += `
-                                <div class="glass-card-item" onclick="copyValue('${sub}')" style="cursor: pointer;">
-                                    <span class="card-inner-title" style="font-family: var(--font-mono); font-size: 12.5px;">${sub}</span>
-                                    <button class="copy-click-btn">
-                                        <svg viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>
-                                    </button>
-                                </div>
-                            `;
-                        }
-                        html += '</div>';
-                    } else {
-                        html = '<div class="empty-placeholder-box"><span>Поддомены в открытых CT-логах не найдены</span></div>';
-                        statusCount.innerText = '0 СОВПАДЕНИЙ';
-                        statusCode.innerText = 'EMPTY';
-                    }
-                }
-                else if (currentModule === 'ip') {
+                else if (currentTool === 'ip') {
                     const cleanTarget = query.replace('https://', '').replace('http://', '').split('/')[0].trim();
                     const res = await fetch(`https://freeipapi.com/api/json/${encodeURIComponent(cleanTarget)}`);
                     const data = await res.json();
 
-                    statusCount.innerText = `IP: ${cleanTarget}`;
-                    statusCode.innerText = 'RESOLVED';
+                    metaCounter.innerText = `IP: ${cleanTarget}`;
+                    metaState.innerText = 'RESOLVED';
 
                     const rows = [
                         ['IP Хоста', data.ipAddress || cleanTarget],
@@ -937,14 +975,14 @@
                         ['Версия IP', data.ipVersion ? `IPv${data.ipVersion}` : '—']
                     ];
 
-                    html += '<div class="glass-data-table">';
+                    html += '<div class="glass-data-stack">';
                     rows.forEach(([k, v]) => {
                         html += `
-                            <div class="data-unit-row">
-                                <span class="data-unit-key">${k}</span>
-                                <div class="data-unit-val-wrap">
-                                    <span class="data-unit-val">${v}</span>
-                                    <button class="copy-click-btn" onclick="copyValue('${v}')">
+                            <div class="data-hud-row">
+                                <span class="data-prop-name">${k}</span>
+                                <div class="data-prop-val-wrap">
+                                    <span class="data-prop-val">${v}</span>
+                                    <button class="hud-copy-btn" onclick="copyValue('${v}')">
                                         <svg viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>
                                     </button>
                                 </div>
@@ -953,13 +991,13 @@
                     });
                     html += '</div>';
                 }
-                else if (currentModule === 'email') {
+                else if (currentTool === 'email') {
                     const cleanEmail = query.trim().toLowerCase();
                     const domain = cleanEmail.split('@')[1] || '—';
                     const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail);
 
-                    statusCount.innerText = cleanEmail;
-                    statusCode.innerText = 'PARSED';
+                    metaCounter.innerText = cleanEmail;
+                    metaState.innerText = 'PARSED';
 
                     const rows = [
                         ['Целевой адрес', cleanEmail],
@@ -967,14 +1005,14 @@
                         ['Формат RFC 5322', isValid ? 'ВАЛИДЕН' : 'ОШИБКА ФОРМАТА']
                     ];
 
-                    html += '<div class="glass-data-table">';
+                    html += '<div class="glass-data-stack">';
                     rows.forEach(([k, v]) => {
                         html += `
-                            <div class="data-unit-row">
-                                <span class="data-unit-key">${k}</span>
-                                <div class="data-unit-val-wrap">
-                                    <span class="data-unit-val">${v}</span>
-                                    <button class="copy-click-btn" onclick="copyValue('${v}')">
+                            <div class="data-hud-row">
+                                <span class="data-prop-name">${k}</span>
+                                <div class="data-prop-val-wrap">
+                                    <span class="data-prop-val">${v}</span>
+                                    <button class="hud-copy-btn" onclick="copyValue('${v}')">
                                         <svg viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>
                                     </button>
                                 </div>
@@ -984,10 +1022,10 @@
                     html += '</div>';
                 }
 
-                outputArea.innerHTML = html;
+                resultsViewport.innerHTML = html;
             } catch (e) {
-                statusCode.innerText = 'FAILURE';
-                outputArea.innerHTML = '<div class="empty-placeholder-box"><span>Ошибка сети или шлюза API</span></div>';
+                metaState.innerText = 'FAILURE';
+                resultsViewport.innerHTML = '<div class="hud-blank-state"><span>Сетевая ошибка или блок запроса</span></div>';
             } finally {
                 btnText.style.display = 'block';
                 spinner.style.display = 'none';
