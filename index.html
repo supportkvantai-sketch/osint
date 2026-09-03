@@ -15,7 +15,7 @@
             --main-color-opacity: rgba(247, 228, 121, 0.12);
             --total-radio: 7;
 
-            /* 🌑 ЧИСТЫЙ ГРАФИТ */
+            /* 🌑 ЧИСТЫЙ СЕРЫЙ ГРАФИТ */
             --bg: #0c0c0e;
             --surface: rgba(26, 26, 30, 0.65);
             --surface-hover: rgba(34, 34, 40, 0.9);
@@ -51,11 +51,11 @@
             position: relative;
         }
 
-        /* 🔘 ЧИСТАЯ СТАТИЧНАЯ КНОПКА МЕНЮ СЛЕВА */
+        /* 🔘 КНОПКА МЕНЮ СЛЕВА */
         .hud-menu-btn {
             position: fixed;
-            top: 28px;
-            left: 28px;
+            top: 24px;
+            left: 24px;
             z-index: 90;
             background: transparent;
             border: none;
@@ -103,18 +103,18 @@
             pointer-events: auto;
         }
 
-        /* 🚪 БОКОВАЯ ШТОРКА (МЕНЮ) */
+        /* 🚪 БОКОВАЯ ШТОРКА */
         .side-drawer {
             position: fixed;
             top: 0;
             left: 0;
             bottom: 0;
-            width: 290px;
+            width: 285px;
             background: rgba(16, 16, 19, 0.98);
             border-right: 1px solid var(--border);
             backdrop-filter: blur(30px);
             z-index: 110;
-            padding: 30px 20px;
+            padding: 28px 20px;
             display: flex;
             flex-direction: column;
             transform: translateX(-100%);
@@ -163,7 +163,7 @@
             color: #fff;
         }
 
-        /* 🌟 ЛАЗЕРНЫЙ ГЛАЙДЕР НА 7 ПОЗИЦИЙ */
+        /* 🌟 ЛАЗЕРНЫЙ ГЛАЙДЕР */
         .radio-container {
             --total-radio: 7;
             display: flex;
@@ -253,64 +253,72 @@
         .radio-container input:nth-of-type(7):checked ~ .glider-container .glider { transform: translateY(600%); }
 
         /* ==========================================================================
-           ⚡ БЕГУЩИЕ ДИАГОНАЛЬНЫЕ ЛЕНТЫ С ТЕКСТОМ OSINT (45 ГРАДУСОВ ВНИЗ)
+           ⚡ МЕДЛЕННЫЙ И ПРОЗРАЧНЫЙ ФОНОВЫЙ ТЕКСТ OSINT (150s + 60% ПРОЗРАЧНОСТИ)
            ========================================================================== */
-        .ambient-layer {
-            position: absolute;
+        .ambient-fixed-layer {
+            position: fixed;
             inset: 0;
             pointer-events: none;
             overflow: hidden;
             z-index: 1;
         }
 
-        /* Контейнер повернут под 45 градусов */
-        .diagonal-tapes-container {
+        .diagonal-marquee-box {
             position: absolute;
-            width: 300vw;
-            height: 300vh;
-            top: -100vh;
-            left: -100vw;
-            transform: rotate(45deg);
+            top: 50%;
+            left: 50%;
+            width: 320vmax;
+            height: 320vmax;
+            transform: translate(-50%, -50%) rotate(45deg);
             display: flex;
             flex-direction: column;
             justify-content: center;
-            gap: 22px; /* Полосы текста идут плотно рядом друг с другом */
+            gap: 18px;
             pointer-events: none;
             user-select: none;
+            /* 🌫️ ПРОЗРАЧНОСТЬ УВЕЛИЧЕНА НА 60% (ВИДИМОСТЬ 40%) */
+            opacity: 0.4;
         }
 
         .tape-row {
             display: flex;
-            width: max-content;
-            white-space: nowrap;
-            will-change: transform;
+            width: 100%;
+            overflow: hidden;
         }
 
-        /* Анимация движения лент вниз по диагонали */
-        .tape-row-down {
-            animation: tapeScrollDown 35s linear infinite;
-        }
-
-        .tape-row-down-fast {
-            animation: tapeScrollDown 24s linear infinite;
-        }
-
+        /* ⏳ МЕДЛЕННАЯ ЕДИНАЯ СКОРОСТЬ 150 СЕКУНД */
         .tape-track {
             display: flex;
-            gap: 18px;
+            width: max-content;
+            will-change: transform;
+            animation: marqueeDiag 150s linear infinite;
+        }
+
+        /* ⛓️ 1, 3, 5, 7, 9... СИНХРОНИЗИРОВАНЫ МЕЖДУ СОБОЙ */
+        .tape-row:nth-child(odd) .tape-track {
+            animation-delay: 0s;
+        }
+
+        /* ⛓️ 2, 4, 6, 8, 10... СИНХРОНИЗИРОВАНЫ МЕЖДУ СОБОЙ И ИДУТ НЕМНОГО ВПЕРЕДИ (-6.5s) */
+        .tape-row:nth-child(even) .tape-track {
+            animation-delay: -6.5s;
+        }
+
+        .tape-words {
+            white-space: nowrap;
             font-family: var(--font-stretched);
-            font-size: 15px;
+            font-size: clamp(45px, 5.5vw, 85px);
             font-weight: 900;
-            letter-spacing: 0.12em;
-            color: rgba(255, 255, 255, 0.028);
-            text-transform: uppercase;
+            line-height: 0.95;
+            letter-spacing: 0.08em;
+            color: rgba(255, 255, 255, 0.024);
         }
 
-        .tape-track span.accent {
-            color: rgba(247, 228, 121, 0.08);
+        .tape-words span {
+            color: rgba(247, 228, 121, 0.06);
         }
 
-        @keyframes tapeScrollDown {
+        @keyframes marqueeDiag {
             0% { transform: translate3d(-50%, 0, 0); }
             100% { transform: translate3d(0, 0, 0); }
         }
@@ -339,7 +347,7 @@
         .orb-1 {
             width: 165px;
             height: 165px;
-            top: 12%;
+            top: 10%;
             right: 14%;
             opacity: 0.85;
             animation: floatOrb1 16s ease-in-out infinite alternate;
@@ -348,8 +356,8 @@
         .orb-2 {
             width: 88px;
             height: 88px;
-            bottom: 14%;
-            right: 6%;
+            bottom: 12%;
+            right: 8%;
             opacity: 0.75;
             animation: floatOrb2 13s ease-in-out infinite alternate;
         }
@@ -357,39 +365,25 @@
         .orb-3 {
             width: 52px;
             height: 52px;
-            bottom: 14%;
-            left: 4%;
+            bottom: 15%;
+            left: 5%;
             opacity: 0.55;
             animation: floatOrb3 18s ease-in-out infinite alternate;
         }
 
-        .orb-4 {
-            width: 36px;
-            height: 36px;
-            top: 18%;
-            left: 48%;
-            opacity: 0.5;
-            animation: floatOrb4 14s ease-in-out infinite alternate;
-        }
-
         @keyframes floatOrb1 {
             0% { transform: translate3d(0, 0, 0) rotate(0deg); }
-            100% { transform: translate3d(18px, -30px, 0) rotate(15deg); }
+            100% { transform: translate3d(16px, -28px, 0) rotate(15deg); }
         }
 
         @keyframes floatOrb2 {
             0% { transform: translate3d(0, 0, 0); }
-            100% { transform: translate3d(-18px, 22px, 0); }
+            100% { transform: translate3d(-16px, 20px, 0); }
         }
 
         @keyframes floatOrb3 {
             0% { transform: translate3d(0, 0, 0); }
-            100% { transform: translate3d(14px, -18px, 0); }
-        }
-
-        @keyframes floatOrb4 {
-            0% { transform: translate3d(0, 0, 0); }
-            100% { transform: translate3d(-12px, 20px, 0); }
+            100% { transform: translate3d(12px, -16px, 0); }
         }
 
         /* ==========================================================================
@@ -400,7 +394,7 @@
             display: grid;
             grid-template-columns: 1.15fr 0.85fr;
             align-items: center;
-            gap: 60px;
+            gap: 50px;
             width: 100%;
             max-width: 1120px;
             margin: 0 auto;
@@ -408,23 +402,23 @@
             min-height: 100vh;
         }
 
-        /* ЛЕВАЯ ЧАСТЬ (z-index: 3 поверх лент) */
         .hero-left {
             position: relative;
             z-index: 3;
             display: flex;
             flex-direction: column;
-            gap: 28px;
+            gap: 24px;
         }
 
         .hero-title {
             font-family: var(--font-stretched);
-            font-size: 44px;
+            font-size: 42px;
             font-weight: 900;
-            line-height: 1.18;
+            line-height: 1.2;
             letter-spacing: -0.02em;
             color: #ffffff;
             text-transform: uppercase;
+            word-break: normal;
         }
 
         .hero-title .badge-highlight {
@@ -438,8 +432,8 @@
         }
 
         .hero-desc {
-            font-size: 15.5px;
-            line-height: 1.65;
+            font-size: 15px;
+            line-height: 1.6;
             color: var(--text-muted);
             max-width: 520px;
         }
@@ -501,7 +495,7 @@
             }
         }
 
-        /* ПРАВАЯ ЧАСТЬ (z-index: 3 поверх лент) */
+        /* ПРАВАЯ ЧАСТЬ: СМАРТФОН */
         .hero-right {
             position: relative;
             z-index: 3;
@@ -512,23 +506,22 @@
 
         .mockup-backdrop-glow {
             position: absolute;
-            width: 360px;
-            height: 360px;
+            width: 340px;
+            height: 340px;
             border-radius: 50%;
             background: radial-gradient(circle, rgba(247, 228, 121, 0.04) 0%, rgba(26, 26, 30, 0.35) 65%, transparent 70%);
             z-index: 1;
             pointer-events: none;
         }
 
-        /* МОНОЛИТНЫЙ СМАРТФОН */
         .device-phone {
             position: relative;
             z-index: 2;
-            width: 295px;
-            height: 500px;
+            width: 290px;
+            height: 490px;
             background: #0c0c0e;
             border: 3px solid #23242b;
-            border-radius: 40px;
+            border-radius: 38px;
             padding: 14px 16px 20px;
             display: flex;
             flex-direction: column;
@@ -557,8 +550,8 @@
         .phone-content {
             display: flex;
             flex-direction: column;
-            gap: 18px;
-            padding-top: 8px;
+            gap: 16px;
+            padding-top: 6px;
         }
 
         .mini-brand-row {
@@ -574,7 +567,7 @@
 
         .mini-title {
             font-family: var(--font-stretched);
-            font-size: 15px;
+            font-size: 14px;
             font-weight: 900;
             color: #ffffff;
             letter-spacing: -0.01em;
@@ -625,7 +618,7 @@
         }
 
         .mini-blank-state {
-            padding: 70px 0;
+            padding: 65px 0;
             color: var(--text-muted);
             font-size: 10.5px;
             font-family: var(--font-mono);
@@ -639,10 +632,12 @@
             width: 100%;
             max-width: 680px;
             margin: 0 auto;
-            padding: 110px 20px 80px;
+            padding: 100px 20px 80px;
             flex-direction: column;
             gap: 28px;
             animation: fadeIn 0.25s ease;
+            position: relative;
+            z-index: 3;
         }
 
         .back-nav-btn {
@@ -891,24 +886,61 @@
             to { opacity: 1; }
         }
 
-        @media (max-width: 960px) {
+        /* 📱 МОБИЛЬНАЯ АДАПТАЦИЯ */
+        @media (max-width: 900px) {
             .landing-view {
                 grid-template-columns: 1fr;
-                gap: 50px;
-                padding: 90px 20px 60px;
+                gap: 44px;
+                padding: 84px 16px 50px;
             }
-            .hero-right { order: 2; }
-            .hero-title { font-size: 34px; }
-            .orb-1 { width: 130px; height: 130px; right: 4%; top: 8%; }
+            .hero-right {
+                order: 2;
+            }
+            .hero-title {
+                font-size: 25px;
+                line-height: 1.25;
+            }
+            .hero-title .badge-highlight {
+                padding: 2px 10px;
+                border-radius: 8px;
+            }
+            .hero-desc {
+                font-size: 13.5px;
+            }
+            .hero-actions {
+                flex-direction: column;
+                width: 100%;
+                gap: 10px;
+            }
+            .btn-primary, .btn-secondary {
+                width: 100%;
+                justify-content: center;
+                height: 44px;
+            }
+            .device-phone {
+                width: 270px;
+                height: 450px;
+                border-radius: 34px;
+            }
+            .mockup-backdrop-glow {
+                width: 280px;
+                height: 280px;
+            }
+            .workspace-view {
+                padding: 84px 16px 50px;
+            }
+            .main-title {
+                font-size: 21px;
+            }
+            .orb-1 { width: 120px; height: 120px; right: 2%; top: 6%; }
             .orb-2 { width: 70px; height: 70px; right: 2%; bottom: 8%; }
             .orb-3 { display: none; }
-            .orb-4 { left: 80%; top: 4%; }
         }
     </style>
 </head>
 <body>
 
-    <!-- 🔘 ЧИСТАЯ СТАТИЧНАЯ ИКОНКА МЕНЮ -->
+    <!-- 🔘 КНОПКА МЕНЮ -->
     <button class="hud-menu-btn" id="menuBtn" onclick="toggleMenu()" title="Инструменты">
         <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
             <line x1="3" y1="6" x2="21" y2="6"></line>
@@ -918,6 +950,56 @@
     </button>
 
     <div class="drawer-overlay" id="drawerOverlay" onclick="toggleMenu()"></div>
+
+    <!-- ⚡ СИНХРОНИЗИРОВАННЫЙ ШАХМАТНЫЙ КОНВЕЙЕР (150s + ПРОЗРАЧНОСТЬ 60%) -->
+    <div class="ambient-fixed-layer">
+        <div class="diagonal-marquee-box">
+            <!-- 1 (Нечетный) -->
+            <div class="tape-row"><div class="tape-track"><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div></div></div>
+            <!-- 2 (Четный: сдвинут вперед на -6.5s) -->
+            <div class="tape-row"><div class="tape-track"><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div></div></div>
+            <!-- 3 (Идентичен 1-й строке) -->
+            <div class="tape-row"><div class="tape-track"><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div></div></div>
+            <!-- 4 (Идентичен 2-й строке) -->
+            <div class="tape-row"><div class="tape-track"><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div></div></div>
+            <!-- 5 (Идентичен 1 и 3) -->
+            <div class="tape-row"><div class="tape-track"><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div></div></div>
+            <!-- 6 (Идентичен 2 и 4) -->
+            <div class="tape-row"><div class="tape-track"><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div></div></div>
+            <!-- 7 (Идентичен 1, 3, 5) -->
+            <div class="tape-row"><div class="tape-track"><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div></div></div>
+            <!-- 8 (Идентичен 2, 4, 6) -->
+            <div class="tape-row"><div class="tape-track"><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div></div></div>
+            <!-- 9 -->
+            <div class="tape-row"><div class="tape-track"><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div></div></div>
+            <!-- 10 -->
+            <div class="tape-row"><div class="tape-track"><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div></div></div>
+            <!-- 11 -->
+            <div class="tape-row"><div class="tape-track"><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div></div></div>
+            <!-- 12 -->
+            <div class="tape-row"><div class="tape-track"><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div></div></div>
+            <!-- 13 -->
+            <div class="tape-row"><div class="tape-track"><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div></div></div>
+            <!-- 14 -->
+            <div class="tape-row"><div class="tape-track"><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div></div></div>
+            <!-- 15 -->
+            <div class="tape-row"><div class="tape-track"><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div></div></div>
+            <!-- 16 -->
+            <div class="tape-row"><div class="tape-track"><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div></div></div>
+            <!-- 17 -->
+            <div class="tape-row"><div class="tape-track"><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div></div></div>
+            <!-- 18 -->
+            <div class="tape-row"><div class="tape-track"><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div></div></div>
+            <!-- 19 -->
+            <div class="tape-row"><div class="tape-track"><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div></div></div>
+            <!-- 20 -->
+            <div class="tape-row"><div class="tape-track"><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div></div></div>
+        </div>
+
+        <div class="metal-orb orb-1"></div>
+        <div class="metal-orb orb-2"></div>
+        <div class="metal-orb orb-3"></div>
+    </div>
 
     <!-- ВЫЕЗЖАЮЩАЯ СЛЕВА ШТОРКА -->
     <aside class="side-drawer" id="sideDrawer">
@@ -981,58 +1063,11 @@
     </aside>
 
     <!-- ==========================================================================
-         🏛️ 1. ГЛАВНОЕ МЕНЮ (С БЕГУЩИМИ ПОЛОСАМИ OSINT ПОД 45 ГРАДУСОВ)
+         🏛️ 1. ГЛАВНЫЙ ЭКРАН
          ========================================================================== -->
     <main class="landing-view" id="landingView">
-
-        <!-- ⚡ ДИНАМИЧЕСКИЙ ФОН: БЕГУЩИЙ ТЕКСТ ПОД 45° ВНИЗ + 3D СФЕРЫ -->
-        <div class="ambient-layer">
-            <div class="diagonal-tapes-container">
-                <!-- 1 полоса -->
-                <div class="tape-row tape-row-down">
-                    <div class="tape-track">
-                        <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span class="accent">OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span class="accent">OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span class="accent">OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span class="accent">OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span>
-                    </div>
-                </div>
-                <!-- 2 полоса -->
-                <div class="tape-row tape-row-down-fast">
-                    <div class="tape-track">
-                        <span class="accent">OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span class="accent">OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span class="accent">OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span class="accent">OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span>
-                    </div>
-                </div>
-                <!-- 3 полоса -->
-                <div class="tape-row tape-row-down">
-                    <div class="tape-track">
-                        <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span class="accent">OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span class="accent">OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span class="accent">OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span class="accent">OSINT</span>
-                    </div>
-                </div>
-                <!-- 4 полоса -->
-                <div class="tape-row tape-row-down-fast">
-                    <div class="tape-track">
-                        <span>OSINT</span> <span>•</span> <span class="accent">OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span class="accent">OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span class="accent">OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span class="accent">OSINT</span> <span>•</span> <span>OSINT</span>
-                    </div>
-                </div>
-                <!-- 5 полоса -->
-                <div class="tape-row tape-row-down">
-                    <div class="tape-track">
-                        <span class="accent">OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span class="accent">OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span class="accent">OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span class="accent">OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span>
-                    </div>
-                </div>
-                <!-- 6 полоса -->
-                <div class="tape-row tape-row-down-fast">
-                    <div class="tape-track">
-                        <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span class="accent">OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span class="accent">OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span class="accent">OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span class="accent">OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span>
-                    </div>
-                </div>
-            </div>
-
-            <div class="metal-orb orb-1"></div>
-            <div class="metal-orb orb-2"></div>
-            <div class="metal-orb orb-3"></div>
-            <div class="metal-orb orb-4"></div>
-        </div>
         
-        <!-- ЛЕВАЯ ЧАСТЬ (z-index: 3 поверх фона) -->
+        <!-- ЛЕВАЯ ЧАСТЬ -->
         <div class="hero-left">
             <h1 class="hero-title">
                 Разведка данных <br>
@@ -1054,7 +1089,7 @@
             </div>
         </div>
 
-        <!-- ПРАВАЯ ЧАСТЬ (z-index: 3 поверх фона) -->
+        <!-- ПРАВАЯ ЧАСТЬ: СМАРТФОН -->
         <div class="hero-right">
             <div class="mockup-backdrop-glow"></div>
 
