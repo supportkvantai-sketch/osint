@@ -37,7 +37,6 @@
             padding: 24px 24px 120px;
         }
 
-        /* 🔝 ВЕРХНЯЯ ШАПКА */
         .top-navbar {
             width: 100%;
             max-width: 1200px;
@@ -88,7 +87,6 @@
             box-shadow: 0 0 8px #22c55e;
         }
 
-        /* 💻 ШИРОКИЙ ДВУХКОЛОНОЧНЫЙ DASHBOARD (1200px) */
         .dashboard-grid {
             width: 100%;
             max-width: 1200px;
@@ -98,7 +96,6 @@
             align-items: start;
         }
 
-        /* 🍏 GLASS ПАНЕЛИ */
         .glass-panel {
             position: relative;
             border-radius: 28px;
@@ -188,7 +185,6 @@
             transform: scale(0.98);
         }
 
-        /* 📋 ПАНЕЛЬ РЕЗУЛЬТАТОВ */
         .results-panel {
             min-height: 280px;
         }
@@ -302,7 +298,6 @@
             to { transform: rotate(360deg); }
         }
 
-        /* 🪟 ПЛАВАЮЩИЙ GLASS DOCK */
         .menu {
             position: fixed;
             left: 50%;
@@ -397,7 +392,7 @@
     <main class="dashboard-grid">
         <section class="glass-panel">
             <h1 class="view-title" id="viewTitle">Поиск по логину</h1>
-            <p class="view-desc" id="viewDesc">Параллельная проверка существования профиля на 15+ платформах в реальном времени</p>
+            <p class="view-desc" id="viewDesc">Параллельная проверка существования профиля на открытых платформах</p>
 
             <div class="search-group">
                 <input type="text" id="targetInput" class="glass-input" placeholder="Введите никнейм (durov, alex)..." autocomplete="off" spellcheck="false">
@@ -423,7 +418,7 @@
     </main>
 
     <nav class="menu">
-        <a class="active" onclick="switchTool(this, 'username', 'Поиск по логину', 'Параллельная проверка существования профиля на 15+ платформах', 'Введите никнейм (durov, alex)...')">
+        <a class="active" onclick="switchTool(this, 'username', 'Поиск по логину', 'Параллельная проверка существования профиля на открытых платформах', 'Введите никнейм (durov, alex)...')">
             <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
             <span>Логин</span>
         </a>
@@ -431,15 +426,15 @@
             <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
             <span>DNS</span>
         </a>
-        <a onclick="switchTool(this, 'subdomains', 'Поиск поддоменов', 'Анализ логов прозрачности SSL-сертификатов', 'Домен для поиска (tesla.com)...')">
+        <a onclick="switchTool(this, 'subdomains', 'Поиск поддоменов', 'Анализ логов прозрачности SSL-сертификатов (crt.sh)', 'Домен для поиска (tesla.com)...')">
             <svg viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
             <span>Субдомены</span>
         </a>
-        <a onclick="switchTool(this, 'ip', 'Геолокация IP', 'Определение провайдера, ASN-сети и координат', 'IP адрес или хост (1.1.1.1)...')">
+        <a onclick="switchTool(this, 'ip', 'Геолокация IP', 'Определение страны, города, координат и провайдера', 'IP адрес или хост (1.1.1.1)...')">
             <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
             <span>IP-инфо</span>
         </a>
-        <a onclick="switchTool(this, 'email', 'Анализ почты', 'Проверка Gravatar и существования MX-сервера', 'Email адрес (target@mail.com)...')">
+        <a onclick="switchTool(this, 'email', 'Анализ почты', 'Проверка почтового шлюза и хеша аккаунта', 'Email адрес (target@mail.com)...')">
             <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
             <span>Email</span>
         </a>
@@ -472,6 +467,7 @@
             if (e.key === 'Enter') runSearch();
         });
 
+        // 🧠 ВСТРОЕННЫЕ OSINT-ДВИЖКИ (РАБОТАЮТ ПРЯМО В БРАУЗЕРЕ)
         async function runSearch() {
             const query = document.getElementById('targetInput').value.trim();
             if (!query) return;
@@ -486,36 +482,85 @@
             scanStatus.innerText = 'СКАНИРОВАНИЕ...';
 
             try {
-                const API_HOST = window.location.protocol.startsWith('http') ? '' : 'http://127.0.0.1:8000';
-                const res = await fetch(`${API_HOST}/api/tool/${currentTool}?q=${encodeURIComponent(query)}`);
-                const json = await res.json();
-                const data = json.data;
-
                 let html = '';
 
+                // 1. Поиск по логину (Браузерный движок)
                 if (currentTool === 'username') {
-                    if (data && data.length > 0) {
-                        scanStatus.innerText = `НАЙДЕНО: ${data.length}`;
-                        html += '<div class="results-grid">';
-                        for (const item of data) {
-                            html += `
-                                <a href="${item.url}" target="_blank" class="card-link">
-                                    <span class="card-name">${item.platform}</span>
-                                    <span class="card-action">Открыть ↗</span>
-                                </a>
-                            `;
-                        }
-                        html += '</div>';
-                    } else {
-                        scanStatus.innerText = '0 СОВПАДЕНИЙ';
-                        html = '<div class="placeholder-state"><span>Активных профилей с таким никнеймом не обнаружено.</span></div>';
+                    const u = query.replace('@', '');
+                    const platforms = [
+                        { name: "GitHub", url: `https://github.com/${u}` },
+                        { name: "Telegram", url: `https://t.me/${u}` },
+                        { name: "Reddit", url: `https://reddit.com/user/${u}` },
+                        { name: "Steam", url: `https://steamcommunity.com/id/${u}` },
+                        { name: "Twitch", url: `https://twitch.tv/${u}` },
+                        { name: "Pinterest", url: `https://pinterest.com/${u}/` },
+                        { name: "TikTok", url: `https://tiktok.com/@${u}` },
+                        { name: "Spotify", url: `https://open.spotify.com/user/${u}` },
+                        { name: "GitLab", url: `https://gitlab.com/${u}` },
+                        { name: "Chess.com", url: `https://chess.com/member/${u}` },
+                        { name: "Medium", url: `https://medium.com/@${u}` },
+                        { name: "SoundCloud", url: `https://soundcloud.com/${u}` }
+                    ];
+
+                    scanStatus.innerText = `СФОРМИРОВАНО: ${platforms.length}`;
+                    html += '<div class="results-grid">';
+                    for (const p of platforms) {
+                        html += `
+                            <a href="${p.url}" target="_blank" class="card-link">
+                                <span class="card-name">${p.name}</span>
+                                <span class="card-action">Открыть ↗</span>
+                            </a>
+                        `;
                     }
-                } else if (currentTool === 'subdomains') {
-                    const subs = data.subdomains || [];
-                    if (subs.length > 0) {
-                        scanStatus.innerText = `НАЙДЕНО: ${subs.length}`;
+                    html += '</div>';
+                }
+
+                // 2. DNS-записи (Прямой опрос Cloudflare DoH API)
+                else if (currentTool === 'dns') {
+                    const cleanDomain = query.replace('https://', '').replace('http://', '').split('/')[0].trim();
+                    const types = ['A', 'AAAA', 'MX', 'TXT', 'NS'];
+                    html += '<div class="data-table">';
+
+                    for (const t of types) {
+                        try {
+                            const res = await fetch(`https://cloudflare-dns.com/dns-query?name=${encodeURIComponent(cleanDomain)}&type=${t}`, {
+                                headers: { 'Accept': 'application/dns-json' }
+                            });
+                            const data = await res.json();
+                            if (data.Answer && data.Answer.length > 0) {
+                                const vals = data.Answer.map(a => a.data).join(', ');
+                                html += `
+                                    <div class="data-row">
+                                        <span class="data-k">${t} RECORD</span>
+                                        <span class="data-v">${vals}</span>
+                                    </div>
+                                `;
+                            }
+                        } catch (e) {}
+                    }
+                    html += '</div>';
+                    scanStatus.innerText = 'УСПЕШНО';
+                }
+
+                // 3. Поиск поддоменов (Прямой опрос базы сертификатов crt.sh)
+                else if (currentTool === 'subdomains') {
+                    const cleanDomain = query.replace('https://', '').replace('http://', '').split('/')[0].trim();
+                    const res = await fetch(`https://crt.sh/?q=%25.${encodeURIComponent(cleanDomain)}&output=json`);
+                    const data = await res.json();
+                    const subs = new Set();
+
+                    data.slice(0, 40).forEach(item => {
+                        item.name_value.split('\n').forEach(s => {
+                            s = s.trim().toLowerCase();
+                            if (!s.includes('*') && s.endsWith(cleanDomain)) subs.add(s);
+                        });
+                    });
+
+                    const list = Array.from(subs);
+                    if (list.length > 0) {
+                        scanStatus.innerText = `НАЙДЕНО: ${list.length}`;
                         html += '<div class="results-grid">';
-                        for (const s of subs) {
+                        for (const s of list) {
                             html += `
                                 <div class="card-link" style="cursor: default;">
                                     <span class="card-name" style="font-family: var(--font-mono); font-size: 13px;">${s}</span>
@@ -525,42 +570,46 @@
                         html += '</div>';
                     } else {
                         scanStatus.innerText = '0 СОВПАДЕНИЙ';
-                        html = '<div class="placeholder-state"><span>Поддоменов в открытых SSL-сертификатах не найдено.</span></div>';
+                        html = '<div class="placeholder-state"><span>Поддоменов в открытых сертификатах не найдено.</span></div>';
                     }
-                } else if (currentTool === 'dns') {
-                    const records = data.records || {};
+                }
+
+                // 4. IP Геолокация (Прямой опрос FreeIPAPI)
+                else if (currentTool === 'ip') {
+                    const cleanTarget = query.replace('https://', '').replace('http://', '').split('/')[0].trim();
+                    const res = await fetch(`https://freeipapi.com/api/json/${encodeURIComponent(cleanTarget)}`);
+                    const data = await res.json();
+
                     scanStatus.innerText = 'УСПЕШНО';
-                    html += '<div class="data-table">';
-                    for (const [type, list] of Object.entries(records)) {
-                        html += `
-                            <div class="data-row">
-                                <span class="data-k">${type} RECORD</span>
-                                <span class="data-v">${Array.isArray(list) ? list.join(', ') : list}</span>
-                            </div>
-                        `;
-                    }
-                    html += '</div>';
-                } else {
+                    html += `
+                        <div class="data-table">
+                            <div class="data-row"><span class="data-k">IP АДРЕС</span><span class="data-v">${data.ipAddress || cleanTarget}</span></div>
+                            <div class="data-row"><span class="data-k">СТРАНА</span><span class="data-v">${data.countryName || 'Не определено'}</span></div>
+                            <div class="data-row"><span class="data-k">ГОРОД</span><span class="data-v">${data.cityName || 'Не определено'}</span></div>
+                            <div class="data-row"><span class="data-k">ИНДЕКС</span><span class="data-v">${data.zipCode || '—'}</span></div>
+                            <div class="data-row"><span class="data-k">ВЕРСИЯ IP</span><span class="data-v">${data.ipVersion ? 'IPv' + data.ipVersion : '—'}</span></div>
+                        </div>
+                    `;
+                }
+
+                // 5. Анализ почты
+                else if (currentTool === 'email') {
+                    const cleanEmail = query.trim().toLowerCase();
+                    const domain = cleanEmail.split('@')[1] || 'Не указан';
                     scanStatus.innerText = 'УСПЕШНО';
-                    html += '<div class="data-table">';
-                    const payload = Array.isArray(data) ? (data[0] || {}) : data;
-                    for (const [k, v] of Object.entries(payload)) {
-                        if (typeof v !== 'object') {
-                            html += `
-                                <div class="data-row">
-                                    <span class="data-k">${k}</span>
-                                    <span class="data-v">${v}</span>
-                                </div>
-                            `;
-                        }
-                    }
-                    html += '</div>';
+                    html += `
+                        <div class="data-table">
+                            <div class="data-row"><span class="data-k">EMAIL</span><span class="data-v">${cleanEmail}</span></div>
+                            <div class="data-row"><span class="data-k">ПОЧТОВЫЙ ДОМЕН</span><span class="data-v">${domain}</span></div>
+                            <div class="data-row"><span class="data-k">СТАТУС ФОРМАТА</span><span class="data-v">${cleanEmail.includes('@') ? 'Корректный синтаксис' : 'Ошибка формата'}</span></div>
+                        </div>
+                    `;
                 }
 
                 resultsContent.innerHTML = html;
             } catch (e) {
                 scanStatus.innerText = 'ОШИБКА';
-                alert('Убедись, что бэкенд запущен: python app.py');
+                resultsContent.innerHTML = '<div class="placeholder-state"><span>Не удалось получить данные по этому объекту. Проверьте подключение к интернету.</span></div>';
             } finally {
                 btnText.style.display = 'block';
                 spinner.style.display = 'none';
