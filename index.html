@@ -6,20 +6,22 @@
     <title>Sherlock</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <!-- Широкий растянутый шрифт Unbounded -->
     <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;800;900&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
     <style>
         :root {
             --main-color: #f7e479;
             --main-color-opacity: rgba(247, 228, 121, 0.12);
-            --total-radio: 5;
+            --total-radio: 6;
 
-            --bg: #08090c;
-            --surface: rgba(18, 20, 27, 0.6);
+            /* 🌑 ЧИСТЫЙ СЕРЫЙ ГРАФИТ */
+            --bg: #0c0c0e;
+            --surface: rgba(26, 26, 30, 0.65);
             --border: rgba(255, 255, 255, 0.08);
 
             --text-main: #f0f2f5;
-            --text-muted: #525663;
+            --text-muted: #64646e;
 
             --font-stretched: 'Unbounded', sans-serif;
             --font-ui: 'Inter', -apple-system, sans-serif;
@@ -81,7 +83,7 @@
             }
         }
 
-        /* 🪟 ЗАТЕМНЕНИЕ ФОНА ПРИ ОТКРЫТИИ МЕНЮ */
+        /* 🪟 ЗАТЕМНЕНИЕ ФОНА */
         .drawer-overlay {
             position: fixed;
             inset: 0;
@@ -100,39 +102,39 @@
             pointer-events: auto;
         }
 
-        /* 🚫 БОЛЬШЕ НИКАКИХ ТЕНЕЙ ПО БОКАМ: в закрытом виде тень отключена */
+        /* 🚪 БОКОВАЯ ПАНЕЛЬ */
         .side-drawer {
             position: fixed;
             top: 0;
             left: 0;
             bottom: 0;
-            width: 280px;
-            background: rgba(11, 13, 17, 0.98);
+            width: 290px;
+            background: rgba(16, 16, 19, 0.98);
             border-right: 1px solid var(--border);
             backdrop-filter: blur(30px);
             z-index: 110;
-            padding: 32px 20px;
+            padding: 30px 20px;
             display: flex;
             flex-direction: column;
             transform: translateX(-100%);
             visibility: hidden;
-            box-shadow: none; /* Тень полностью выключена */
+            box-shadow: none;
             transition: transform 0.3s var(--ease), visibility 0.3s, box-shadow 0.3s;
         }
 
         .side-drawer.active {
             transform: translateX(0);
             visibility: visible;
-            box-shadow: 20px 0 60px rgba(0, 0, 0, 0.9); /* Появляется ТОЛЬКО когда открыто */
+            box-shadow: 20px 0 60px rgba(0, 0, 0, 0.9);
         }
 
         .drawer-head {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding-bottom: 20px;
+            padding-bottom: 18px;
             border-bottom: 1px solid var(--border);
-            margin-bottom: 20px;
+            margin-bottom: 16px;
         }
 
         .drawer-brand {
@@ -160,9 +162,9 @@
             color: #fff;
         }
 
-        /* 🌟 ЛАЗЕРНЫЙ ГЛАЙДЕР В МЕНЮ */
+        /* 🌟 ЛАЗЕРНЫЙ ГЛАЙДЕР НА 6 ПОЗИЦИЙ */
         .radio-container {
-            --total-radio: 5;
+            --total-radio: 6;
             display: flex;
             flex-direction: column;
             position: relative;
@@ -217,9 +219,9 @@
 
         .radio-container label {
             cursor: pointer;
-            padding: 1rem 1.1rem;
+            padding: 0.85rem 1.1rem;
             position: relative;
-            color: #606472;
+            color: #686873;
             font-size: 13.5px;
             font-weight: 600;
             display: flex;
@@ -246,6 +248,7 @@
         .radio-container input:nth-of-type(3):checked ~ .glider-container .glider { transform: translateY(200%); }
         .radio-container input:nth-of-type(4):checked ~ .glider-container .glider { transform: translateY(300%); }
         .radio-container input:nth-of-type(5):checked ~ .glider-container .glider { transform: translateY(400%); }
+        .radio-container input:nth-of-type(6):checked ~ .glider-container .glider { transform: translateY(500%); }
 
         /* ⎯⎯⎯ РАБОЧАЯ ОБЛАСТЬ ⎯⎯⎯ */
         .workspace {
@@ -303,9 +306,9 @@
             color: rgba(255, 255, 255, 0.25);
         }
 
-        /* 🌟 КНОПКА ПОИСКА: СРАЗУ ГОРИТ */
+        /* 🌟 КНОПКА ПОИСКА */
         .menu-style-btn {
-            background: linear-gradient(90deg, rgba(247, 228, 121, 0.08) 0%, rgba(18, 20, 27, 0.8) 100%);
+            background: linear-gradient(90deg, rgba(247, 228, 121, 0.08) 0%, rgba(26, 26, 30, 0.85) 100%);
             border: 1px solid rgba(247, 228, 121, 0.35);
             border-radius: 10px;
             height: 44px;
@@ -324,7 +327,6 @@
             user-select: none;
         }
 
-        /* 🖱️ ТОЛЬКО НА ПК: ЗАТЕМНЯЕТСЯ ПРИ НАВЕДЕНИИ */
         @media (hover: hover) and (pointer: fine) {
             .menu-style-btn:hover {
                 filter: brightness(0.85);
@@ -332,7 +334,6 @@
             }
         }
 
-        /* 📱 НА ТЕЛЕФОНЕ: ПОЛНАЯ СТАТИЧНОСТЬ */
         @media (hover: none) {
             .menu-style-btn,
             .menu-style-btn:active,
@@ -498,7 +499,7 @@
             left: 50%;
             transform: translateX(-50%);
             background: #ffffff;
-            color: #090a0d;
+            color: #0c0c0e;
             font-size: 12px;
             font-weight: 600;
             padding: 8px 18px;
@@ -535,7 +536,7 @@
 
     <div class="drawer-overlay" id="drawerOverlay" onclick="toggleMenu()"></div>
 
-    <!-- ВЫЕЗЖАЮЩАЯ СЛЕВА ПАНЕЛЬ С ГЛАЙДЕРОМ -->
+    <!-- ВЫЕЗЖАЮЩАЯ СЛЕВА ПАНЕЛЬ (6 ПУНКТОВ) -->
     <aside class="side-drawer" id="sideDrawer">
         <div class="drawer-head">
             <span class="drawer-brand">Инструменты</span>
@@ -554,10 +555,18 @@
                 <span>Субдомены</span>
             </label>
 
-            <input type="radio" id="tool-user" name="osint-radio" value="username" onchange="selectTool(this)">
-            <label for="tool-user">
-                <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                <span>Никнейм</span>
+            <!-- ✈️ ПО TELEGRAM (ВМЕСТО НИКНЕЙМА) -->
+            <input type="radio" id="tool-tg" name="osint-radio" value="telegram" onchange="selectTool(this)">
+            <label for="tool-tg">
+                <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                <span>По TELEGRAM</span>
+            </label>
+
+            <!-- 📞 ПО НОМЕРУ (НОВАЯ ФУНКЦИЯ) -->
+            <input type="radio" id="tool-phone" name="osint-radio" value="phone" onchange="selectTool(this)">
+            <label for="tool-phone">
+                <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                <span>По номеру</span>
             </label>
 
             <input type="radio" id="tool-dns" name="osint-radio" value="dns" onchange="selectTool(this)">
@@ -617,9 +626,13 @@
                 title: 'Субдомены',
                 placeholder: 'Корневой домен (например: spotify.com)...'
             },
-            username: {
-                title: 'Никнейм',
-                placeholder: 'Введите никнейм цели (например: durov)...'
+            telegram: {
+                title: 'По TELEGRAM',
+                placeholder: 'Юзернейм цели (например: durov)...'
+            },
+            phone: {
+                title: 'По номеру',
+                placeholder: 'Номер телефона (например: +79991234567)...'
             },
             dns: {
                 title: 'DNS записи',
@@ -674,6 +687,35 @@
             if (e.key === 'Enter') runInvestigation();
         });
 
+        // Функция парсинга и определения номеров
+        function parsePhoneNumber(raw) {
+            const digits = raw.replace(/\D/g, '');
+            let country = 'Международный / Неизвестно';
+            let formatted = `+${digits}`;
+
+            if (digits.startsWith('7')) {
+                country = digits.length === 11 && digits[1] === '7' ? 'Казахстан' : 'Россия';
+                if (digits.length === 11) {
+                    formatted = `+7 (${digits.slice(1,4)}) ${digits.slice(4,7)}-${digits.slice(7,9)}-${digits.slice(9,11)}`;
+                }
+            } else if (digits.startsWith('380')) {
+                country = 'Украина';
+                formatted = `+380 (${digits.slice(3,5)}) ${digits.slice(5,8)}-${digits.slice(8,10)}-${digits.slice(10,12)}`;
+            } else if (digits.startsWith('375')) {
+                country = 'Беларусь';
+                formatted = `+375 (${digits.slice(3,5)}) ${digits.slice(5,8)}-${digits.slice(8,10)}-${digits.slice(10,12)}`;
+            } else if (digits.startsWith('1')) {
+                country = 'США / Канада';
+                formatted = `+1 (${digits.slice(1,4)}) ${digits.slice(4,7)}-${digits.slice(7,11)}`;
+            } else if (digits.startsWith('44')) {
+                country = 'Великобритания';
+            } else if (digits.startsWith('49')) {
+                country = 'Германия';
+            }
+
+            return { digits, country, formatted };
+        }
+
         async function runInvestigation() {
             const query = document.getElementById('targetInput').value.trim();
             if (!query) return;
@@ -690,7 +732,88 @@
             try {
                 let html = '';
 
-                if (currentTool === 'subdomains') {
+                // ✈️ 1. TELEGRAM
+                if (currentTool === 'telegram') {
+                    const u = query.replace('@', '').trim();
+                    const tgHub = [
+                        { name: "Telegram Профиль", sub: `t.me/${u}`, url: `https://t.me/${u}` },
+                        { name: "Web Просмотр ленты", sub: "Предпросмотр постов", url: `https://t.me/s/${u}` },
+                        { name: "Аналитика TGStat", sub: "Рейтинг канала/чата", url: `https://tgstat.ru/channel/@${u}` },
+                        { name: "Аналитика Telemetr", sub: "Статистика аудитории", url: `https://telemetr.me/channels/?r=${u}` },
+                        { name: "База постов Lyzem", sub: "Глобальный архив", url: `https://lyzem.com/search?q=${u}` },
+                        { name: "Telegram Web Client", sub: "Открыть в браузере", url: `https://web.telegram.org/k/#?tgaddr=tg%3A%2F%2Fresolve%3Fdomain%3D${u}` }
+                    ];
+
+                    statusLine.innerText = `Telegram: @${u}`;
+                    html += '<div class="deck-grid">';
+                    for (const p of tgHub) {
+                        html += `
+                            <a href="${p.url}" target="_blank" rel="noopener noreferrer" class="deck-card">
+                                <div>
+                                    <div style="font-weight: 600;">${p.name}</div>
+                                    <div style="font-size: 11px; color: var(--text-muted); font-family: var(--font-mono); margin-top: 2px;">${p.sub}</div>
+                                </div>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="7" y1="17" x2="17" y2="7"></line>
+                                    <polyline points="7 7 17 7 17 17"></polyline>
+                                </svg>
+                            </a>
+                        `;
+                    }
+                    html += '</div>';
+                }
+                // 📞 2. ПО НОМЕРУ ТЕЛЕФОНА
+                else if (currentTool === 'phone') {
+                    const info = parsePhoneNumber(query);
+                    statusLine.innerText = `Номер: +${info.digits}`;
+
+                    const messengers = [
+                        { name: "WhatsApp Диалог", sub: "wa.me прямой чат", url: `https://wa.me/${info.digits}` },
+                        { name: "Telegram Поиск", sub: "t.me по номеру", url: `https://t.me/+${info.digits}` },
+                        { name: "Viber Чат", sub: "viber direct chat", url: `viber://chat?number=%2B${info.digits}` }
+                    ];
+
+                    html += '<div class="data-table" style="margin-bottom: 12px;">';
+                    const phoneProps = [
+                        ['Страна / Регион', info.country],
+                        ['Форматированный вид', info.formatted],
+                        ['Международный формат', `+${info.digits}`]
+                    ];
+
+                    phoneProps.forEach(([k, v]) => {
+                        html += `
+                            <div class="data-row">
+                                <span class="data-key">${k}</span>
+                                <div class="data-val-group">
+                                    <span class="data-val">${v}</span>
+                                    <button class="copy-btn" onclick="copyData('${v}')">
+                                        <svg viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>
+                                    </button>
+                                </div>
+                            </div>
+                        `;
+                    });
+                    html += '</div>';
+
+                    html += '<div class="deck-grid">';
+                    for (const m of messengers) {
+                        html += `
+                            <a href="${m.url}" target="_blank" rel="noopener noreferrer" class="deck-card">
+                                <div>
+                                    <div style="font-weight: 600;">${m.name}</div>
+                                    <div style="font-size: 11px; color: var(--text-muted); font-family: var(--font-mono); margin-top: 2px;">${m.sub}</div>
+                                </div>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="7" y1="17" x2="17" y2="7"></line>
+                                    <polyline points="7 7 17 7 17 17"></polyline>
+                                </svg>
+                            </a>
+                        `;
+                    }
+                    html += '</div>';
+                }
+                // 🌐 3. СУБДОМЕНЫ
+                else if (currentTool === 'subdomains') {
                     const cleanDomain = query.replace('https://', '').replace('http://', '').split('/')[0].trim();
                     const res = await fetch(`https://crt.sh/?q=%25.${encodeURIComponent(cleanDomain)}&output=json`);
                     const data = await res.json();
@@ -706,7 +829,6 @@
                     const list = Array.from(subSet);
                     if (list.length > 0) {
                         statusLine.innerText = `Найдено: ${list.length} поддоменов`;
-
                         html += '<div class="deck-grid">';
                         for (const sub of list) {
                             html += `
@@ -725,39 +847,7 @@
                         statusLine.innerText = '0 результатов';
                     }
                 }
-                else if (currentTool === 'username') {
-                    const u = query.replace('@', '');
-                    const platforms = [
-                        { name: "GitHub", url: `https://github.com/${u}` },
-                        { name: "Telegram", url: `https://t.me/${u}` },
-                        { name: "Reddit", url: `https://reddit.com/user/${u}` },
-                        { name: "Steam", url: `https://steamcommunity.com/id/${u}` },
-                        { name: "Twitch", url: `https://twitch.tv/${u}` },
-                        { name: "Pinterest", url: `https://pinterest.com/${u}/` },
-                        { name: "TikTok", url: `https://tiktok.com/@${u}` },
-                        { name: "Spotify", url: `https://open.spotify.com/user/${u}` },
-                        { name: "GitLab", url: `https://gitlab.com/${u}` },
-                        { name: "Chess.com", url: `https://chess.com/member/${u}` },
-                        { name: "Medium", url: `https://medium.com/@${u}` },
-                        { name: "SoundCloud", url: `https://soundcloud.com/${u}` }
-                    ];
-
-                    statusLine.innerText = `Платформ: ${platforms.length}`;
-
-                    html += '<div class="deck-grid">';
-                    for (const p of platforms) {
-                        html += `
-                            <a href="${p.url}" target="_blank" rel="noopener noreferrer" class="deck-card">
-                                <span>${p.name}</span>
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
-                                    <line x1="7" y1="17" x2="17" y2="7"></line>
-                                    <polyline points="7 7 17 7 17 17"></polyline>
-                                </svg>
-                            </a>
-                        `;
-                    }
-                    html += '</div>';
-                }
+                // 📡 4. DNS
                 else if (currentTool === 'dns') {
                     const cleanDomain = query.replace('https://', '').replace('http://', '').split('/')[0].trim();
                     const types = ['A', 'AAAA', 'MX', 'TXT', 'NS'];
@@ -796,6 +886,7 @@
                         statusLine.innerText = '0 результатов';
                     }
                 }
+                // 📍 5. IP
                 else if (currentTool === 'ip') {
                     const cleanTarget = query.replace('https://', '').replace('http://', '').split('/')[0].trim();
                     const res = await fetch(`https://freeipapi.com/api/json/${encodeURIComponent(cleanTarget)}`);
@@ -827,6 +918,7 @@
                     });
                     html += '</div>';
                 }
+                // ✉️ 6. EMAIL
                 else if (currentTool === 'email') {
                     const cleanEmail = query.trim().toLowerCase();
                     const domain = cleanEmail.split('@')[1] || '—';
