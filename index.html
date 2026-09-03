@@ -3,208 +3,393 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sherlock</title>
+    <title>Sherlock — OSINT & Cyber Intelligence Console</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --font: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            --mono: 'JetBrains Mono', monospace;
-            --ease: cubic-bezier(0.16, 1, 0.3, 1);
-            --border: rgba(255, 255, 255, 0.08);
-            --border-focus: rgba(255, 255, 255, 0.3);
-            --bg: #07080c;
+            --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --bg-base: #04060a;
+            --bg-surface: rgba(14, 18, 27, 0.65);
+            --bg-card: rgba(18, 24, 38, 0.45);
+            --bg-card-hover: rgba(26, 34, 52, 0.7);
+            --border-subtle: rgba(255, 255, 255, 0.07);
+            --border-medium: rgba(255, 255, 255, 0.14);
+            --border-glow: rgba(56, 189, 248, 0.4);
+            --accent-cyan: #38bdf8;
+            --accent-blue: #6366f1;
+            --accent-emerald: #10b981;
+            --accent-amber: #f59e0b;
+            --accent-rose: #f43f5e;
+            --text-main: #f8fafc;
+            --text-muted: rgba(248, 250, 252, 0.55);
+            --text-dim: rgba(248, 250, 252, 0.3);
+            --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+            --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: var(--font);
+            font-family: var(--font-sans);
             -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background-color: var(--bg);
+            background-color: var(--bg-base);
             background-image: 
-                radial-gradient(circle at 50% 0%, #171d2a 0%, transparent 60%),
-                radial-gradient(circle at 90% 100%, #10141f 0%, transparent 50%),
-                radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
-            background-size: 100% 100%, 100% 100%, 28px 28px;
-            color: #ffffff;
+                radial-gradient(ellipse 90% 60% at 50% -10%, rgba(56, 189, 248, 0.12), transparent 70%),
+                radial-gradient(ellipse 70% 50% at 85% 100%, rgba(99, 102, 241, 0.08), transparent 70%),
+                radial-gradient(rgba(255, 255, 255, 0.04) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 32px 32px;
+            color: var(--text-main);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            position: relative;
             overflow-x: hidden;
+            selection-background-color: var(--accent-cyan);
+            selection-color: #000;
         }
 
-        /* 🔝 ПОЛНОШИРИННЫЙ ВЕРХНИЙ БАР */
+        ::selection {
+            background: rgba(56, 189, 248, 0.3);
+            color: #ffffff;
+        }
+
+        /* 🌐 ТОП-БАР */
         .navbar {
             width: 100%;
-            height: 70px;
-            border-bottom: 1px solid var(--border);
-            background: rgba(10, 12, 18, 0.6);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
+            height: 72px;
+            border-bottom: 1px solid var(--border-subtle);
+            background: rgba(4, 6, 10, 0.7);
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
             position: sticky;
             top: 0;
-            z-index: 40;
+            z-index: 50;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 36px;
+            padding: 0 32px;
         }
 
-        .brand {
+        .brand-container {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .brand-badge {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.2), rgba(99, 102, 241, 0.2));
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.4);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .brand-badge::after {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255,255,255,0.15), transparent);
+            transform: rotate(45deg);
+            animation: brandShine 6s linear infinite;
+        }
+
+        @keyframes brandShine {
+            0% { transform: translateY(-100%) rotate(45deg); }
+            20%, 100% { transform: translateY(100%) rotate(45deg); }
+        }
+
+        .brand-badge svg {
+            width: 20px;
+            height: 20px;
+            stroke: var(--accent-cyan);
+            filter: drop-shadow(0 0 4px var(--accent-cyan));
+        }
+
+        .brand-title-wrap {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .brand-name {
+            font-size: 19px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: linear-gradient(180deg, #ffffff 40%, rgba(255, 255, 255, 0.7));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .brand-tag {
+            font-size: 10px;
+            font-weight: 700;
+            font-family: var(--font-mono);
+            letter-spacing: 0.8px;
+            color: var(--accent-cyan);
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px solid rgba(56, 189, 248, 0.25);
+            padding: 1px 6px;
+            border-radius: 6px;
+            -webkit-text-fill-color: var(--accent-cyan);
+        }
+
+        .brand-subtitle {
+            font-size: 11px;
+            color: var(--text-dim);
+            font-family: var(--font-mono);
+            letter-spacing: 0.2px;
+        }
+
+        .nav-actions {
             display: flex;
             align-items: center;
             gap: 12px;
         }
 
-        .brand-icon {
-            width: 34px;
-            height: 34px;
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.16);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.4);
-        }
-
-        .brand-icon svg {
-            width: 18px;
-            height: 18px;
-            stroke: #ffffff;
-        }
-
-        .brand-name {
-            font-size: 18px;
-            font-weight: 800;
-            letter-spacing: -0.4px;
-        }
-
-        .header-actions {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-        }
-
-        .status-pill {
+        .live-indicator {
             display: inline-flex;
             align-items: center;
-            gap: 7px;
+            gap: 8px;
+            padding: 6px 12px;
+            border-radius: 99px;
+            background: rgba(16, 185, 129, 0.08);
+            border: 1px solid rgba(16, 185, 129, 0.2);
             font-size: 12px;
             font-weight: 600;
-            color: rgba(255, 255, 255, 0.75);
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid var(--border);
-            padding: 6px 14px;
-            border-radius: 99rem;
+            color: var(--accent-emerald);
         }
 
-        .status-dot {
-            width: 6px;
-            height: 6px;
+        .live-dot {
+            width: 7px;
+            height: 7px;
             border-radius: 50%;
-            background: #22c55e;
-            box-shadow: 0 0 8px #22c55e;
+            background: var(--accent-emerald);
+            box-shadow: 0 0 10px var(--accent-emerald);
+            animation: radarPulse 2s ease-in-out infinite;
         }
 
-        /* 🔘 КНОПКА МЕНЮ СПРАВА */
-        .menu-toggle-btn {
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            color: #ffffff;
-            height: 40px;
-            padding: 0 16px;
-            border-radius: 12px;
-            cursor: pointer;
-            display: flex;
+        @keyframes radarPulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.4); opacity: 0.4; }
+        }
+
+        .btn-quick-history {
+            display: inline-flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-medium);
+            padding: 8px 14px;
+            border-radius: 12px;
+            color: var(--text-muted);
             font-size: 13px;
-            font-weight: 700;
-            transition: all 0.2s var(--ease);
-            backdrop-filter: blur(12px);
-            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.2);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s var(--ease-spring);
         }
 
-        .menu-toggle-btn:hover {
-            background: rgba(255, 255, 255, 0.12);
-            border-color: rgba(255, 255, 255, 0.3);
-            transform: scale(1.02);
+        .btn-quick-history:hover {
+            background: rgba(255, 255, 255, 0.08);
+            color: #ffffff;
+            border-color: rgba(255, 255, 255, 0.25);
         }
 
-        .menu-toggle-btn svg {
-            width: 18px;
-            height: 18px;
-            stroke: #ffffff;
+        .btn-quick-history kbd {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 5px;
+            padding: 1px 5px;
+            font-size: 10px;
+            font-family: var(--font-mono);
+            color: var(--text-muted);
         }
 
-        /* 💻 СВОБОДНАЯ РАБОЧАЯ ОБЛАСТЬ (БЕЗ КОРОБОК) */
-        .main-container {
+        /* 🛸 ГЛАВНЫЙ КОНТЕЙНЕР */
+        .main-wrapper {
             width: 100%;
-            max-width: 900px;
+            max-width: 980px;
             margin: 0 auto;
             flex: 1;
-            padding: 50px 24px 80px;
+            padding: 40px 24px 90px;
             display: flex;
             flex-direction: column;
         }
 
-        .tool-intro {
-            margin-bottom: 28px;
+        /* 🎛 ФУТУРИСТИЧНЫЙ ДОК ВЫБОРА ИНСТРУМЕНТОВ */
+        .hud-dock-wrapper {
+            position: relative;
+            background: rgba(14, 20, 32, 0.7);
+            border: 1px solid var(--border-medium);
+            border-radius: 20px;
+            padding: 6px;
+            margin-bottom: 32px;
+            backdrop-filter: blur(20px);
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.15);
+            display: grid;
+            grid-template-columns: repeat(5, 1fr);
+            gap: 6px;
         }
 
-        .tool-title {
-            font-size: 36px;
+        .dock-item {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 14px;
+            border-radius: 14px;
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 13.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s var(--ease-spring);
+            user-select: none;
+            z-index: 2;
+        }
+
+        .dock-item svg {
+            width: 18px;
+            height: 18px;
+            stroke-width: 2.1;
+            transition: transform 0.2s var(--ease-spring), stroke 0.2s;
+        }
+
+        .dock-item .key-num {
+            font-family: var(--font-mono);
+            font-size: 10px;
+            opacity: 0.35;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 4px;
+            padding: 1px 4px;
+            margin-left: 2px;
+        }
+
+        .dock-item:hover {
+            color: #ffffff;
+        }
+
+        .dock-item:hover svg {
+            transform: scale(1.1);
+            stroke: var(--accent-cyan);
+        }
+
+        .dock-item.active {
+            color: #ffffff;
+            background: rgba(56, 189, 248, 0.12);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            box-shadow: 0 4px 20px rgba(56, 189, 248, 0.2), inset 0 1px 1px rgba(255, 255, 255, 0.3);
+        }
+
+        .dock-item.active svg {
+            stroke: var(--accent-cyan);
+            filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.6));
+        }
+
+        .dock-item.active .key-num {
+            opacity: 0.9;
+            color: var(--accent-cyan);
+            border-color: rgba(56, 189, 248, 0.4);
+        }
+
+        /* 💡 ЗАГОЛОВОК И ОПИСАНИЕ СТЕКА */
+        .hero-banner {
+            margin-bottom: 24px;
+            display: flex;
+            align-items: flex-end;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .hero-info {
+            max-width: 650px;
+        }
+
+        .hero-tag {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            color: var(--accent-cyan);
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .hero-title {
+            font-size: 32px;
             font-weight: 800;
             letter-spacing: -0.8px;
-            margin-bottom: 8px;
+            color: #ffffff;
+            line-height: 1.15;
+            margin-bottom: 6px;
         }
 
-        .tool-desc {
-            font-size: 15px;
-            color: rgba(255, 255, 255, 0.5);
+        .hero-desc {
+            font-size: 14.5px;
+            color: var(--text-muted);
             line-height: 1.5;
         }
 
-        /* 🔍 ПОИСКОВАЯ СТРОКА */
-        .search-wrapper {
+        /* 🔎 СТРОКА ГЛОБАЛЬНОГО ПОИСКА */
+        .search-container {
+            position: relative;
+            background: var(--bg-surface);
+            border: 1px solid var(--border-medium);
+            border-radius: 22px;
+            padding: 8px 10px 8px 22px;
+            margin-bottom: 18px;
+            backdrop-filter: blur(32px);
+            box-shadow: 
+                0 25px 60px -15px rgba(0, 0, 0, 0.7),
+                inset 0 1px 1px rgba(255, 255, 255, 0.2);
             display: flex;
             align-items: center;
-            background: rgba(18, 22, 32, 0.6);
-            border: 1px solid rgba(255, 255, 255, 0.14);
-            border-radius: 20px;
-            padding: 8px 10px 8px 22px;
-            margin-bottom: 20px;
-            backdrop-filter: blur(28px);
-            -webkit-backdrop-filter: blur(28px);
-            box-shadow: 
-                0 20px 40px -10px rgba(0, 0, 0, 0.5),
-                inset 0 1px 1px rgba(255, 255, 255, 0.2);
-            transition: all 0.25s var(--ease);
+            transition: all 0.3s var(--ease-spring);
         }
 
-        .search-wrapper:focus-within {
-            border-color: var(--border-focus);
-            background: rgba(22, 28, 40, 0.8);
+        .search-container:focus-within {
+            border-color: rgba(56, 189, 248, 0.6);
+            background: rgba(18, 26, 42, 0.85);
             box-shadow: 
-                0 25px 50px -10px rgba(0, 0, 0, 0.6),
-                0 0 0 1px rgba(255, 255, 255, 0.2),
-                inset 0 1px 1px rgba(255, 255, 255, 0.3);
+                0 30px 70px -15px rgba(0, 0, 0, 0.8),
+                0 0 0 3px rgba(56, 189, 248, 0.15),
+                inset 0 1px 2px rgba(255, 255, 255, 0.3);
         }
 
-        .search-icon {
-            width: 20px;
-            height: 20px;
-            stroke: rgba(255, 255, 255, 0.4);
+        .search-tool-icon {
+            width: 22px;
+            height: 22px;
+            stroke: var(--accent-cyan);
             margin-right: 14px;
             flex-shrink: 0;
+            transition: transform 0.25s var(--ease-bounce);
+        }
+
+        .search-container:focus-within .search-tool-icon {
+            transform: scale(1.15) rotate(-5deg);
         }
 
         .search-input {
@@ -216,188 +401,485 @@
             font-weight: 500;
             outline: none;
             min-width: 0;
+            font-family: var(--font-sans);
         }
 
         .search-input::placeholder {
-            color: rgba(255, 255, 255, 0.28);
+            color: var(--text-dim);
+            font-weight: 400;
         }
 
-        .search-btn {
-            background: #ffffff;
-            color: #06070b;
+        .clear-btn {
+            background: rgba(255, 255, 255, 0.08);
             border: none;
-            border-radius: 14px;
-            padding: 13px 24px;
+            color: var(--text-muted);
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            margin-right: 12px;
+            font-size: 12px;
+            transition: all 0.2s;
+        }
+
+        .clear-btn:hover {
+            background: rgba(255, 255, 255, 0.18);
+            color: #fff;
+        }
+
+        .search-action-btn {
+            background: linear-gradient(135deg, #ffffff, #e2e8f0);
+            color: #05070c;
+            border: none;
+            border-radius: 16px;
+            padding: 13px 26px;
             font-size: 14px;
             font-weight: 700;
             cursor: pointer;
-            transition: all 0.2s var(--ease);
+            transition: all 0.2s var(--ease-spring);
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
             flex-shrink: 0;
-            box-shadow: 0 4px 15px rgba(255, 255, 255, 0.2);
+            box-shadow: 0 6px 20px rgba(255, 255, 255, 0.18);
         }
 
-        .search-btn:hover {
-            background: #f1f5f9;
-            transform: scale(1.02);
-            box-shadow: 0 6px 20px rgba(255, 255, 255, 0.35);
+        .search-action-btn:hover {
+            background: #ffffff;
+            transform: translateY(-1px) scale(1.02);
+            box-shadow: 0 10px 25px rgba(255, 255, 255, 0.3);
         }
 
-        .search-btn:active {
-            transform: scale(0.98);
+        .search-action-btn:active {
+            transform: translateY(1px) scale(0.98);
         }
 
-        .kbd-hint {
-            font-family: var(--mono);
+        .btn-kbd {
+            font-family: var(--font-mono);
             font-size: 11px;
-            opacity: 0.5;
+            background: rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(0, 0, 0, 0.15);
+            border-radius: 5px;
+            padding: 2px 5px;
+            font-weight: 600;
         }
 
-        /* ПРЕСЕТЫ */
-        .presets-row {
+        /* 🔖 БЫСТРЫЕ ПРЕСЕТЫ */
+        .meta-row {
             display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: space-between;
             margin-bottom: 36px;
             flex-wrap: wrap;
-        }
-
-        .preset-title {
-            font-size: 12px;
-            font-weight: 600;
-            color: rgba(255, 255, 255, 0.35);
-            text-transform: uppercase;
-            letter-spacing: 0.6px;
-        }
-
-        .preset-chip {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 6px 12px;
-            font-size: 12px;
-            color: rgba(255, 255, 255, 0.7);
-            cursor: pointer;
-            transition: all 0.15s var(--ease);
-        }
-
-        .preset-chip:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: #ffffff;
-            border-color: rgba(255, 255, 255, 0.25);
-            transform: translateY(-1px);
-        }
-
-        /* 📋 РЕЗУЛЬТАТЫ */
-        .results-section {
-            border-top: 1px solid var(--border);
-            padding-top: 28px;
-        }
-
-        .status-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 12px;
-            font-weight: 700;
-            letter-spacing: 0.8px;
-            text-transform: uppercase;
-            color: rgba(255, 255, 255, 0.4);
-            margin-bottom: 18px;
-        }
-
-        .results-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
             gap: 12px;
         }
 
-        .card-item {
+        .presets-box {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .preset-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: var(--text-dim);
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+        }
+
+        .preset-tag {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 5px 12px;
+            font-size: 12px;
+            font-family: var(--font-mono);
+            color: var(--text-muted);
+            cursor: pointer;
+            transition: all 0.15s var(--ease-spring);
+        }
+
+        .preset-tag:hover {
+            background: rgba(56, 189, 248, 0.1);
+            border-color: rgba(56, 189, 248, 0.3);
+            color: var(--accent-cyan);
+            transform: translateY(-1px);
+        }
+
+        .actions-secondary {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .mini-btn {
+            background: transparent;
+            border: 1px solid var(--border-subtle);
+            border-radius: 8px;
+            padding: 6px 12px;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-muted);
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s;
+        }
+
+        .mini-btn:hover {
+            background: rgba(255, 255, 255, 0.06);
+            color: #ffffff;
+            border-color: var(--border-medium);
+        }
+
+        .mini-btn svg {
+            width: 13px;
+            height: 13px;
+        }
+
+        /* 📊 СЕКЦИЯ РЕЗУЛЬТАТОВ */
+        .results-panel {
+            border-top: 1px solid var(--border-subtle);
+            padding-top: 26px;
+            position: relative;
+        }
+
+        .results-header-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(18, 22, 32, 0.5);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 16px 20px;
-            text-decoration: none;
-            color: #ffffff;
-            backdrop-filter: blur(16px);
-            transition: all 0.2s var(--ease);
-            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.15);
+            margin-bottom: 20px;
         }
 
-        .card-item:hover {
-            transform: translateY(-2px);
-            background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(255, 255, 255, 0.3);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+        .results-headline {
+            display: flex;
+            align-items: center;
+            gap: 12px;
         }
 
-        .card-title {
-            font-size: 14px;
+        .results-title {
+            font-size: 13px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+        }
+
+        .results-badge {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            padding: 3px 9px;
+            border-radius: 99px;
+            background: rgba(56, 189, 248, 0.1);
+            border: 1px solid rgba(56, 189, 248, 0.25);
+            color: var(--accent-cyan);
             font-weight: 600;
         }
 
-        .card-link-text {
+        .results-status-wrap {
+            display: flex;
+            align-items: center;
+            gap: 8px;
             font-size: 12px;
-            color: rgba(255, 255, 255, 0.45);
+            font-family: var(--font-mono);
+            color: var(--text-dim);
         }
 
-        .data-list {
+        .status-led {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--text-dim);
+        }
+
+        .status-led.ready { background: var(--accent-cyan); box-shadow: 0 0 8px var(--accent-cyan); }
+        .status-led.scanning { background: var(--accent-amber); box-shadow: 0 0 8px var(--accent-amber); animation: blink 0.8s infinite; }
+        .status-led.done { background: var(--accent-emerald); box-shadow: 0 0 8px var(--accent-emerald); }
+        .status-led.error { background: var(--accent-rose); box-shadow: 0 0 8px var(--accent-rose); }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+
+        /* 🎴 СЕТКА КАРТОЧЕК */
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 14px;
+        }
+
+        .recon-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 16px 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            text-decoration: none;
+            color: #ffffff;
+            transition: all 0.25s var(--ease-spring);
+            backdrop-filter: blur(16px);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .recon-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: radial-gradient(circle at right center, rgba(56, 189, 248, 0.08), transparent 60%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .recon-card:hover {
+            background: var(--bg-card-hover);
+            border-color: rgba(56, 189, 248, 0.3);
+            transform: translateY(-3px) scale(1.01);
+            box-shadow: 0 14px 30px -10px rgba(0, 0, 0, 0.6), 0 0 20px rgba(56, 189, 248, 0.1);
+        }
+
+        .recon-card:hover::before {
+            opacity: 1;
+        }
+
+        .card-left {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            z-index: 1;
+        }
+
+        .card-service-icon {
+            width: 38px;
+            height: 38px;
+            border-radius: 11px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-medium);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--accent-cyan);
+            flex-shrink: 0;
+        }
+
+        .card-meta {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .card-service-title {
+            font-size: 14.5px;
+            font-weight: 700;
+            letter-spacing: -0.2px;
+        }
+
+        .card-category {
+            font-size: 11px;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+        }
+
+        .card-action-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            transition: all 0.2s;
+            z-index: 1;
+        }
+
+        .recon-card:hover .card-action-btn {
+            background: var(--accent-cyan);
+            border-color: var(--accent-cyan);
+            color: #04060a;
+            transform: scale(1.08);
+            box-shadow: 0 0 12px rgba(56, 189, 248, 0.5);
+        }
+
+        /* 📋 СПИСОК ТАБЛИЧНЫХ ДАННЫХ (DNS / IP / EMAIL) */
+        .data-table-stack {
             display: flex;
             flex-direction: column;
             gap: 10px;
         }
 
-        .data-row {
+        .data-entry-row {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 16px;
+            padding: 16px 22px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(18, 22, 32, 0.5);
-            border: 1px solid var(--border);
-            border-radius: 16px;
-            padding: 16px 22px;
+            gap: 20px;
             backdrop-filter: blur(16px);
-            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.15);
+            transition: all 0.2s var(--ease-spring);
         }
 
-        .data-k {
-            font-size: 13px;
-            font-weight: 500;
-            color: rgba(255, 255, 255, 0.45);
+        .data-entry-row:hover {
+            border-color: var(--border-medium);
+            background: rgba(26, 34, 52, 0.6);
+            transform: translateX(4px);
         }
 
-        .data-v {
-            font-family: var(--mono);
-            font-size: 14px;
+        .data-entry-key {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 13.5px;
+            font-weight: 600;
+            color: var(--text-muted);
+        }
+
+        .type-badge {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            font-weight: 700;
+            padding: 3px 8px;
+            border-radius: 6px;
+            background: rgba(99, 102, 241, 0.15);
+            border: 1px solid rgba(99, 102, 241, 0.3);
+            color: #a5b4fc;
+        }
+
+        .data-entry-val {
+            font-family: var(--font-mono);
+            font-size: 13.5px;
             font-weight: 600;
             color: #ffffff;
-            max-width: 65%;
             text-align: right;
             word-break: break-all;
+            display: flex;
+            align-items: center;
+            gap: 10px;
         }
 
+        .copy-pill {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid var(--border-subtle);
+            border-radius: 6px;
+            padding: 3px 7px;
+            font-size: 11px;
+            color: var(--text-dim);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .copy-pill:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: #ffffff;
+        }
+
+        /* 🗺 ИНФО-БЛОК ДЛЯ IP */
+        .ip-dashboard {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+            margin-bottom: 14px;
+        }
+
+        .ip-stat-card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-subtle);
+            border-radius: 18px;
+            padding: 20px;
+            backdrop-filter: blur(16px);
+        }
+
+        .ip-stat-label {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-dim);
+            margin-bottom: 6px;
+        }
+
+        .ip-stat-value {
+            font-size: 22px;
+            font-weight: 800;
+            letter-spacing: -0.4px;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        /* 🌐 ФИЛЬТР ДЛЯ СУБДОМЕНОВ */
+        .subdomain-filter-bar {
+            margin-bottom: 14px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .sub-filter-input {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            padding: 10px 14px;
+            color: #ffffff;
+            font-size: 13px;
+            font-family: var(--font-mono);
+            outline: none;
+        }
+
+        .sub-filter-input:focus {
+            border-color: var(--accent-cyan);
+        }
+
+        /* ПУСТОЕ СОСТОЯНИЕ */
         .placeholder-state {
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            min-height: 220px;
-            color: rgba(255, 255, 255, 0.3);
+            min-height: 260px;
+            color: var(--text-dim);
             font-size: 14px;
             text-align: center;
-            gap: 10px;
+            gap: 14px;
+            border: 1px dashed var(--border-subtle);
+            border-radius: 20px;
+            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.01);
         }
 
-        .spinner {
+        .placeholder-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-subtle);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+        }
+
+        .spinner-loader {
             display: none;
-            width: 16px;
-            height: 16px;
+            width: 18px;
+            height: 18px;
             border: 2px solid rgba(0, 0, 0, 0.2);
-            border-top-color: #06070b;
+            border-top-color: #04060a;
             border-radius: 50%;
             animation: spin 0.6s linear infinite;
         }
@@ -406,552 +888,884 @@
             to { transform: rotate(360deg); }
         }
 
-        /* ==========================================
-           🪟 ВЫЕЗЖАЮЩЕЕ СПРАВА СТЕКЛЯННОЕ МЕНЮ (DRAWER)
-           ========================================== */
-        .drawer-backdrop {
+        /* 🔔 TOAST NOTIFICATIONS */
+        .toast-container {
             position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(8px);
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s var(--ease);
-            z-index: 90;
+            bottom: 24px;
+            right: 24px;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
         }
 
-        .drawer-backdrop.active {
+        .toast {
+            background: rgba(18, 24, 38, 0.95);
+            border: 1px solid rgba(56, 189, 248, 0.4);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+            backdrop-filter: blur(16px);
+            padding: 12px 18px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            color: #ffffff;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideInToast 0.3s var(--ease-spring);
+        }
+
+        @keyframes slideInToast {
+            from { transform: translateY(20px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        /* 📱 МОДАЛЬНОЕ ОКНО ИСТОРИИ */
+        .modal-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(12px);
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.25s var(--ease-spring);
+            z-index: 200;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .modal-backdrop.active {
             opacity: 1;
             visibility: visible;
         }
 
-        .drawer {
-            position: fixed;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            width: 320px;
-            background: rgba(14, 18, 26, 0.85);
-            border-left: 1px solid rgba(255, 255, 255, 0.15);
-            backdrop-filter: blur(36px) saturate(190%);
-            -webkit-backdrop-filter: blur(36px) saturate(190%);
-            box-shadow: -20px 0 60px rgba(0, 0, 0, 0.7);
-            z-index: 100;
+        .modal-box {
+            background: rgba(14, 18, 28, 0.95);
+            border: 1px solid var(--border-medium);
+            border-radius: 24px;
+            width: 100%;
+            max-width: 520px;
             padding: 24px;
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            transform: translateX(100%);
-            transition: transform 0.35s var(--ease);
+            box-shadow: 0 25px 60px rgba(0,0,0,0.8);
+            transform: scale(0.95);
+            transition: transform 0.25s var(--ease-spring);
         }
 
-        .drawer.active {
-            transform: translateX(0);
+        .modal-backdrop.active .modal-box {
+            transform: scale(1);
         }
 
-        .drawer-header {
+        .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding-bottom: 16px;
-            border-bottom: 1px solid var(--border);
+            margin-bottom: 18px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid var(--border-subtle);
         }
 
-        .drawer-title {
-            font-size: 15px;
-            font-weight: 700;
-            letter-spacing: -0.2px;
+        .modal-title {
+            font-size: 16px;
+            font-weight: 800;
         }
 
-        .close-btn {
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid var(--border);
-            color: #ffffff;
-            width: 32px;
-            height: 32px;
-            border-radius: 8px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 14px;
-            transition: all 0.2s;
-        }
-
-        .close-btn:hover {
-            background: rgba(255, 255, 255, 0.15);
-        }
-
-        /* 🌟 ЛАЗЕРНЫЙ ГЛАЙДЕР ВНУТРИ ВЫЕЗЖАЮЩЕГО МЕНЮ */
-        .radio-container {
-            --main-color: #ffffff;
-            --main-color-opacity: rgba(255, 255, 255, 0.1);
-            --total-radio: 5;
-
+        .history-list {
             display: flex;
             flex-direction: column;
-            position: relative;
-            padding-left: 0.5rem;
-            margin-top: 10px;
+            gap: 8px;
+            max-height: 280px;
+            overflow-y: auto;
         }
 
-        .radio-container input {
-            cursor: pointer;
-            appearance: none;
-            position: absolute;
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .radio-container .glider-container {
-            position: absolute;
-            left: 0;
-            top: 0;
-            bottom: 0;
-            background: linear-gradient(
-                0deg,
-                rgba(0, 0, 0, 0) 0%,
-                rgba(255, 255, 255, 0.15) 50%,
-                rgba(0, 0, 0, 0) 100%
-            );
-            width: 2px;
-        }
-
-        .radio-container .glider-container .glider {
-            position: relative;
-            height: calc(100% / var(--total-radio));
-            width: 100%;
-            background: linear-gradient(
-                0deg,
-                rgba(0, 0, 0, 0) 0%,
-                var(--main-color) 50%,
-                rgba(0, 0, 0, 0) 100%
-            );
-            transition: transform 0.4s var(--ease);
-        }
-
-        .radio-container .glider-container .glider::before {
-            content: "";
-            position: absolute;
-            height: 60%;
-            width: 400%;
-            top: 50%;
-            transform: translateY(-50%);
-            background: var(--main-color);
-            filter: blur(8px);
-            opacity: 0.9;
-        }
-
-        .radio-container .glider-container .glider::after {
-            content: "";
-            position: absolute;
-            left: 0;
-            top: 0;
-            height: 100%;
-            width: 220px;
-            background: linear-gradient(
-                90deg,
-                var(--main-color-opacity) 0%,
-                rgba(0, 0, 0, 0) 100%
-            );
-            pointer-events: none;
-        }
-
-        .radio-container label {
-            cursor: pointer;
-            padding: 1.1rem 1.4rem;
-            position: relative;
-            color: rgba(255, 255, 255, 0.45);
-            font-size: 14px;
-            font-weight: 600;
+        .history-item {
             display: flex;
             align-items: center;
-            gap: 12px;
-            transition: all 0.25s ease-in-out;
-            user-select: none;
+            justify-content: space-between;
+            padding: 10px 14px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-subtle);
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.15s;
         }
 
-        .radio-container label svg {
-            width: 18px;
-            height: 18px;
-            stroke: currentColor;
-            fill: none;
-            stroke-width: 2;
+        .history-item:hover {
+            background: rgba(56, 189, 248, 0.1);
+            border-color: rgba(56, 189, 248, 0.3);
         }
 
-        .radio-container input:checked + label {
-            color: var(--main-color);
-        }
-
-        .radio-container input:checked + label svg {
-            stroke: var(--main-color);
-            filter: drop-shadow(0 0 6px rgba(255, 255, 255, 0.6));
-        }
-
-        .radio-container input:nth-of-type(1):checked ~ .glider-container .glider { transform: translateY(0); }
-        .radio-container input:nth-of-type(2):checked ~ .glider-container .glider { transform: translateY(100%); }
-        .radio-container input:nth-of-type(3):checked ~ .glider-container .glider { transform: translateY(200%); }
-        .radio-container input:nth-of-type(4):checked ~ .glider-container .glider { transform: translateY(300%); }
-        .radio-container input:nth-of-type(5):checked ~ .glider-container .glider { transform: translateY(400%); }
-
-        @media (max-width: 768px) {
-            .navbar { padding: 0 20px; }
-            .status-pill { display: none; }
-            .main-container { padding: 30px 16px 60px; }
-            .tool-title { font-size: 28px; }
-            .drawer { width: 280px; }
+        /* 📱 АДАПТИВНОСТЬ */
+        @media (max-width: 860px) {
+            .navbar { padding: 0 16px; }
+            .main-wrapper { padding: 24px 14px 60px; }
+            .hud-dock-wrapper {
+                grid-template-columns: repeat(3, 1fr);
+            }
+            .hud-dock-wrapper .dock-item:nth-child(4),
+            .hud-dock-wrapper .dock-item:nth-child(5) {
+                grid-column: span 1;
+            }
+            .hero-title { font-size: 26px; }
+            .hero-banner { flex-direction: column; align-items: flex-start; }
+            .ip-dashboard { grid-template-columns: 1fr; }
+            .results-grid { grid-template-columns: 1fr; }
+            .btn-quick-history span { display: none; }
         }
     </style>
 </head>
 <body>
 
-    <!-- 🔝 ВЕРХНИЙ НАВБАР С КНОПКОЙ МЕНЮ СПРАВА -->
+    <!-- 🌐 НАВИГАЦИОННАЯ ПАНЕЛЬ -->
     <header class="navbar">
-        <div class="brand">
-            <div class="brand-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                    <circle cx="11" cy="11" r="8"></circle>
-                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+        <a href="#" class="brand-container">
+            <div class="brand-badge">
+                <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
                 </svg>
             </div>
-            <span class="brand-name">Sherlock</span>
-        </div>
+            <div class="brand-title-wrap">
+                <div class="brand-name">
+                    Sherlock
+                    <span class="brand-tag">OSINT 2.0</span>
+                </div>
+                <span class="brand-subtitle">CYBER INTELLIGENCE SYSTEM</span>
+            </div>
+        </a>
 
-        <div class="header-actions">
-            <div class="status-pill">
-                <span class="status-dot"></span>
-                <span>Система активна</span>
+        <div class="nav-actions">
+            <div class="live-indicator">
+                <span class="live-dot"></span>
+                <span>Онлайн</span>
             </div>
 
-            <!-- Кнопка вызова меню справа -->
-            <button class="menu-toggle-btn" onclick="toggleDrawer()">
-                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="3" y1="12" x2="21" y2="12"></line>
-                    <line x1="3" y1="6" x2="21" y2="6"></line>
-                    <line x1="3" y1="18" x2="21" y2="18"></line>
-                </svg>
-                <span>Меню</span>
+            <button class="btn-quick-history" onclick="toggleHistoryModal()">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                <span>История</span>
+                <kbd>H</kbd>
             </button>
         </div>
     </header>
 
-    <!-- 💻 ПОЛНОРАЗМЕРНАЯ РАБОЧАЯ ЗОНА (БЕЗ КОРОБОК) -->
-    <main class="main-container">
-        <div class="tool-intro">
-            <h1 class="tool-title" id="toolTitle">Поиск по никнейму</h1>
-            <p class="tool-desc" id="toolDesc">Параллельная верификация профиля на 15+ открытых платформах в реальном времени</p>
+    <!-- 🛸 ГЛАВНЫЙ ИНТЕРФЕЙС -->
+    <main class="main-wrapper">
+
+        <!-- 🎛 ФУТУРИСТИЧНЫЙ ДОК МОДУЛЕЙ -->
+        <div class="hud-dock-wrapper" id="dockNav">
+            <button class="dock-item active" data-tool="username" onclick="switchTool('username')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                <span>Логин</span>
+                <span class="key-num">1</span>
+            </button>
+            <button class="dock-item" data-tool="dns" onclick="switchTool('dns')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                <span>DNS Cloud</span>
+                <span class="key-num">2</span>
+            </button>
+            <button class="dock-item" data-tool="subdomains" onclick="switchTool('subdomains')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                <span>Субдомены</span>
+                <span class="key-num">3</span>
+            </button>
+            <button class="dock-item" data-tool="ip" onclick="switchTool('ip')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                <span>IP Инфо</span>
+                <span class="key-num">4</span>
+            </button>
+            <button class="dock-item" data-tool="email" onclick="switchTool('email')">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+                <span>Email MX</span>
+                <span class="key-num">5</span>
+            </button>
         </div>
 
-        <div class="search-wrapper">
-            <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <!-- 💡 БАННЕР ТЕКУЩЕГО МОДУЛЯ -->
+        <div class="hero-banner">
+            <div class="hero-info">
+                <div class="hero-tag" id="heroTag">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><circle cx="12" cy="12" r="10"/></svg>
+                    <span>Модуль глубокой разведки</span>
+                </div>
+                <h1 class="hero-title" id="heroTitle">Поиск по никнейму</h1>
+                <p class="hero-desc" id="heroDesc">Сканирование 20+ платформ, репозиториев кода, форумов и соцсетей в реальном времени</p>
+            </div>
+        </div>
+
+        <!-- 🔎 СТРОКА ВВОДА -->
+        <div class="search-container">
+            <svg class="search-tool-icon" id="searchToolIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                 <circle cx="11" cy="11" r="8"></circle>
                 <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
             </svg>
             <input type="text" id="targetInput" class="search-input" placeholder="Введите никнейм (например: durov)..." autocomplete="off" spellcheck="false">
-            <button class="search-btn" id="searchBtn" onclick="runSearch()">
-                <span id="btnText">Поиск</span>
-                <span class="kbd-hint" id="kbdHint">↵</span>
-                <div class="spinner" id="spinner"></div>
+            <button class="clear-btn" id="clearBtn" onclick="clearInput()">✕</button>
+            <button class="search-action-btn" id="searchActionBtn" onclick="executeInvestigation()">
+                <span id="btnText">Сканировать</span>
+                <span class="btn-kbd" id="btnKbd">↵ Enter</span>
+                <div class="spinner-loader" id="spinnerLoader"></div>
             </button>
         </div>
 
-        <div class="presets-row" id="presetsRow">
-            <span class="preset-title">Примеры:</span>
-            <span class="preset-chip" onclick="applyPreset('durov')">durov</span>
-            <span class="preset-chip" onclick="applyPreset('alex')">alex</span>
-            <span class="preset-chip" onclick="applyPreset('developer')">developer</span>
+        <!-- 🔖 ПРЕСЕТЫ И ЭКСПОРТ -->
+        <div class="meta-row">
+            <div class="presets-box" id="presetsBox">
+                <span class="preset-label">Быстрый тест:</span>
+                <span class="preset-tag" onclick="usePreset('durov')">durov</span>
+                <span class="preset-tag" onclick="usePreset('alex')">alex</span>
+                <span class="preset-tag" onclick="usePreset('satoshi')">satoshi</span>
+            </div>
+
+            <div class="actions-secondary">
+                <button class="mini-btn" onclick="exportData('json')">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" y1="15" x2="12" y2="3"></line></svg>
+                    <span>JSON Экспорт</span>
+                </button>
+                <button class="mini-btn" onclick="copyAllResults()">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    <span>Скопировать</span>
+                </button>
+            </div>
         </div>
 
-        <div class="results-section">
-            <div class="status-header">
-                <span id="resultsCount">Результаты анализа</span>
-                <span id="scanStatus">Готов к работе</span>
-            </div>
-            <div id="resultsContent">
-                <div class="placeholder-state">
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                    <span>Введите цель поиска выше или откройте меню справа для смены инструмента</span>
+        <!-- 📊 ПАНЕЛЬ РЕЗУЛЬТАТОВ -->
+        <section class="results-panel">
+            <div class="results-header-bar">
+                <div class="results-headline">
+                    <span class="results-title" id="resultsTitle">Результаты разведки</span>
+                    <span class="results-badge" id="resultsBadge">0 записей</span>
+                </div>
+                <div class="results-status-wrap">
+                    <span class="status-led ready" id="statusLed"></span>
+                    <span id="statusText">Готов к сканированию</span>
                 </div>
             </div>
-        </div>
+
+            <div id="resultsViewport">
+                <div class="placeholder-state">
+                    <div class="placeholder-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    </div>
+                    <div>
+                        <div style="font-weight: 700; color: #fff; margin-bottom: 4px;">Ожидание целевого объекта</div>
+                        <div>Введите параметр в поисковую строку выше или нажмите быстрый пресет</div>
+                    </div>
+                </div>
+            </div>
+        </section>
     </main>
 
-    <!-- ТЕМНЫЙ ЗАТЕМНИТЕЛЬ ДЛЯ ФОНА -->
-    <div class="drawer-backdrop" id="drawerBackdrop" onclick="toggleDrawer()"></div>
+    <!-- 🔔 КОНТЕЙНЕР ДЛЯ TOAST-УВЕДОМЛЕНИЙ -->
+    <div class="toast-container" id="toastContainer"></div>
 
-    <!-- 🪟 ВЫЕЗЖАЮЩАЯ СПРАВА СТЕКЛЯННАЯ ПАНЕЛЬ С ГЛАЙДЕРОМ -->
-    <aside class="drawer" id="drawer">
-        <div class="drawer-header">
-            <span class="drawer-title">Инструменты разведки</span>
-            <button class="close-btn" onclick="toggleDrawer()">✕</button>
-        </div>
-
-        <div class="radio-container">
-            <input type="radio" id="tab-username" name="osint-tool" value="username" checked onchange="handleTabChange(this)">
-            <label for="tab-username">
-                <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
-                <span>Логин</span>
-            </label>
-
-            <input type="radio" id="tab-dns" name="osint-tool" value="dns" onchange="handleTabChange(this)">
-            <label for="tab-dns">
-                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
-                <span>DNS</span>
-            </label>
-
-            <input type="radio" id="tab-subdomains" name="osint-tool" value="subdomains" onchange="handleTabChange(this)">
-            <label for="tab-subdomains">
-                <svg viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
-                <span>Субдомены</span>
-            </label>
-
-            <input type="radio" id="tab-ip" name="osint-tool" value="ip" onchange="handleTabChange(this)">
-            <label for="tab-ip">
-                <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                <span>IP-инфо</span>
-            </label>
-
-            <input type="radio" id="tab-email" name="osint-tool" value="email" onchange="handleTabChange(this)">
-            <label for="tab-email">
-                <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
-                <span>Email</span>
-            </label>
-
-            <div class="glider-container">
-                <div class="glider"></div>
+    <!-- 📜 МОДАЛЬНОЕ ОКНО ИСТОРИИ -->
+    <div class="modal-backdrop" id="historyModal" onclick="closeModalOnBackdrop(event)">
+        <div class="modal-box">
+            <div class="modal-header">
+                <span class="modal-title">Недавние расследования</span>
+                <button class="mini-btn" onclick="clearSearchHistory()">Очистить</button>
+            </div>
+            <div class="history-list" id="historyList">
+                <!-- Заполняется из JS -->
             </div>
         </div>
-    </aside>
+    </div>
 
     <script>
-        let currentTool = 'username';
+        /* =========================================================================
+           🛠 КОНФИГУРАЦИЯ И БАЗА ИНСТРУМЕНТОВ
+           ========================================================================= */
+        let activeToolKey = 'username';
+        let lastScanData = null;
+        let searchHistory = JSON.parse(localStorage.getItem('sherlock_history') || '[]');
 
-        const toolData = {
+        const toolRegistry = {
             username: {
                 title: 'Поиск по никнейму',
-                desc: 'Параллельная верификация профиля на 15+ открытых платформах в реальном времени',
+                desc: 'Сканирование 20+ платформ, репозиториев кода, форумов и соцсетей в реальном времени',
                 placeholder: 'Введите никнейм (например: durov)...',
-                presets: ['durov', 'alex', 'developer']
+                tag: 'Профиль & Identity',
+                icon: '<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle>',
+                presets: ['durov', 'alex', 'satoshi', 'vitalik']
             },
             dns: {
-                title: 'DNS записи домена',
-                desc: 'Получение A, MX, TXT и NS записей через защищенный шлюз Cloudflare DoH',
-                placeholder: 'Введите домен (например: google.com)...',
-                presets: ['google.com', 'github.com', 'telegram.org']
+                title: 'DNS Cloud Resolving',
+                desc: 'Мгновенное получение A, AAAA, MX, TXT, NS записей через защищенный DoH-шлюз Cloudflare',
+                placeholder: 'Введите домен (например: cloudflare.com)...',
+                tag: 'Сетевой периметр',
+                icon: '<circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>',
+                presets: ['google.com', 'github.com', 'openai.com', 'telegram.org']
             },
             subdomains: {
-                title: 'Поиск поддоменов',
-                desc: 'Парсинг глобальных открытых логов SSL-сертификатов (crt.sh)',
-                placeholder: 'Домен для поиска (например: tesla.com)...',
-                presets: ['tesla.com', 'spotify.com', 'uber.com']
+                title: 'Поиск субдоменов',
+                desc: 'Парсинг прозрачных журналов SSL-сертификатов (Certificate Transparency / crt.sh)',
+                placeholder: 'Домен для поиска (например: spotify.com)...',
+                tag: 'Инфраструктура',
+                icon: '<polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline>',
+                presets: ['uber.com', 'tesla.com', 'spotify.com', 'twitch.tv']
             },
             ip: {
-                title: 'Сведения об IP адресе',
-                desc: 'Определение страны, города, ASN-провайдера и сетевой информации хоста',
+                title: 'Анализ IP и Хоста',
+                desc: 'Геолокация, автономная система ASN, координаты, индекс и данные провайдера',
                 placeholder: 'IP адрес или хост (например: 1.1.1.1)...',
-                presets: ['1.1.1.1', '8.8.8.8', '9.9.9.9']
+                tag: 'Гео & Маршрутизация',
+                icon: '<path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle>',
+                presets: ['1.1.1.1', '8.8.8.8', '9.9.9.9', '140.82.121.4']
             },
             email: {
-                title: 'Анализ почты',
-                desc: 'Проверка синтаксиса, доменной зоны и существования почтового сервера',
-                placeholder: 'Email адрес (например: name@domain.com)...',
-                presets: ['contact@gmail.com', 'support@apple.com']
+                title: 'Валидация Email & MX',
+                desc: 'Проверка синтаксиса, прощупывание MX серверов домена и оценка безопасности',
+                placeholder: 'Email адрес (например: contact@telegram.org)...',
+                tag: 'Почтовый шлюз',
+                icon: '<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline>',
+                presets: ['contact@telegram.org', 'support@github.com', 'security@google.com']
             }
         };
 
-        // Открытие / закрытие выезжающей панели
-        function toggleDrawer() {
-            document.getElementById('drawer').classList.toggle('active');
-            document.getElementById('drawerBackdrop').classList.toggle('active');
-        }
+        const targetInput = document.getElementById('targetInput');
+        const clearBtn = document.getElementById('clearBtn');
 
-        function handleTabChange(radio) {
-            currentTool = radio.value;
-            const t = toolData[currentTool];
-
-            document.getElementById('toolTitle').innerText = t.title;
-            document.getElementById('toolDesc').innerText = t.desc;
-            const input = document.getElementById('targetInput');
-            input.placeholder = t.placeholder;
-            input.value = '';
-            document.getElementById('resultsCount').innerText = 'Результаты анализа';
-            document.getElementById('scanStatus').innerText = 'Готов к работе';
-
-            let presetsHtml = '<span class="preset-title">Примеры:</span>';
-            t.presets.forEach(p => {
-                presetsHtml += `<span class="preset-chip" onclick="applyPreset('${p}')">${p}</span>`;
-            });
-            document.getElementById('presetsRow').innerHTML = presetsHtml;
-
-            document.getElementById('resultsContent').innerHTML = `
-                <div class="placeholder-state">
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
-                    <span>Введите цель поиска выше</span>
-                </div>
-            `;
-            
-            // Автоматически закрываем панель после выбора инструмента
-            setTimeout(toggleDrawer, 180);
-            input.focus();
-        }
-
-        function applyPreset(val) {
-            document.getElementById('targetInput').value = val;
-            runSearch();
-        }
-
-        document.getElementById('targetInput').addEventListener('keydown', function(e) {
-            if (e.key === 'Enter') runSearch();
+        targetInput.addEventListener('input', (e) => {
+            clearBtn.style.display = e.target.value.length > 0 ? 'flex' : 'none';
         });
 
-        async function runSearch() {
-            const query = document.getElementById('targetInput').value.trim();
-            if (!query) return;
+        function clearInput() {
+            targetInput.value = '';
+            clearBtn.style.display = 'none';
+            targetInput.focus();
+        }
+
+        /* =========================================================================
+           🎛 ПЕРЕКЛЮЧЕНИЕ МОДУЛЕЙ
+           ========================================================================= */
+        function switchTool(toolKey) {
+            if (!toolRegistry[toolKey]) return;
+            activeToolKey = toolKey;
+
+            // Обновляем Dock
+            document.querySelectorAll('.dock-item').forEach(btn => {
+                btn.classList.toggle('active', btn.dataset.tool === toolKey);
+            });
+
+            const config = toolRegistry[toolKey];
+            document.getElementById('heroTitle').innerText = config.title;
+            document.getElementById('heroDesc').innerText = config.desc;
+            document.getElementById('heroTag').querySelector('span').innerText = config.tag;
+            document.getElementById('searchToolIcon').innerHTML = config.icon;
+            
+            targetInput.placeholder = config.placeholder;
+            targetInput.value = '';
+            clearBtn.style.display = 'none';
+
+            // Пресеты
+            let presetsHtml = '<span class="preset-label">Быстрый тест:</span>';
+            config.presets.forEach(p => {
+                presetsHtml += `<span class="preset-tag" onclick="usePreset('${p}')">${p}</span>`;
+            });
+            document.getElementById('presetsBox').innerHTML = presetsHtml;
+
+            // Сброс результатов
+            document.getElementById('resultsTitle').innerText = 'Результаты разведки';
+            document.getElementById('resultsBadge').innerText = '0 записей';
+            setLedState('ready', 'Готов к сканированию');
+
+            document.getElementById('resultsViewport').innerHTML = `
+                <div class="placeholder-state">
+                    <div class="placeholder-icon">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    </div>
+                    <div>
+                        <div style="font-weight: 700; color: #fff; margin-bottom: 4px;">Модуль ${config.title} активирован</div>
+                        <div>Введите цель поиска или выберите один из быстрых тестов выше</div>
+                    </div>
+                </div>
+            `;
+
+            targetInput.focus();
+        }
+
+        function usePreset(val) {
+            targetInput.value = val;
+            clearBtn.style.display = 'flex';
+            executeInvestigation();
+        }
+
+        /* =========================================================================
+           🚀 ВЫПОЛНЕНИЕ РАЗВЕДКИ (OSINT ENGINE)
+           ========================================================================= */
+        async function executeInvestigation() {
+            const query = targetInput.value.trim();
+            if (!query) {
+                showToast('Пожалуйста, введите цель для анализа');
+                targetInput.focus();
+                return;
+            }
+
+            saveToHistory(activeToolKey, query);
 
             const btnText = document.getElementById('btnText');
-            const kbdHint = document.getElementById('kbdHint');
-            const spinner = document.getElementById('spinner');
-            const resultsContent = document.getElementById('resultsContent');
-            const resultsCount = document.getElementById('resultsCount');
-            const scanStatus = document.getElementById('scanStatus');
+            const btnKbd = document.getElementById('btnKbd');
+            const spinner = document.getElementById('spinnerLoader');
+            const viewport = document.getElementById('resultsViewport');
 
             btnText.style.display = 'none';
-            kbdHint.style.display = 'none';
+            btnKbd.style.display = 'none';
             spinner.style.display = 'block';
-            scanStatus.innerText = 'Сканирование...';
+            setLedState('scanning', 'Сканирование источников...');
 
             try {
-                let html = '';
-
-                if (currentTool === 'username') {
-                    const u = query.replace('@', '');
-                    const platforms = [
-                        { name: "GitHub", url: `https://github.com/${u}` },
-                        { name: "Telegram", url: `https://t.me/${u}` },
-                        { name: "Reddit", url: `https://reddit.com/user/${u}` },
-                        { name: "Steam", url: `https://steamcommunity.com/id/${u}` },
-                        { name: "Twitch", url: `https://twitch.tv/${u}` },
-                        { name: "Pinterest", url: `https://pinterest.com/${u}/` },
-                        { name: "TikTok", url: `https://tiktok.com/@${u}` },
-                        { name: "Spotify", url: `https://open.spotify.com/user/${u}` },
-                        { name: "GitLab", url: `https://gitlab.com/${u}` },
-                        { name: "Chess.com", url: `https://chess.com/member/${u}` },
-                        { name: "Medium", url: `https://medium.com/@${u}` },
-                        { name: "SoundCloud", url: `https://soundcloud.com/${u}` }
-                    ];
-
-                    resultsCount.innerText = `Найдено профилей: ${platforms.length}`;
-                    scanStatus.innerText = 'Завершено';
-                    html += '<div class="results-grid">';
-                    for (const p of platforms) {
-                        html += `
-                            <a href="${p.url}" target="_blank" class="card-item">
-                                <span class="card-title">${p.name}</span>
-                                <span class="card-link-text">Открыть ↗</span>
-                            </a>
-                        `;
-                    }
-                    html += '</div>';
+                if (activeToolKey === 'username') {
+                    await scanUsername(query, viewport);
+                } else if (activeToolKey === 'dns') {
+                    await scanDNS(query, viewport);
+                } else if (activeToolKey === 'subdomains') {
+                    await scanSubdomains(query, viewport);
+                } else if (activeToolKey === 'ip') {
+                    await scanIP(query, viewport);
+                } else if (activeToolKey === 'email') {
+                    await scanEmail(query, viewport);
                 }
-                else if (currentTool === 'dns') {
-                    const cleanDomain = query.replace('https://', '').replace('http://', '').split('/')[0].trim();
-                    const types = ['A', 'AAAA', 'MX', 'TXT', 'NS'];
-                    html += '<div class="data-list">';
-
-                    for (const t of types) {
-                        try {
-                            const res = await fetch(`https://cloudflare-dns.com/dns-query?name=${encodeURIComponent(cleanDomain)}&type=${t}`, {
-                                headers: { 'Accept': 'application/dns-json' }
-                            });
-                            const data = await res.json();
-                            if (data.Answer && data.Answer.length > 0) {
-                                const vals = data.Answer.map(a => a.data).join(', ');
-                                html += `
-                                    <div class="data-row">
-                                        <span class="data-k">${t} запись</span>
-                                        <span class="data-v">${vals}</span>
-                                    </div>
-                                `;
-                            }
-                        } catch (e) {}
-                    }
-                    html += '</div>';
-                    resultsCount.innerText = `DNS: ${cleanDomain}`;
-                    scanStatus.innerText = 'Завершено';
-                }
-                else if (currentTool === 'subdomains') {
-                    const cleanDomain = query.replace('https://', '').replace('http://', '').split('/')[0].trim();
-                    const res = await fetch(`https://crt.sh/?q=%25.${encodeURIComponent(cleanDomain)}&output=json`);
-                    const data = await res.json();
-                    const subs = new Set();
-
-                    data.slice(0, 40).forEach(item => {
-                        item.name_value.split('\n').forEach(s => {
-                            s = s.trim().toLowerCase();
-                            if (!s.includes('*') && s.endsWith(cleanDomain)) subs.add(s);
-                        });
-                    });
-
-                    const list = Array.from(subs);
-                    if (list.length > 0) {
-                        resultsCount.innerText = `Поддоменов: ${list.length}`;
-                        scanStatus.innerText = 'Завершено';
-                        html += '<div class="results-grid">';
-                        for (const s of list) {
-                            html += `
-                                <div class="card-item" style="cursor: default;">
-                                    <span class="card-title" style="font-family: var(--mono); font-size: 13px;">${s}</span>
-                                </div>
-                            `;
-                        }
-                        html += '</div>';
-                    } else {
-                        resultsCount.innerText = 'Результаты';
-                        scanStatus.innerText = '0 совпадений';
-                        html = '<div class="placeholder-state"><span>Поддоменов в открытых SSL-реестрах не найдено.</span></div>';
-                    }
-                }
-                else if (currentTool === 'ip') {
-                    const cleanTarget = query.replace('https://', '').replace('http://', '').split('/')[0].trim();
-                    const res = await fetch(`https://freeipapi.com/api/json/${encodeURIComponent(cleanTarget)}`);
-                    const data = await res.json();
-
-                    resultsCount.innerText = `IP: ${cleanTarget}`;
-                    scanStatus.innerText = 'Завершено';
-                    html += `
-                        <div class="data-list">
-                            <div class="data-row"><span class="data-k">IP адрес</span><span class="data-v">${data.ipAddress || cleanTarget}</span></div>
-                            <div class="data-row"><span class="data-k">Страна</span><span class="data-v">${data.countryName || '—'}</span></div>
-                            <div class="data-row"><span class="data-k">Город</span><span class="data-v">${data.cityName || '—'}</span></div>
-                            <div class="data-row"><span class="data-k">Индекс</span><span class="data-v">${data.zipCode || '—'}</span></div>
-                            <div class="data-row"><span class="data-k">Версия IP</span><span class="data-v">${data.ipVersion ? 'IPv' + data.ipVersion : '—'}</span></div>
-                        </div>
-                    `;
-                }
-                else if (currentTool === 'email') {
-                    const cleanEmail = query.trim().toLowerCase();
-                    const domain = cleanEmail.split('@')[1] || 'Не указан';
-                    resultsCount.innerText = 'Сведения о почте';
-                    scanStatus.innerText = 'Завершено';
-                    html += `
-                        <div class="data-list">
-                            <div class="data-row"><span class="data-k">Адрес</span><span class="data-v">${cleanEmail}</span></div>
-                            <div class="data-row"><span class="data-k">Почтовый домен</span><span class="data-v">${domain}</span></div>
-                            <div class="data-row"><span class="data-k">Формат синтаксиса</span><span class="data-v">${cleanEmail.includes('@') ? 'Корректный' : 'Ошибка формата'}</span></div>
-                        </div>
-                    `;
-                }
-
-                resultsContent.innerHTML = html;
-            } catch (e) {
-                scanStatus.innerText = 'Ошибка';
-                resultsContent.innerHTML = '<div class="placeholder-state"><span>Не удалось получить данные. Проверьте интернет.</span></div>';
+                setLedState('done', 'Анализ завершен');
+                showToast('Разведка успешно завершена');
+            } catch (err) {
+                console.error(err);
+                setLedState('error', 'Ошибка при запросе');
+                viewport.innerHTML = `
+                    <div class="placeholder-state" style="border-color: rgba(244, 63, 94, 0.3);">
+                        <div style="color: var(--accent-rose); font-weight: 700; font-size: 16px;">Сбой получения данных</div>
+                        <div style="color: var(--text-muted);">${err.message || 'Проверьте соединение с интернетом или корректность ввода.'}</div>
+                    </div>
+                `;
             } finally {
                 btnText.style.display = 'block';
-                kbdHint.style.display = 'inline';
+                btnKbd.style.display = 'inline';
                 spinner.style.display = 'none';
             }
         }
+
+        /* --- 1. USERNAME ENGINE --- */
+        async function scanUsername(username, viewport) {
+            const clean = username.replace(/^@+/, '');
+            const platforms = [
+                { name: 'GitHub', cat: 'Разработка', url: `https://github.com/${clean}`, icon: 'GH' },
+                { name: 'Telegram', cat: 'Мессенджер', url: `https://t.me/${clean}`, icon: 'TG' },
+                { name: 'X / Twitter', cat: 'Соцсеть', url: `https://x.com/${clean}`, icon: '𝕏' },
+                { name: 'Reddit', cat: 'Сообщество', url: `https://reddit.com/user/${clean}`, icon: 'RD' },
+                { name: 'Steam', cat: 'Гейминг', url: `https://steamcommunity.com/id/${clean}`, icon: 'ST' },
+                { name: 'Twitch', cat: 'Стриминг', url: `https://twitch.tv/${clean}`, icon: 'TW' },
+                { name: 'GitLab', cat: 'Разработка', url: `https://gitlab.com/${clean}`, icon: 'GL' },
+                { name: 'Medium', cat: 'Блогинг', url: `https://medium.com/@${clean}`, icon: 'MD' },
+                { name: 'Pinterest', cat: 'Медиа', url: `https://pinterest.com/${clean}/`, icon: 'PT' },
+                { name: 'TikTok', cat: 'Видео', url: `https://tiktok.com/@${clean}`, icon: 'TT' },
+                { name: 'Spotify', cat: 'Музыка', url: `https://open.spotify.com/user/${clean}`, icon: 'SP' },
+                { name: 'SoundCloud', cat: 'Аудио', url: `https://soundcloud.com/${clean}`, icon: 'SC' },
+                { name: 'Chess.com', cat: 'Шахматы', url: `https://chess.com/member/${clean}`, icon: 'CH' },
+                { name: 'Habr', cat: 'Статьи', url: `https://habr.com/ru/users/${clean}/`, icon: 'HB' },
+                { name: 'DockerHub', cat: 'DevOps', url: `https://hub.docker.com/u/${clean}`, icon: 'DH' },
+                { name: 'Dribbble', cat: 'Дизайн', url: `https://dribbble.com/${clean}`, icon: 'DB' }
+            ];
+
+            lastScanData = { type: 'username', target: clean, results: platforms };
+            document.getElementById('resultsTitle').innerText = `Профиль: @${clean}`;
+            document.getElementById('resultsBadge').innerText = `${platforms.length} сервисов`;
+
+            let html = '<div class="results-grid">';
+            platforms.forEach(p => {
+                html += `
+                    <a href="${p.url}" target="_blank" rel="noopener noreferrer" class="recon-card">
+                        <div class="card-left">
+                            <div class="card-service-icon">${p.icon}</div>
+                            <div class="card-meta">
+                                <span class="card-service-title">${p.name}</span>
+                                <span class="card-category">${p.cat}</span>
+                            </div>
+                        </div>
+                        <div class="card-action-btn">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="7" y1="17" x2="17" y2="7"></line><polyline points="7 7 17 7 17 17"></polyline></svg>
+                        </div>
+                    </a>
+                `;
+            });
+            html += '</div>';
+            viewport.innerHTML = html;
+        }
+
+        /* --- 2. DNS ENGINE --- */
+        async function scanDNS(domain, viewport) {
+            const clean = domain.replace(/^https?:\/\//, '').split('/')[0].trim();
+            const types = ['A', 'AAAA', 'MX', 'TXT', 'NS', 'CNAME', 'SOA'];
+            const collected = [];
+
+            for (const t of types) {
+                try {
+                    const res = await fetch(`https://cloudflare-dns.com/dns-query?name=${encodeURIComponent(clean)}&type=${t}`, {
+                        headers: { 'Accept': 'application/dns-json' }
+                    });
+                    const json = await res.json();
+                    if (json.Answer && json.Answer.length > 0) {
+                        json.Answer.forEach(ans => {
+                            collected.push({ type: t, value: ans.data, ttl: ans.TTL });
+                        });
+                    }
+                } catch (e) {}
+            }
+
+            lastScanData = { type: 'dns', domain: clean, records: collected };
+            document.getElementById('resultsTitle').innerText = `DNS Карта: ${clean}`;
+            document.getElementById('resultsBadge').innerText = `${collected.length} записей`;
+
+            if (collected.length === 0) {
+                viewport.innerHTML = `<div class="placeholder-state"><span>DNS записи не найдены или домен не существует.</span></div>`;
+                return;
+            }
+
+            let html = '<div class="data-table-stack">';
+            collected.forEach(item => {
+                html += `
+                    <div class="data-entry-row">
+                        <div class="data-entry-key">
+                            <span class="type-badge">${item.type}</span>
+                            <span>TTL: ${item.ttl}s</span>
+                        </div>
+                        <div class="data-entry-val">
+                            <span>${escapeHtml(item.value)}</span>
+                            <span class="copy-pill" onclick="copySnippet('${escapeHtml(item.value)}')">Копия</span>
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            viewport.innerHTML = html;
+        }
+
+        /* --- 3. SUBDOMAINS ENGINE --- */
+        let currentSubdomainsList = [];
+        async function scanSubdomains(domain, viewport) {
+            const clean = domain.replace(/^https?:\/\//, '').split('/')[0].trim();
+            const res = await fetch(`https://crt.sh/?q=%25.${encodeURIComponent(clean)}&output=json`);
+            if (!res.ok) throw new Error('База SSL-сертификатов crt.sh временно недоступна');
+            
+            const data = await res.json();
+            const subsSet = new Set();
+
+            data.slice(0, 150).forEach(item => {
+                item.name_value.split('\n').forEach(s => {
+                    const val = s.trim().toLowerCase();
+                    if (!val.includes('*') && val.endsWith(clean)) subsSet.add(val);
+                });
+            });
+
+            currentSubdomainsList = Array.from(subsSet).sort();
+            lastScanData = { type: 'subdomains', domain: clean, subdomains: currentSubdomainsList };
+
+            document.getElementById('resultsTitle').innerText = `Субдомены: ${clean}`;
+            document.getElementById('resultsBadge').innerText = `${currentSubdomainsList.length} хостов`;
+
+            if (currentSubdomainsList.length === 0) {
+                viewport.innerHTML = `<div class="placeholder-state"><span>В открытых Certificate Transparency логах поддомены не найдены.</span></div>`;
+                return;
+            }
+
+            renderSubdomainsGrid(currentSubdomainsList);
+        }
+
+        function renderSubdomainsGrid(list) {
+            const viewport = document.getElementById('resultsViewport');
+            let html = `
+                <div class="subdomain-filter-bar">
+                    <input type="text" class="sub-filter-input" placeholder="Быстрая фильтрация по списку (${list.length} поддоменов)..." oninput="filterSubdomains(this.value)">
+                </div>
+                <div class="results-grid" id="subdomainsGrid">
+            `;
+            list.forEach(sub => {
+                html += `
+                    <div class="recon-card" style="cursor: pointer;" onclick="copySnippet('https://${sub}')">
+                        <div class="card-left">
+                            <div class="card-service-icon">🌐</div>
+                            <div class="card-meta">
+                                <span class="card-service-title" style="font-family: var(--font-mono); font-size: 13px;">${sub}</span>
+                                <span class="card-category">SSL Verified</span>
+                            </div>
+                        </div>
+                        <div class="card-action-btn">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                        </div>
+                    </div>
+                `;
+            });
+            html += '</div>';
+            viewport.innerHTML = html;
+        }
+
+        function filterSubdomains(text) {
+            const filtered = currentSubdomainsList.filter(s => s.includes(text.toLowerCase().trim()));
+            const grid = document.getElementById('subdomainsGrid');
+            if (!grid) return;
+            let html = '';
+            filtered.forEach(sub => {
+                html += `
+                    <div class="recon-card" style="cursor: pointer;" onclick="copySnippet('https://${sub}')">
+                        <div class="card-left">
+                            <div class="card-service-icon">🌐</div>
+                            <div class="card-meta">
+                                <span class="card-service-title" style="font-family: var(--font-mono); font-size: 13px;">${sub}</span>
+                                <span class="card-category">SSL Verified</span>
+                            </div>
+                        </div>
+                        <div class="card-action-btn">
+                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                        </div>
+                    </div>
+                `;
+            });
+            grid.innerHTML = html || '<div style="grid-column: 1/-1; text-align: center; color: var(--text-dim); padding: 20px;">Совпадений не найдено</div>';
+        }
+
+        /* --- 4. IP GEOLOCATION ENGINE --- */
+        async function scanIP(ipTarget, viewport) {
+            const clean = ipTarget.replace(/^https?:\/\//, '').split('/')[0].trim();
+            const res = await fetch(`https://freeipapi.com/api/json/${encodeURIComponent(clean)}`);
+            const d = await res.json();
+
+            lastScanData = { type: 'ip', target: clean, data: d };
+            document.getElementById('resultsTitle').innerText = `Инфо о Хосте: ${d.ipAddress || clean}`;
+            document.getElementById('resultsBadge').innerText = d.countryCode || 'IP';
+
+            let mapLink = (d.latitude && d.longitude) 
+                ? `https://www.google.com/maps?q=${d.latitude},${d.longitude}` 
+                : '#';
+
+            let html = `
+                <div class="ip-dashboard">
+                    <div class="ip-stat-card">
+                        <div class="ip-stat-label">Локация / Страна</div>
+                        <div class="ip-stat-value">
+                            <span>${d.countryName || 'Неизвестно'}</span>
+                            <span style="font-size: 14px; color: var(--accent-cyan); font-family: var(--font-mono);">(${d.countryCode || '—'})</span>
+                        </div>
+                    </div>
+                    <div class="ip-stat-card">
+                        <div class="ip-stat-label">Город и Регион</div>
+                        <div class="ip-stat-value">
+                            <span>${d.cityName || '—'}</span>
+                            <span style="font-size: 13px; color: var(--text-muted); font-family: var(--font-mono); font-weight: 500;">${d.regionName || ''}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="data-table-stack">
+                    <div class="data-entry-row">
+                        <span class="data-entry-key"><span class="type-badge">IP</span> IP Адрес</span>
+                        <div class="data-entry-val">${d.ipAddress || clean} <span class="copy-pill" onclick="copySnippet('${d.ipAddress || clean}')">Копия</span></div>
+                    </div>
+                    <div class="data-entry-row">
+                        <span class="data-entry-key"><span class="type-badge">VER</span> Версия протокола</span>
+                        <div class="data-entry-val">IPv${d.ipVersion || '4'}</div>
+                    </div>
+                    <div class="data-entry-row">
+                        <span class="data-entry-key"><span class="type-badge">ZIP</span> Почтовый индекс</span>
+                        <div class="data-entry-val">${d.zipCode || '—'}</div>
+                    </div>
+                    <div class="data-entry-row">
+                        <span class="data-entry-key"><span class="type-badge">GEO</span> Координаты (Lat / Long)</span>
+                        <div class="data-entry-val">
+                            <span>${d.latitude || '0'}, ${d.longitude || '0'}</span>
+                            ${d.latitude ? `<a href="${mapLink}" target="_blank" class="copy-pill" style="text-decoration:none; color:var(--accent-cyan);">Google Maps ↗</a>` : ''}
+                        </div>
+                    </div>
+                    <div class="data-entry-row">
+                        <span class="data-entry-key"><span class="type-badge">TZ</span> Часовой пояс</span>
+                        <div class="data-entry-val">${d.timeZones ? d.timeZones[0] : '—'}</div>
+                    </div>
+                </div>
+            `;
+            viewport.innerHTML = html;
+        }
+
+        /* --- 5. EMAIL MX & SYNTAX ENGINE --- */
+        async function scanEmail(emailStr, viewport) {
+            const clean = emailStr.trim().toLowerCase();
+            const isValidSyntax = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(clean);
+            const domain = clean.includes('@') ? clean.split('@')[1] : '';
+
+            let mxRecords = [];
+            if (domain) {
+                try {
+                    const res = await fetch(`https://cloudflare-dns.com/dns-query?name=${encodeURIComponent(domain)}&type=MX`, {
+                        headers: { 'Accept': 'application/dns-json' }
+                    });
+                    const json = await res.json();
+                    if (json.Answer) mxRecords = json.Answer.map(a => a.data);
+                } catch(e) {}
+            }
+
+            lastScanData = { type: 'email', email: clean, valid: isValidSyntax, domain, mx: mxRecords };
+            document.getElementById('resultsTitle').innerText = `Почтовый аудит: ${clean}`;
+            document.getElementById('resultsBadge').innerText = isValidSyntax ? 'Синтаксис OK' : 'Ошибка структуры';
+
+            let html = `
+                <div class="data-table-stack">
+                    <div class="data-entry-row">
+                        <span class="data-entry-key"><span class="type-badge">ADDR</span> Email цель</span>
+                        <div class="data-entry-val">${clean}</div>
+                    </div>
+                    <div class="data-entry-row">
+                        <span class="data-entry-key"><span class="type-badge">SYNTAX</span> Валидация формата</span>
+                        <div class="data-entry-val" style="color: ${isValidSyntax ? 'var(--accent-emerald)' : 'var(--accent-rose)'};">
+                            ${isValidSyntax ? '✓ Корректный RFC-формат' : '✕ Ошибка синтаксиса'}
+                        </div>
+                    </div>
+                    <div class="data-entry-row">
+                        <span class="data-entry-key"><span class="type-badge">DOMAIN</span> Почтовый шлюз домена</span>
+                        <div class="data-entry-val">${domain || 'Не указан'}</div>
+                    </div>
+                    <div class="data-entry-row">
+                        <span class="data-entry-key"><span class="type-badge">MX</span> MX Серверы Доставки</span>
+                        <div class="data-entry-val" style="color: ${mxRecords.length > 0 ? 'var(--accent-emerald)' : 'var(--accent-amber)'};">
+                            ${mxRecords.length > 0 ? mxRecords.join('<br>') : 'MX записи не обнаружены'}
+                        </div>
+                    </div>
+                </div>
+            `;
+            viewport.innerHTML = html;
+        }
+
+        /* =========================================================================
+           🛠 УТИЛИТЫ И ВСПОМОГАТЕЛЬНЫЕ ФУНКЦИИ
+           ========================================================================= */
+        function setLedState(state, text) {
+            const led = document.getElementById('statusLed');
+            const statusText = document.getElementById('statusText');
+            led.className = 'status-led ' + state;
+            statusText.innerText = text;
+        }
+
+        function showToast(msg) {
+            const container = document.getElementById('toastContainer');
+            const toast = document.createElement('div');
+            toast.className = 'toast';
+            toast.innerHTML = `
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent-cyan)" stroke-width="2.5"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path><polyline points="22 4 12 14.01 9 11.01"></polyline></svg>
+                <span>${msg}</span>
+            `;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.style.opacity = '0';
+                toast.style.transform = 'translateY(10px)';
+                toast.style.transition = 'all 0.3s';
+                setTimeout(() => toast.remove(), 300);
+            }, 2600);
+        }
+
+        function copySnippet(text) {
+            navigator.clipboard.writeText(text);
+            showToast('Скопировано: ' + text);
+        }
+
+        function copyAllResults() {
+            if (!lastScanData) {
+                showToast('Нет данных для копирования');
+                return;
+            }
+            navigator.clipboard.writeText(JSON.stringify(lastScanData, null, 2));
+            showToast('Все результаты скопированы в буфер (JSON)');
+        }
+
+        function exportData(format) {
+            if (!lastScanData) {
+                showToast('Сначала выполните поиск для экспорта');
+                return;
+            }
+            const blob = new Blob([JSON.stringify(lastScanData, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `sherlock_${lastScanData.type}_${Date.now()}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showToast('Файл отчёта успешно загружен');
+        }
+
+        /* --- ИСТОРИЯ ПОИСКА --- */
+        function saveToHistory(tool, query) {
+            searchHistory.unshift({ tool, query, time: new Date().toLocaleTimeString() });
+            if (searchHistory.length > 20) searchHistory.pop();
+            localStorage.setItem('sherlock_history', JSON.stringify(searchHistory));
+            renderHistoryModal();
+        }
+
+        function renderHistoryModal() {
+            const list = document.getElementById('historyList');
+            if (searchHistory.length === 0) {
+                list.innerHTML = '<div style="text-align: center; color: var(--text-dim); padding: 20px;">История пуста</div>';
+                return;
+            }
+            let html = '';
+            searchHistory.forEach((h, idx) => {
+                html += `
+                    <div class="history-item" onclick="loadFromHistory('${h.tool}', '${h.query}')">
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <span class="type-badge">${h.tool.toUpperCase()}</span>
+                            <span style="font-weight:600; font-family:var(--font-mono);">${escapeHtml(h.query)}</span>
+                        </div>
+                        <span style="font-size:11px; color:var(--text-dim); font-family:var(--font-mono);">${h.time}</span>
+                    </div>
+                `;
+            });
+            list.innerHTML = html;
+        }
+
+        function loadFromHistory(tool, query) {
+            toggleHistoryModal();
+            switchTool(tool);
+            targetInput.value = query;
+            executeInvestigation();
+        }
+
+        function clearSearchHistory() {
+            searchHistory = [];
+            localStorage.removeItem('sherlock_history');
+            renderHistoryModal();
+            showToast('История очищена');
+        }
+
+        function toggleHistoryModal() {
+            renderHistoryModal();
+            document.getElementById('historyModal').classList.toggle('active');
+        }
+
+        function closeModalOnBackdrop(e) {
+            if (e.target.id === 'historyModal') toggleHistoryModal();
+        }
+
+        function escapeHtml(str) {
+            if (!str) return '';
+            return String(str).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        }
+
+        /* =========================================================================
+           ⌨️ ГОРЯЧИЕ КЛАВИШИ (KEYBOARD SHORTCUTS)
+           ========================================================================= */
+        window.addEventListener('keydown', (e) => {
+            // Enter для поиска
+            if (e.key === 'Enter' && document.activeElement === targetInput) {
+                executeInvestigation();
+            }
+            // Шорткат H для истории
+            if ((e.key === 'h' || e.key === 'р') && document.activeElement !== targetInput) {
+                e.preventDefault();
+                toggleHistoryModal();
+            }
+            // Цифры 1-5 для смены инструментов
+            if (['1', '2', '3', '4', '5'].includes(e.key) && document.activeElement !== targetInput) {
+                const tools = ['username', 'dns', 'subdomains', 'ip', 'email'];
+                switchTool(tools[parseInt(e.key) - 1]);
+            }
+            // Escape для закрытия окон
+            if (e.key === 'Escape') {
+                document.getElementById('historyModal').classList.remove('active');
+            }
+        });
     </script>
 </body>
 </html>
