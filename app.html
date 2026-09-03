@@ -1,0 +1,567 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sherlock Intelligence</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --font-main: 'Plus Jakarta Sans', -apple-system, sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: var(--font-main);
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            background-color: #07090e;
+            background-image: 
+                radial-gradient(circle at 50% 10%, #151a24 0%, transparent 60%),
+                radial-gradient(circle at 80% 90%, #0d1017 0%, transparent 50%),
+                radial-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+            background-size: 100% 100%, 100% 100%, 28px 28px;
+            color: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 30px 16px 120px;
+            position: relative;
+        }
+
+        /* 🔝 ВЕРХНЯЯ ПАНЕЛЬ И ЛОГОТИП */
+        .top-navbar {
+            width: 100%;
+            max-width: 520px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 28px;
+        }
+
+        .brand-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .brand-svg {
+            width: 22px;
+            height: 22px;
+            stroke: #ffffff;
+        }
+
+        .brand-name {
+            font-size: 18px;
+            font-weight: 800;
+            letter-spacing: -0.4px;
+            color: #ffffff;
+        }
+
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            color: rgba(255, 255, 255, 0.6);
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 4px 10px;
+            border-radius: 99rem;
+        }
+
+        .status-dot {
+            width: 5px;
+            height: 5px;
+            border-radius: 50%;
+            background: #22c55e;
+            box-shadow: 0 0 8px #22c55e;
+        }
+
+        /* 🍏 ОСНОВНОЙ GLASS-КОНТЕЙНЕР */
+        .glass-card {
+            width: 100%;
+            max-width: 520px;
+            position: relative;
+            border-radius: 28px;
+            background: 
+                linear-gradient(150deg, rgba(17, 21, 30, 0.75) 0%, rgba(9, 11, 16, 0.9) 100%) padding-box,
+                linear-gradient(135deg, 
+                    rgba(255, 255, 255, 0.8) 0%, 
+                    rgba(255, 255, 255, 0.25) 30%, 
+                    rgba(255, 255, 255, 0.02) 60%, 
+                    rgba(255, 255, 255, 0.35) 100%) border-box;
+            border: 1px solid transparent;
+            backdrop-filter: blur(30px);
+            -webkit-backdrop-filter: blur(30px);
+            box-shadow: 
+                0 30px 60px -15px rgba(0, 0, 0, 0.9),
+                inset 0 1px 1px 0 rgba(255, 255, 255, 0.4),
+                inset 0 -1px 1px 0 rgba(255, 255, 255, 0.1);
+            padding: 32px 26px;
+        }
+
+        .view-title {
+            font-size: 24px;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 6px;
+        }
+
+        .view-desc {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.45);
+            margin-bottom: 22px;
+            line-height: 1.4;
+        }
+
+        /* ПОИСКОВАЯ СТРОКА */
+        .search-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 24px;
+        }
+
+        .glass-input {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.45);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 16px;
+            padding: 15px 18px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #ffffff;
+            outline: none;
+            transition: all 0.2s ease;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .glass-input:focus {
+            border-color: rgba(255, 255, 255, 0.45);
+            background: rgba(0, 0, 0, 0.65);
+            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2);
+        }
+
+        .glass-input::placeholder {
+            color: rgba(255, 255, 255, 0.25);
+        }
+
+        .search-btn {
+            background: #ffffff;
+            color: #07090e;
+            border: none;
+            border-radius: 16px;
+            padding: 0 22px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s var(--ease-spring);
+            box-shadow: 0 8px 20px rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
+        }
+
+        .search-btn:hover {
+            transform: scale(1.02);
+            box-shadow: 0 10px 25px rgba(255, 255, 255, 0.35);
+        }
+
+        .search-btn:active {
+            transform: scale(0.98);
+        }
+
+        /* 📋 РЕЗУЛЬТАТЫ */
+        .results-wrapper {
+            display: none;
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding-top: 20px;
+            animation: fadeIn 0.3s var(--ease-spring);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .results-header {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 0.8px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.4);
+            margin-bottom: 12px;
+        }
+
+        .results-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
+            gap: 10px;
+        }
+
+        .card-link {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: 
+                linear-gradient(rgba(0, 0, 0, 0.35), rgba(0, 0, 0, 0.45)) padding-box,
+                linear-gradient(135deg, rgba(255, 255, 255, 0.14), rgba(255, 255, 255, 0.02)) border-box;
+            border: 1px solid transparent;
+            border-radius: 14px;
+            padding: 13px 16px;
+            text-decoration: none;
+            color: #ffffff;
+            transition: all 0.2s var(--ease-spring);
+        }
+
+        .card-link:hover {
+            transform: translateY(-2px);
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(255, 255, 255, 0.35);
+        }
+
+        .card-name {
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .card-action {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .data-table {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            width: 100%;
+        }
+
+        .data-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 12px;
+            padding: 12px 16px;
+        }
+
+        .data-k {
+            font-size: 12px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.4);
+            text-transform: uppercase;
+        }
+
+        .data-v {
+            font-family: var(--font-mono);
+            font-size: 13px;
+            font-weight: 600;
+            color: #ffffff;
+            max-width: 65%;
+            text-align: right;
+            word-break: break-all;
+        }
+
+        .empty-card {
+            background: rgba(0, 0, 0, 0.25);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            padding: 22px;
+            text-align: center;
+            color: rgba(255, 255, 255, 0.45);
+            font-size: 13px;
+        }
+
+        .spinner {
+            display: none;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(0, 0, 0, 0.2);
+            border-top-color: #07090e;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* 🪟 ПЛАВАЮЩИЙ GLASS-DOCK МЕНЮ (ПО ТВОЕМУ CSS-ШАБЛОНУ) */
+        .menu {
+            position: fixed;
+            left: 50%;
+            bottom: 20px;
+            transform: translateX(-50%);
+            width: calc(100% - 24px);
+            max-width: 520px;
+            backdrop-filter: blur(16px) saturate(180%) contrast(150%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%) contrast(150%);
+            background: rgba(14, 18, 26, 0.65);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            box-shadow: 
+                0 20px 40px rgba(0, 0, 0, 0.7),
+                inset 0 1px 1px rgba(255, 255, 255, 0.4),
+                inset 0 -1px 1px rgba(255, 255, 255, 0.1);
+            padding: 6px;
+            border-radius: 99rem;
+            display: flex;
+            justify-content: center;
+            gap: 6px;
+            z-index: 100;
+        }
+
+        .menu::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            border-radius: inherit;
+            box-shadow:
+                inset 2px 2px 5px -2px rgba(255, 255, 255, 0.3),
+                inset -2px -2px 5px 2px rgba(255, 255, 255, 0.05),
+                inset 0 -2px 0 rgba(255, 255, 255, 0.1);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .menu a {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1 1 0;
+            min-width: 0;
+            color: rgba(255, 255, 255, 0.5);
+            text-decoration: none;
+            padding: 9px 4px;
+            border-radius: 999rem;
+            cursor: pointer;
+            -webkit-tap-highlight-color: transparent;
+            transition:
+                background 0.18s var(--ease-spring),
+                color 0.18s var(--ease-spring),
+                transform 0.18s var(--ease-spring),
+                box-shadow 0.3s ease-in-out;
+        }
+
+        .menu a:hover {
+            color: #ffffff;
+            background-color: rgba(255, 255, 255, 0.08);
+            box-shadow:
+                inset 1px 1px 3px rgba(255, 255, 255, 0.2),
+                inset 0 -1px 0 rgba(255, 255, 255, 0.1);
+        }
+
+        .menu a svg {
+            width: 1.25rem;
+            height: 1.25rem;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
+        .menu a span {
+            font-size: 0.72rem;
+            font-weight: 600;
+            line-height: 1;
+            margin-top: 4px;
+        }
+
+        .menu a.active {
+            background: rgba(255, 255, 255, 0.18);
+            color: #ffffff;
+            box-shadow: 
+                inset 0 1px 1px rgba(255, 255, 255, 0.5),
+                0 4px 12px rgba(0, 0, 0, 0.4);
+        }
+
+        .menu a:active {
+            transform: scale(0.96);
+        }
+    </style>
+</head>
+<body>
+
+    <!-- 🔝 ВЕРХНЯЯ ШАПКА -->
+    <header class="top-navbar">
+        <div class="brand-header">
+            <svg class="brand-svg" viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <circle cx="11" cy="11" r="8"></circle>
+                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                <circle cx="11" cy="11" r="3"></circle>
+            </svg>
+            <span class="brand-name">Sherlock</span>
+        </div>
+        <div class="status-badge">
+            <span class="status-dot"></span>
+            <span>OSINT Online</span>
+        </div>
+    </header>
+
+    <!-- 🍏 ГЛАВНЫЙ ИНСТРУМЕНТ -->
+    <main class="glass-card">
+        <h1 class="view-title" id="viewTitle">Поиск по логину</h1>
+        <p class="view-desc" id="viewDesc">Параллельная проверка существования профиля на 15+ платформах</p>
+
+        <div class="search-group">
+            <input type="text" id="targetInput" class="glass-input" placeholder="Введите никнейм (durov, alex)..." autocomplete="off" spellcheck="false">
+            <button class="search-btn" id="searchBtn" onclick="runSearch()">
+                <span id="btnText">Найти</span>
+                <div class="spinner" id="spinner"></div>
+            </button>
+        </div>
+
+        <div class="results-wrapper" id="resultsWrapper"></div>
+    </main>
+
+    <!-- 🪟 ПЛАВАЮЩИЙ GLASS DOCK (НАВИГАЦИЯ С SVG) -->
+    <nav class="menu">
+        <a class="active" onclick="switchTool(this, 'username', 'Поиск по логину', 'Параллельная проверка существования профиля на 15+ платформах', 'Введите никнейм (durov, alex)...')">
+            <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            <span>Логин</span>
+        </a>
+        <a onclick="switchTool(this, 'dns', 'DNS и сеть домена', 'Проверка A, MX, TXT и NS записей через Cloudflare DNS', 'Введите домен (google.com)...')">
+            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+            <span>DNS</span>
+        </a>
+        <a onclick="switchTool(this, 'subdomains', 'Поиск поддоменов', 'Анализ логов прозрачности SSL-сертификатов', 'Домен для поиска (tesla.com)...')">
+            <svg viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+            <span>Субдомены</span>
+        </a>
+        <a onclick="switchTool(this, 'ip', 'Геолокация IP', 'Определение провайдера, ASN-сети и координат', 'IP адрес или хост (1.1.1.1)...')">
+            <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+            <span>IP-инфо</span>
+        </a>
+        <a onclick="switchTool(this, 'email', 'Анализ почты', 'Проверка Gravatar и существования MX-сервера', 'Email адрес (target@mail.com)...')">
+            <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
+            <span>Email</span>
+        </a>
+    </nav>
+
+    <script>
+        let currentTool = 'username';
+
+        function switchTool(btn, tool, title, desc, placeholder) {
+            document.querySelectorAll('.menu a').forEach(el => el.classList.remove('active'));
+            btn.classList.add('active');
+            currentTool = tool;
+
+            document.getElementById('viewTitle').innerText = title;
+            document.getElementById('viewDesc').innerText = desc;
+            const input = document.getElementById('targetInput');
+            input.placeholder = placeholder;
+            input.value = '';
+            document.getElementById('resultsWrapper').style.display = 'none';
+            input.focus();
+        }
+
+        document.getElementById('targetInput').addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') runSearch();
+        });
+
+        async function runSearch() {
+            const query = document.getElementById('targetInput').value.trim();
+            if (!query) return;
+
+            const btnText = document.getElementById('btnText');
+            const spinner = document.getElementById('spinner');
+            const resultsWrapper = document.getElementById('resultsWrapper');
+
+            btnText.style.display = 'none';
+            spinner.style.display = 'block';
+            resultsWrapper.style.display = 'none';
+
+            try {
+                const res = await fetch(`/api/tool/${currentTool}?q=${encodeURIComponent(query)}`);
+                const json = await res.json();
+                const data = json.data;
+
+                let html = '';
+
+                if (currentTool === 'username') {
+                    if (data && data.length > 0) {
+                        html += `<div class="results-header">Найдено профилей: ${data.length}</div>`;
+                        html += '<div class="results-grid">';
+                        for (const item of data) {
+                            html += `
+                                <a href="${item.url}" target="_blank" class="card-link">
+                                    <span class="card-name">${item.platform}</span>
+                                    <span class="card-action">Открыть ↗</span>
+                                </a>
+                            `;
+                        }
+                        html += '</div>';
+                    } else {
+                        html = '<div class="empty-card">Активных профилей с таким никнеймом не обнаружено.</div>';
+                    }
+                } else if (currentTool === 'subdomains') {
+                    const subs = data.subdomains || [];
+                    if (subs.length > 0) {
+                        html += `<div class="results-header">Обнаружено поддоменов: ${subs.length}</div>`;
+                        html += '<div class="results-grid">';
+                        for (const s of subs) {
+                            html += `
+                                <div class="card-link" style="cursor: default;">
+                                    <span class="card-name" style="font-family: var(--font-mono); font-size: 12px;">${s}</span>
+                                </div>
+                            `;
+                        }
+                        html += '</div>';
+                    } else {
+                        html = '<div class="empty-card">Поддоменов в публичных сертификатах не найдено.</div>';
+                    }
+                } else if (currentTool === 'dns') {
+                    const records = data.records || {};
+                    html += '<div class="results-header">DNS-записи домена</div><div class="data-table">';
+                    for (const [type, list] of Object.entries(records)) {
+                        html += `
+                            <div class="data-row">
+                                <span class="data-k">${type}</span>
+                                <span class="data-v">${Array.isArray(list) ? list.join(', ') : list}</span>
+                            </div>
+                        `;
+                    }
+                    html += '</div>';
+                } else {
+                    html += '<div class="results-header">Результаты анализа</div><div class="data-table">';
+                    const payload = Array.isArray(data) ? (data[0] || {}) : data;
+                    for (const [k, v] of Object.entries(payload)) {
+                        if (typeof v !== 'object') {
+                            html += `
+                                <div class="data-row">
+                                    <span class="data-k">${k}</span>
+                                    <span class="data-v">${v}</span>
+                                </div>
+                            `;
+                        }
+                    }
+                    html += '</div>';
+                }
+
+                resultsWrapper.innerHTML = html;
+                resultsWrapper.style.display = 'block';
+            } catch (e) {
+                alert('Ошибка соединения с API сервером');
+            } finally {
+                btnText.style.display = 'block';
+                spinner.style.display = 'none';
+            }
+        }
+    </script>
+</body>
+</html>
