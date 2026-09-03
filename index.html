@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Sherlock — Hub</title>
+    <title>Sherlock — OSINT Hub</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <!-- Широкий растянутый шрифт Unbounded -->
-    <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;800;900&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;800;900&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
     <style>
         :root {
@@ -18,11 +18,11 @@
             /* 🌑 ЧИСТЫЙ ГРАФИТ */
             --bg: #0c0c0e;
             --surface: rgba(26, 26, 30, 0.65);
-            --surface-hover: rgba(34, 34, 40, 0.85);
+            --surface-hover: rgba(34, 34, 40, 0.9);
             --border: rgba(255, 255, 255, 0.08);
 
             --text-main: #f0f2f5;
-            --text-muted: #64646e;
+            --text-muted: #6a6a75;
 
             --font-stretched: 'Unbounded', sans-serif;
             --font-ui: 'Inter', -apple-system, sans-serif;
@@ -51,7 +51,7 @@
             position: relative;
         }
 
-        /* 🔘 ЧИСТАЯ СТАТИЧНАЯ SVG КНОПКА МЕНЮ */
+        /* 🔘 ЧИСТАЯ СТАТИЧНАЯ КНОПКА МЕНЮ СЛЕВА */
         .hud-menu-btn {
             position: fixed;
             top: 28px;
@@ -103,7 +103,7 @@
             pointer-events: auto;
         }
 
-        /* 🚪 БОКОВАЯ ШТОРКА */
+        /* 🚪 БОКОВАЯ ШТОРКА (МЕНЮ) */
         .side-drawer {
             position: fixed;
             top: 0;
@@ -135,7 +135,7 @@
             align-items: center;
             padding-bottom: 18px;
             border-bottom: 1px solid var(--border);
-            margin-bottom: 14px;
+            margin-bottom: 16px;
         }
 
         .drawer-brand {
@@ -163,7 +163,7 @@
             color: #fff;
         }
 
-        /* 🌟 ЛАЗЕРНЫЙ ГЛАЙДЕР НА 7 ПОЗИЦИЙ (ВКЛЮЧАЯ ХАБ) */
+        /* 🌟 ЛАЗЕРНЫЙ ГЛАЙДЕР НА 7 ПОЗИЦИЙ */
         .radio-container {
             --total-radio: 7;
             display: flex;
@@ -252,151 +252,397 @@
         .radio-container input:nth-of-type(6):checked ~ .glider-container .glider { transform: translateY(500%); }
         .radio-container input:nth-of-type(7):checked ~ .glider-container .glider { transform: translateY(600%); }
 
-        /* ⎯⎯⎯ КОНТЕЙНЕРЫ ЭКРАНОВ ⎯⎯⎯ */
-        .workspace {
-            width: 100%;
-            max-width: 720px;
-            margin: 0 auto;
-            padding: 100px 20px 80px;
+        /* ==========================================================================
+           ⚡ БЕГУЩИЕ ДИАГОНАЛЬНЫЕ ЛЕНТЫ С ТЕКСТОМ OSINT (45 ГРАДУСОВ ВНИЗ)
+           ========================================================================== */
+        .ambient-layer {
+            position: absolute;
+            inset: 0;
+            pointer-events: none;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        /* Контейнер повернут под 45 градусов */
+        .diagonal-tapes-container {
+            position: absolute;
+            width: 300vw;
+            height: 300vh;
+            top: -100vh;
+            left: -100vw;
+            transform: rotate(45deg);
             display: flex;
             flex-direction: column;
-            gap: 28px;
-        }
-
-        /* 🏛️ 1. ЭКРАН ГЛАВНОГО МЕНЮ (ХАБ) */
-        .hub-view {
-            display: flex;
-            flex-direction: column;
-            gap: 36px;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .hub-header {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .hub-title {
-            font-family: var(--font-stretched);
-            font-size: 38px;
-            font-weight: 900;
-            letter-spacing: -0.02em;
-            color: #ffffff;
-            text-transform: uppercase;
-            line-height: 1.1;
-        }
-
-        .hub-meta {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-family: var(--font-mono);
-            font-size: 11.5px;
-            color: var(--text-muted);
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-        }
-
-        .hub-status-dot {
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-            background: var(--main-color);
-            box-shadow: 0 0 8px var(--main-color);
-        }
-
-        /* ТАКТИЧЕСКАЯ МАТРИЦА 6 МОДУЛЕЙ */
-        .hub-grid {
-            display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 10px;
-        }
-
-        .hub-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 22px 20px;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            min-height: 130px;
-            transition: border-color 0.2s ease, background 0.2s ease;
+            justify-content: center;
+            gap: 22px; /* Полосы текста идут плотно рядом друг с другом */
+            pointer-events: none;
             user-select: none;
         }
 
-        .hub-card-top {
+        .tape-row {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
+            width: max-content;
+            white-space: nowrap;
+            will-change: transform;
         }
 
-        .hub-card-icon {
-            color: var(--text-muted);
+        /* Анимация движения лент вниз по диагонали */
+        .tape-row-down {
+            animation: tapeScrollDown 35s linear infinite;
+        }
+
+        .tape-row-down-fast {
+            animation: tapeScrollDown 24s linear infinite;
+        }
+
+        .tape-track {
             display: flex;
+            gap: 18px;
+            font-family: var(--font-stretched);
+            font-size: 15px;
+            font-weight: 900;
+            letter-spacing: 0.12em;
+            color: rgba(255, 255, 255, 0.028);
+            text-transform: uppercase;
+        }
+
+        .tape-track span.accent {
+            color: rgba(247, 228, 121, 0.08);
+        }
+
+        @keyframes tapeScrollDown {
+            0% { transform: translate3d(-50%, 0, 0); }
+            100% { transform: translate3d(0, 0, 0); }
+        }
+
+        /* 3D Металлические сферы */
+        .metal-orb {
+            position: absolute;
+            border-radius: 50%;
+            pointer-events: none;
+            will-change: transform;
+            z-index: 2;
+            background: radial-gradient(circle at 32% 28%,
+                #ffffff 0%,
+                #d0d2d8 9%,
+                #646774 24%,
+                #23242c 54%,
+                #111216 82%,
+                #07080a 100%
+            );
+            box-shadow:
+                inset -8px -8px 24px rgba(247, 228, 121, 0.16),
+                inset 5px 5px 14px rgba(255, 255, 255, 0.45),
+                0 30px 60px rgba(0, 0, 0, 0.85);
+        }
+
+        .orb-1 {
+            width: 165px;
+            height: 165px;
+            top: 12%;
+            right: 14%;
+            opacity: 0.85;
+            animation: floatOrb1 16s ease-in-out infinite alternate;
+        }
+
+        .orb-2 {
+            width: 88px;
+            height: 88px;
+            bottom: 14%;
+            right: 6%;
+            opacity: 0.75;
+            animation: floatOrb2 13s ease-in-out infinite alternate;
+        }
+
+        .orb-3 {
+            width: 52px;
+            height: 52px;
+            bottom: 14%;
+            left: 4%;
+            opacity: 0.55;
+            animation: floatOrb3 18s ease-in-out infinite alternate;
+        }
+
+        .orb-4 {
+            width: 36px;
+            height: 36px;
+            top: 18%;
+            left: 48%;
+            opacity: 0.5;
+            animation: floatOrb4 14s ease-in-out infinite alternate;
+        }
+
+        @keyframes floatOrb1 {
+            0% { transform: translate3d(0, 0, 0) rotate(0deg); }
+            100% { transform: translate3d(18px, -30px, 0) rotate(15deg); }
+        }
+
+        @keyframes floatOrb2 {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-18px, 22px, 0); }
+        }
+
+        @keyframes floatOrb3 {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(14px, -18px, 0); }
+        }
+
+        @keyframes floatOrb4 {
+            0% { transform: translate3d(0, 0, 0); }
+            100% { transform: translate3d(-12px, 20px, 0); }
+        }
+
+        /* ==========================================================================
+           🏛️ ГЛАВНЫЙ ЭКРАН
+           ========================================================================== */
+        .landing-view {
+            position: relative;
+            display: grid;
+            grid-template-columns: 1.15fr 0.85fr;
             align-items: center;
-            transition: color 0.2s ease;
+            gap: 60px;
+            width: 100%;
+            max-width: 1120px;
+            margin: 0 auto;
+            padding: 110px 24px 80px;
+            min-height: 100vh;
         }
 
-        .hub-card-icon svg {
-            width: 20px;
-            height: 20px;
-            stroke-width: 2;
-            stroke: currentColor;
-            fill: none;
-        }
-
-        .hub-card-idx {
-            font-family: var(--font-mono);
-            font-size: 11px;
-            color: var(--text-muted);
-            letter-spacing: 0.05em;
-        }
-
-        .hub-card-body {
+        /* ЛЕВАЯ ЧАСТЬ (z-index: 3 поверх лент) */
+        .hero-left {
+            position: relative;
+            z-index: 3;
             display: flex;
             flex-direction: column;
-            gap: 4px;
-            margin-top: 18px;
+            gap: 28px;
         }
 
-        .hub-card-name {
+        .hero-title {
             font-family: var(--font-stretched);
-            font-size: 14px;
-            font-weight: 800;
-            letter-spacing: 0.02em;
-            color: var(--text-main);
+            font-size: 44px;
+            font-weight: 900;
+            line-height: 1.18;
+            letter-spacing: -0.02em;
+            color: #ffffff;
             text-transform: uppercase;
-            transition: color 0.2s ease;
         }
 
-        .hub-card-desc {
-            font-size: 12px;
+        .hero-title .badge-highlight {
+            display: inline-block;
+            background: var(--main-color);
+            color: #0c0c0e;
+            padding: 2px 14px;
+            border-radius: 10px;
+            box-shadow: 0 0 25px rgba(247, 228, 121, 0.25);
+            margin-top: 4px;
+        }
+
+        .hero-desc {
+            font-size: 15.5px;
+            line-height: 1.65;
             color: var(--text-muted);
-            line-height: 1.4;
+            max-width: 520px;
+        }
+
+        .hero-desc strong {
+            color: #ffffff;
+            font-weight: 600;
+        }
+
+        .hero-actions {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .btn-primary {
+            background: var(--main-color);
+            color: #0c0c0e;
+            border: none;
+            border-radius: 10px;
+            height: 46px;
+            padding: 0 28px;
+            font-size: 14px;
+            font-weight: 700;
+            letter-spacing: 0.02em;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 0 20px rgba(247, 228, 121, 0.2);
+            transition: filter 0.2s ease, opacity 0.2s ease;
+            user-select: none;
+        }
+
+        .btn-secondary {
+            background: var(--surface);
+            color: #ffffff;
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            height: 46px;
+            padding: 0 24px;
+            font-size: 13.5px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            transition: border-color 0.2s ease;
+            user-select: none;
         }
 
         @media (hover: hover) and (pointer: fine) {
-            .hub-card:hover {
-                border-color: rgba(247, 228, 121, 0.28);
-                background: var(--surface-hover);
+            .btn-primary:hover {
+                filter: brightness(0.85);
+                opacity: 0.92;
             }
-            .hub-card:hover .hub-card-icon {
-                color: var(--main-color);
-            }
-            .hub-card:hover .hub-card-name {
-                color: var(--main-color);
+            .btn-secondary:hover {
+                border-color: rgba(255, 255, 255, 0.25);
             }
         }
 
-        /* 🛠️ 2. ЭКРАН ИНСТРУМЕНТА */
-        .tool-view {
+        /* ПРАВАЯ ЧАСТЬ (z-index: 3 поверх лент) */
+        .hero-right {
+            position: relative;
+            z-index: 3;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .mockup-backdrop-glow {
+            position: absolute;
+            width: 360px;
+            height: 360px;
+            border-radius: 50%;
+            background: radial-gradient(circle, rgba(247, 228, 121, 0.04) 0%, rgba(26, 26, 30, 0.35) 65%, transparent 70%);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        /* МОНОЛИТНЫЙ СМАРТФОН */
+        .device-phone {
+            position: relative;
+            z-index: 2;
+            width: 295px;
+            height: 500px;
+            background: #0c0c0e;
+            border: 3px solid #23242b;
+            border-radius: 40px;
+            padding: 14px 16px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+            overflow: hidden;
+        }
+
+        .phone-status-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: #71717a;
+            padding: 0 4px 4px;
+        }
+
+        .phone-island {
+            width: 72px;
+            height: 18px;
+            border-radius: 99px;
+            background: #000000;
+        }
+
+        .phone-content {
+            display: flex;
+            flex-direction: column;
+            gap: 18px;
+            padding-top: 8px;
+        }
+
+        .mini-brand-row {
+            display: flex;
+            align-items: center;
+        }
+
+        .mini-menu-icon {
+            width: 18px;
+            height: 18px;
+            color: rgba(255, 255, 255, 0.35);
+        }
+
+        .mini-title {
+            font-family: var(--font-stretched);
+            font-size: 15px;
+            font-weight: 900;
+            color: #ffffff;
+            letter-spacing: -0.01em;
+            text-transform: uppercase;
+        }
+
+        .mini-input-row {
+            display: flex;
+            gap: 6px;
+            width: 100%;
+        }
+
+        .mini-field {
+            flex: 1;
+            height: 36px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 0 12px;
+            color: #ffffff;
+            font-size: 11px;
+            font-family: var(--font-ui);
+            outline: none;
+        }
+
+        .mini-btn {
+            background: linear-gradient(90deg, rgba(247, 228, 121, 0.08) 0%, rgba(26, 26, 30, 0.85) 100%);
+            border: 1px solid rgba(247, 228, 121, 0.35);
+            border-radius: 8px;
+            height: 36px;
+            padding: 0 12px;
+            color: var(--main-color);
+            font-size: 11px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 0 10px rgba(247, 228, 121, 0.12);
+        }
+
+        .mini-meta-line {
+            font-family: var(--font-mono);
+            font-size: 9.5px;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .mini-blank-state {
+            padding: 70px 0;
+            color: var(--text-muted);
+            font-size: 10.5px;
+            font-family: var(--font-mono);
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        /* ⎯⎯⎯ ТЕРМИНАЛ ИНСТРУМЕНТА ⎯⎯⎯ */
+        .workspace-view {
             display: none;
+            width: 100%;
+            max-width: 680px;
+            margin: 0 auto;
+            padding: 110px 20px 80px;
             flex-direction: column;
             gap: 28px;
-            animation: fadeIn 0.3s ease;
+            animation: fadeIn 0.25s ease;
         }
 
         .back-nav-btn {
@@ -420,11 +666,6 @@
             color: var(--main-color);
         }
 
-        .title-block {
-            display: flex;
-            flex-direction: column;
-        }
-
         .main-title {
             font-family: var(--font-stretched);
             font-size: 26px;
@@ -434,7 +675,6 @@
             text-transform: uppercase;
         }
 
-        /* 🔍 СТРОКА ВВОДА */
         .input-row {
             display: flex;
             gap: 10px;
@@ -465,7 +705,6 @@
             color: rgba(255, 255, 255, 0.25);
         }
 
-        /* 🌟 КНОПКА ПОИСКА */
         .menu-style-btn {
             background: linear-gradient(90deg, rgba(247, 228, 121, 0.08) 0%, rgba(26, 26, 30, 0.85) 100%);
             border: 1px solid rgba(247, 228, 121, 0.35);
@@ -493,19 +732,6 @@
             }
         }
 
-        @media (hover: none) {
-            .menu-style-btn,
-            .menu-style-btn:active,
-            .menu-style-btn:focus,
-            .menu-style-btn:hover {
-                filter: none;
-                opacity: 1;
-                border-color: rgba(247, 228, 121, 0.35);
-                box-shadow: 0 0 16px rgba(247, 228, 121, 0.12), inset 0 0 10px rgba(247, 228, 121, 0.05);
-            }
-        }
-
-        /* 📋 РЕЗУЛЬТАТЫ */
         .results-section {
             display: flex;
             flex-direction: column;
@@ -542,18 +768,10 @@
         }
 
         @media (hover: hover) and (pointer: fine) {
-            .deck-card {
-                transition: border-color 0.2s ease;
-            }
-            .deck-card:hover {
-                border-color: rgba(255, 255, 255, 0.16);
-            }
-            .deck-card svg {
-                transition: stroke 0.2s ease;
-            }
-            .deck-card:hover svg {
-                stroke: #ffffff;
-            }
+            .deck-card { transition: border-color 0.2s ease; }
+            .deck-card:hover { border-color: rgba(255, 255, 255, 0.16); }
+            .deck-card svg { transition: stroke 0.2s ease; }
+            .deck-card:hover svg { stroke: #ffffff; }
         }
 
         .deck-card svg {
@@ -614,12 +832,8 @@
         }
 
         @media (hover: hover) and (pointer: fine) {
-            .copy-btn {
-                transition: color 0.15s ease;
-            }
-            .copy-btn:hover {
-                color: #ffffff;
-            }
+            .copy-btn { transition: color 0.15s ease; }
+            .copy-btn:hover { color: #ffffff; }
         }
 
         .copy-btn svg {
@@ -670,22 +884,25 @@
             z-index: 120;
         }
 
-        .toast.show {
-            opacity: 1;
-        }
+        .toast.show { opacity: 1; }
 
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(4px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
-        @media (max-width: 640px) {
-            .hud-menu-btn { top: 20px; left: 20px; }
-            .workspace { padding: 84px 16px 40px; }
-            .hub-grid { grid-template-columns: 1fr; }
-            .hub-title { font-size: 28px; }
-            .deck-grid { grid-template-columns: 1fr; }
-            .main-title { font-size: 21px; }
+        @media (max-width: 960px) {
+            .landing-view {
+                grid-template-columns: 1fr;
+                gap: 50px;
+                padding: 90px 20px 60px;
+            }
+            .hero-right { order: 2; }
+            .hero-title { font-size: 34px; }
+            .orb-1 { width: 130px; height: 130px; right: 4%; top: 8%; }
+            .orb-2 { width: 70px; height: 70px; right: 2%; bottom: 8%; }
+            .orb-3 { display: none; }
+            .orb-4 { left: 80%; top: 4%; }
         }
     </style>
 </head>
@@ -702,10 +919,10 @@
 
     <div class="drawer-overlay" id="drawerOverlay" onclick="toggleMenu()"></div>
 
-    <!-- ВЫЕЗЖАЮЩАЯ СЛЕВА ПАНЕЛЬ (ХАБ + 6 ИНСТРУМЕНТОВ) -->
+    <!-- ВЫЕЗЖАЮЩАЯ СЛЕВА ШТОРКА -->
     <aside class="side-drawer" id="sideDrawer">
         <div class="drawer-head">
-            <span class="drawer-brand">Терминал</span>
+            <span class="drawer-brand">Навигация</span>
             <button class="drawer-close" onclick="toggleMenu()">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -715,51 +932,44 @@
         </div>
 
         <div class="radio-container">
-            <!-- 🏠 ГЛАВНОЕ МЕНЮ (ХАБ) -->
-            <input type="radio" id="tool-home" name="osint-radio" value="home" checked onchange="handleNavSelect(this)">
-            <label for="tool-home">
+            <input type="radio" id="nav-home" name="osint-nav" value="home" checked onchange="handleNavChange(this)">
+            <label for="nav-home">
                 <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
-                <span>Главный Хаб</span>
+                <span>Главная</span>
             </label>
 
-            <!-- 1. СУБДОМЕНЫ -->
-            <input type="radio" id="tool-sub" name="osint-radio" value="subdomains" onchange="handleNavSelect(this)">
-            <label for="tool-sub">
+            <input type="radio" id="nav-sub" name="osint-nav" value="subdomains" onchange="handleNavChange(this)">
+            <label for="nav-sub">
                 <svg viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
                 <span>Субдомены</span>
             </label>
 
-            <!-- 2. TELEGRAM -->
-            <input type="radio" id="tool-tg" name="osint-radio" value="telegram" onchange="handleNavSelect(this)">
-            <label for="tool-tg">
+            <input type="radio" id="nav-tg" name="osint-nav" value="telegram" onchange="handleNavChange(this)">
+            <label for="nav-tg">
                 <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
                 <span>По TELEGRAM</span>
             </label>
 
-            <!-- 3. НОМЕР -->
-            <input type="radio" id="tool-phone" name="osint-radio" value="phone" onchange="handleNavSelect(this)">
-            <label for="tool-phone">
+            <input type="radio" id="nav-phone" name="osint-nav" value="phone" onchange="handleNavChange(this)">
+            <label for="nav-phone">
                 <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
                 <span>По номеру</span>
             </label>
 
-            <!-- 4. DNS -->
-            <input type="radio" id="tool-dns" name="osint-radio" value="dns" onchange="handleNavSelect(this)">
-            <label for="tool-dns">
+            <input type="radio" id="nav-dns" name="osint-nav" value="dns" onchange="handleNavChange(this)">
+            <label for="nav-dns">
                 <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
                 <span>DNS записи</span>
             </label>
 
-            <!-- 5. IP -->
-            <input type="radio" id="tool-ip" name="osint-radio" value="ip" onchange="handleNavSelect(this)">
-            <label for="tool-ip">
+            <input type="radio" id="nav-ip" name="osint-nav" value="ip" onchange="handleNavChange(this)">
+            <label for="nav-ip">
                 <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
                 <span>IP хост</span>
             </label>
 
-            <!-- 6. EMAIL -->
-            <input type="radio" id="tool-mail" name="osint-radio" value="email" onchange="handleNavSelect(this)">
-            <label for="tool-mail">
+            <input type="radio" id="nav-mail" name="osint-nav" value="email" onchange="handleNavChange(this)">
+            <label for="nav-mail">
                 <svg viewBox="0 0 24 24"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
                 <span>Почтовый адрес</span>
             </label>
@@ -770,139 +980,150 @@
         </div>
     </aside>
 
-    <!-- 💻 ОСНОВНАЯ РАБОЧАЯ ОБЛАСТЬ -->
-    <main class="workspace">
+    <!-- ==========================================================================
+         🏛️ 1. ГЛАВНОЕ МЕНЮ (С БЕГУЩИМИ ПОЛОСАМИ OSINT ПОД 45 ГРАДУСОВ)
+         ========================================================================== -->
+    <main class="landing-view" id="landingView">
 
-        <!-- 🏛️ 1. ЭКРАН ГЛАВНОГО ХАБА (ВСТРЕЧАЕТ ПРИ ВХОДЕ) -->
-        <section class="hub-view" id="hubView">
-            <div class="hub-header">
-                <h1 class="hub-title">SHERLOCK</h1>
-                <div class="hub-meta">
-                    <div class="hub-status-dot"></div>
-                    <span>КОНСОЛЬ РАЗВЕДКИ // ВЫБЕРИТЕ МОДУЛЬ</span>
+        <!-- ⚡ ДИНАМИЧЕСКИЙ ФОН: БЕГУЩИЙ ТЕКСТ ПОД 45° ВНИЗ + 3D СФЕРЫ -->
+        <div class="ambient-layer">
+            <div class="diagonal-tapes-container">
+                <!-- 1 полоса -->
+                <div class="tape-row tape-row-down">
+                    <div class="tape-track">
+                        <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span class="accent">OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span class="accent">OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span class="accent">OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span class="accent">OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span>
+                    </div>
+                </div>
+                <!-- 2 полоса -->
+                <div class="tape-row tape-row-down-fast">
+                    <div class="tape-track">
+                        <span class="accent">OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span class="accent">OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span class="accent">OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span class="accent">OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span>
+                    </div>
+                </div>
+                <!-- 3 полоса -->
+                <div class="tape-row tape-row-down">
+                    <div class="tape-track">
+                        <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span class="accent">OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span class="accent">OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span class="accent">OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span class="accent">OSINT</span>
+                    </div>
+                </div>
+                <!-- 4 полоса -->
+                <div class="tape-row tape-row-down-fast">
+                    <div class="tape-track">
+                        <span>OSINT</span> <span>•</span> <span class="accent">OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span class="accent">OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span class="accent">OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span class="accent">OSINT</span> <span>•</span> <span>OSINT</span>
+                    </div>
+                </div>
+                <!-- 5 полоса -->
+                <div class="tape-row tape-row-down">
+                    <div class="tape-track">
+                        <span class="accent">OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span class="accent">OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span class="accent">OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span class="accent">OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span>
+                    </div>
+                </div>
+                <!-- 6 полоса -->
+                <div class="tape-row tape-row-down-fast">
+                    <div class="tape-track">
+                        <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span class="accent">OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span class="accent">OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span class="accent">OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span class="accent">OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span> <span>•</span> <span>OSINT</span>
+                    </div>
                 </div>
             </div>
 
-            <div class="hub-grid">
-                <!-- 01 СУБДОМЕНЫ -->
-                <div class="hub-card" onclick="openTool('subdomains')">
-                    <div class="hub-card-top">
-                        <div class="hub-card-icon">
-                            <svg viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
-                        </div>
-                        <span class="hub-card-idx">// 01</span>
-                    </div>
-                    <div class="hub-card-body">
-                        <div class="hub-card-name">Субдомены</div>
-                        <div class="hub-card-desc">Глобальный поиск по SSL-сертификатам crt.sh</div>
-                    </div>
-                </div>
+            <div class="metal-orb orb-1"></div>
+            <div class="metal-orb orb-2"></div>
+            <div class="metal-orb orb-3"></div>
+            <div class="metal-orb orb-4"></div>
+        </div>
+        
+        <!-- ЛЕВАЯ ЧАСТЬ (z-index: 3 поверх фона) -->
+        <div class="hero-left">
+            <h1 class="hero-title">
+                Разведка данных <br>
+                <span class="badge-highlight">за 1 клик</span>
+            </h1>
 
-                <!-- 02 TELEGRAM -->
-                <div class="hub-card" onclick="openTool('telegram')">
-                    <div class="hub-card-top">
-                        <div class="hub-card-icon">
-                            <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
-                        </div>
-                        <span class="hub-card-idx">// 02</span>
-                    </div>
-                    <div class="hub-card-body">
-                        <div class="hub-card-name">По TELEGRAM</div>
-                        <div class="hub-card-desc">TGStat, Telemetr, предпросмотр постов и Web</div>
-                    </div>
-                </div>
+            <p class="hero-desc">
+                Введите никнейм, номер телефона или домен — система мгновенно соберет цифровой след по 15+ открытым источникам и реестрам. <strong>Без регистрации и следов.</strong>
+            </p>
 
-                <!-- 03 НОМЕР -->
-                <div class="hub-card" onclick="openTool('phone')">
-                    <div class="hub-card-top">
-                        <div class="hub-card-icon">
-                            <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
-                        </div>
-                        <span class="hub-card-idx">// 03</span>
-                    </div>
-                    <div class="hub-card-body">
-                        <div class="hub-card-name">По номеру</div>
-                        <div class="hub-card-desc">Парсинг оператора, стран и чаты WhatsApp/TG</div>
-                    </div>
-                </div>
-
-                <!-- 04 DNS -->
-                <div class="hub-card" onclick="openTool('dns')">
-                    <div class="hub-card-top">
-                        <div class="hub-card-icon">
-                            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
-                        </div>
-                        <span class="hub-card-idx">// 04</span>
-                    </div>
-                    <div class="hub-card-body">
-                        <div class="hub-card-name">DNS записи</div>
-                        <div class="hub-card-desc">Резолв A, MX, TXT через Cloudflare DoH</div>
-                    </div>
-                </div>
-
-                <!-- 05 IP -->
-                <div class="hub-card" onclick="openTool('ip')">
-                    <div class="hub-card-top">
-                        <div class="hub-card-icon">
-                            <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
-                        </div>
-                        <span class="hub-card-idx">// 05</span>
-                    </div>
-                    <div class="hub-card-body">
-                        <div class="hub-card-name">IP хост</div>
-                        <div class="hub-card-desc">Геолокация, провайдер ASN и сетевая зона</div>
-                    </div>
-                </div>
-
-                <!-- 06 EMAIL -->
-                <div class="hub-card" onclick="openTool('email')">
-                    <div class="hub-card-top">
-                        <div class="hub-card-icon">
-                            <svg viewBox="0 0 24 24"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
-                        </div>
-                        <span class="hub-card-idx">// 06</span>
-                    </div>
-                    <div class="hub-card-body">
-                        <div class="hub-card-name">Почтовый адрес</div>
-                        <div class="hub-card-desc">Проверка валидности синтаксиса и MX узла</div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- 🛠️ 2. ЭКРАН ИНСТРУМЕНТА (ОТКРЫВАЕТСЯ ПРИ ВЫБОРЕ) -->
-        <section class="tool-view" id="toolView">
-            <button class="back-nav-btn" onclick="openHome()">
-                <span>← Главное меню</span>
-            </button>
-
-            <div class="title-block">
-                <h1 class="main-title" id="toolTitle">Субдомены</h1>
-            </div>
-
-            <div class="input-row">
-                <input type="text" id="targetInput" class="field-input" placeholder="Цель поиска..." autocomplete="off" spellcheck="false">
-                <button class="menu-style-btn" id="runBtn" onclick="runInvestigation()">
-                    <span id="btnText">Поиск</span>
-                    <div class="spinner" id="spinner"></div>
+            <div class="hero-actions">
+                <button class="btn-primary" onclick="launchTool('telegram')">
+                    <span>Начать поиск</span>
+                    <span style="font-family: var(--font-mono);">→</span>
+                </button>
+                <button class="btn-secondary" onclick="toggleMenu()">
+                    <span>Все модули</span>
                 </button>
             </div>
+        </div>
 
-            <!-- РЕЗУЛЬТАТЫ -->
-            <div class="results-section">
-                <div class="meta-line" id="statusLine">Ожидание</div>
-                <div id="resultsViewport">
-                    <div class="blank-state">Укажите цель для инициализации поиска</div>
+        <!-- ПРАВАЯ ЧАСТЬ (z-index: 3 поверх фона) -->
+        <div class="hero-right">
+            <div class="mockup-backdrop-glow"></div>
+
+            <div class="device-phone">
+                <div class="phone-status-bar">
+                    <span>13:42</span>
+                    <div class="phone-island"></div>
+                    <span>100%</span>
+                </div>
+
+                <div class="phone-content">
+                    <div class="mini-brand-row">
+                        <svg class="mini-menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <line x1="3" y1="12" x2="16" y2="12"></line>
+                            <line x1="3" y1="18" x2="20" y2="18"></line>
+                        </svg>
+                    </div>
+
+                    <div class="mini-title">ПО TELEGRAM</div>
+
+                    <div class="mini-input-row">
+                        <input type="text" class="mini-field" placeholder="Юзернейм цели..." readonly>
+                        <div class="mini-btn">Поиск</div>
+                    </div>
+
+                    <div class="mini-meta-line">Ожидание</div>
+
+                    <div class="mini-blank-state">
+                        Укажите цель для инициализации поиска
+                    </div>
                 </div>
             </div>
-        </section>
+        </div>
 
     </main>
+
+    <!-- ==========================================================================
+         🛠️ 2. РАБОЧИЙ ТЕРМИНАЛ
+         ========================================================================== -->
+    <section class="workspace-view" id="workspaceView">
+        <button class="back-nav-btn" onclick="returnToLanding()">
+            <span>← На главную</span>
+        </button>
+
+        <div class="title-block">
+            <h1 class="main-title" id="toolTitle">Субдомены</h1>
+        </div>
+
+        <div class="input-row">
+            <input type="text" id="targetInput" class="field-input" placeholder="Введите цель..." autocomplete="off" spellcheck="false">
+            <button class="menu-style-btn" id="runBtn" onclick="runInvestigation()">
+                <span id="btnText">Поиск</span>
+                <div class="spinner" id="spinner"></div>
+            </button>
+        </div>
+
+        <div class="results-section">
+            <div class="meta-line" id="statusLine">Ожидание</div>
+            <div id="resultsViewport">
+                <div class="blank-state">Укажите цель для инициализации поиска</div>
+            </div>
+        </div>
+    </section>
 
     <div class="toast" id="toast">Скопировано в буфер</div>
 
     <script>
-        let currentNav = 'home';
+        let currentTool = 'subdomains';
 
         const toolConfig = {
             subdomains: {
@@ -941,35 +1162,22 @@
             menuBtn.classList.toggle('active', isOpen);
         }
 
-        // Переключение из боковой шторки
-        function handleNavSelect(radio) {
+        function handleNavChange(radio) {
             const val = radio.value;
             if (val === 'home') {
-                openHome();
+                returnToLanding();
             } else {
-                openTool(val);
+                launchTool(val);
             }
             setTimeout(toggleMenu, 160);
         }
 
-        // Открыть Главный Хаб
-        function openHome() {
-            currentNav = 'home';
-            document.getElementById('hubView').style.display = 'flex';
-            document.getElementById('toolView').style.display = 'none';
+        function launchTool(key) {
+            currentTool = key;
+            const c = toolConfig[key];
 
-            // Синхронизируем радио-селектор
-            const r = document.getElementById('tool-home');
-            if (r) r.checked = true;
-        }
-
-        // Открыть Конкретный Инструмент
-        function openTool(toolKey) {
-            currentNav = toolKey;
-            const c = toolConfig[toolKey];
-
-            document.getElementById('hubView').style.display = 'none';
-            document.getElementById('toolView').style.display = 'flex';
+            document.getElementById('landingView').style.display = 'none';
+            document.getElementById('workspaceView').style.display = 'flex';
 
             document.getElementById('toolTitle').innerText = c.title;
 
@@ -982,17 +1190,26 @@
                 <div class="blank-state">Укажите цель для инициализации поиска</div>
             `;
 
-            // Синхронизируем радио-селектор в меню
-            const radioMap = {
-                subdomains: 'tool-sub',
-                telegram: 'tool-tg',
-                phone: 'tool-phone',
-                dns: 'tool-dns',
-                ip: 'tool-ip',
-                email: 'tool-mail'
+            const map = {
+                subdomains: 'nav-sub',
+                telegram: 'nav-tg',
+                phone: 'nav-phone',
+                dns: 'nav-dns',
+                ip: 'nav-ip',
+                email: 'nav-mail'
             };
-            const targetRadio = document.getElementById(radioMap[toolKey]);
-            if (targetRadio) targetRadio.checked = true;
+            if (map[key]) {
+                const r = document.getElementById(map[key]);
+                if (r) r.checked = true;
+            }
+        }
+
+        function returnToLanding() {
+            document.getElementById('landingView').style.display = 'grid';
+            document.getElementById('workspaceView').style.display = 'none';
+
+            const r = document.getElementById('nav-home');
+            if (r) r.checked = true;
         }
 
         function copyData(val) {
@@ -1051,12 +1268,12 @@
                 let html = '';
 
                 // ✈️ 1. TELEGRAM
-                if (currentNav === 'telegram') {
+                if (currentTool === 'telegram') {
                     const u = query.replace('@', '').trim();
                     const tgHub = [
                         { name: "Telegram Профиль", sub: `t.me/${u}`, url: `https://t.me/${u}` },
                         { name: "Web Просмотр ленты", sub: "Предпросмотр постов", url: `https://t.me/s/${u}` },
-                        { name: "Аналитика TGStat", sub: "Рейтинг канала/чата", url: `https://tgstat.ru/channel/@${u}` },
+                        { name: "Аналитика TGStat", sub: "Рейтинг канала и чата", url: `https://tgstat.ru/channel/@${u}` },
                         { name: "Аналитика Telemetr", sub: "Статистика аудитории", url: `https://telemetr.me/channels/?r=${u}` },
                         { name: "База постов Lyzem", sub: "Глобальный архив", url: `https://lyzem.com/search?q=${u}` },
                         { name: "Telegram Web Client", sub: "Открыть в браузере", url: `https://web.telegram.org/k/#?tgaddr=tg%3A%2F%2Fresolve%3Fdomain%3D${u}` }
@@ -1081,7 +1298,7 @@
                     html += '</div>';
                 }
                 // 📞 2. ПО НОМЕРУ
-                else if (currentNav === 'phone') {
+                else if (currentTool === 'phone') {
                     const info = parsePhoneNumber(query);
                     statusLine.innerText = `Номер: +${info.digits}`;
 
@@ -1131,7 +1348,7 @@
                     html += '</div>';
                 }
                 // 🌐 3. СУБДОМЕНЫ
-                else if (currentNav === 'subdomains') {
+                else if (currentTool === 'subdomains') {
                     const cleanDomain = query.replace('https://', '').replace('http://', '').split('/')[0].trim();
                     const res = await fetch(`https://crt.sh/?q=%25.${encodeURIComponent(cleanDomain)}&output=json`);
                     const data = await res.json();
@@ -1166,7 +1383,7 @@
                     }
                 }
                 // 📡 4. DNS
-                else if (currentNav === 'dns') {
+                else if (currentTool === 'dns') {
                     const cleanDomain = query.replace('https://', '').replace('http://', '').split('/')[0].trim();
                     const types = ['A', 'AAAA', 'MX', 'TXT', 'NS'];
                     let found = 0;
@@ -1205,7 +1422,7 @@
                     }
                 }
                 // 📍 5. IP
-                else if (currentNav === 'ip') {
+                else if (currentTool === 'ip') {
                     const cleanTarget = query.replace('https://', '').replace('http://', '').split('/')[0].trim();
                     const res = await fetch(`https://freeipapi.com/api/json/${encodeURIComponent(cleanTarget)}`);
                     const data = await res.json();
@@ -1237,7 +1454,7 @@
                     html += '</div>';
                 }
                 // ✉️ 6. EMAIL
-                else if (currentNav === 'email') {
+                else if (currentTool === 'email') {
                     const cleanEmail = query.trim().toLowerCase();
                     const domain = cleanEmail.split('@')[1] || '—';
                     const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail);
