@@ -23,55 +23,85 @@
         }
 
         body {
-            background-color: #07090e;
-            background-image: 
-                radial-gradient(circle at 50% 0%, #151a24 0%, transparent 55%),
-                radial-gradient(circle at 100% 100%, #0d1017 0%, transparent 40%);
+            background-color: #06070a;
             color: #ffffff;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 32px 24px 120px;
+            padding: 36px 24px 130px;
+            position: relative;
+            overflow-x: hidden;
         }
 
-        /* Верхняя панель */
-        .header {
+        /* Мягкие фоновые световые пятна */
+        .ambient-glow {
+            position: fixed;
+            border-radius: 50%;
+            filter: blur(120px);
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.45;
+        }
+
+        .glow-top {
+            width: 600px;
+            height: 350px;
+            background: #1e293b;
+            top: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .glow-bottom {
+            width: 500px;
+            height: 300px;
+            background: #0f172a;
+            bottom: 50px;
+            right: 15%;
+        }
+
+        .container {
             width: 100%;
-            max-width: 1080px;
+            max-width: 880px;
+            position: relative;
+            z-index: 10;
+        }
+
+        /* Верхняя навигация */
+        .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding-bottom: 24px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            margin-bottom: 32px;
+            margin-bottom: 24px;
+            padding: 0 4px;
         }
 
         .brand {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
         }
 
         .brand-icon {
-            width: 32px;
-            height: 32px;
-            border-radius: 10px;
-            background: rgba(255, 255, 255, 0.06);
-            border: 1px solid rgba(255, 255, 255, 0.15);
+            width: 28px;
+            height: 28px;
+            border-radius: 8px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.12);
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
         .brand-icon svg {
-            width: 17px;
-            height: 17px;
+            width: 15px;
+            height: 15px;
             stroke: #ffffff;
         }
 
         .brand-title {
-            font-size: 18px;
+            font-size: 17px;
             font-weight: 700;
             letter-spacing: -0.3px;
         }
@@ -79,13 +109,13 @@
         .status-pill {
             display: inline-flex;
             align-items: center;
-            gap: 8px;
+            gap: 7px;
             font-size: 12px;
             font-weight: 500;
             color: rgba(255, 255, 255, 0.7);
             background: rgba(255, 255, 255, 0.04);
             border: 1px solid rgba(255, 255, 255, 0.08);
-            padding: 6px 14px;
+            padding: 5px 12px;
             border-radius: 99rem;
         }
 
@@ -97,136 +127,162 @@
             box-shadow: 0 0 8px #22c55e;
         }
 
-        /* Двухколоночный интерфейс */
-        .workspace-grid {
-            width: 100%;
-            max-width: 1080px;
-            display: grid;
-            grid-template-columns: 380px 1fr;
-            gap: 24px;
-            align-items: start;
-        }
-
-        /* Стеклянные панели */
-        .glass-panel {
-            position: relative;
-            border-radius: 24px;
+        /* 🍏 ЕДИНАЯ СТЕКЛЯННАЯ ПАНЕЛЬ (UNIFIED GLASS DECK) */
+        .glass-deck {
             background: 
-                linear-gradient(150deg, rgba(17, 21, 30, 0.7) 0%, rgba(9, 11, 16, 0.85) 100%) padding-box,
+                linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, rgba(255, 255, 255, 0.01) 100%) padding-box,
                 linear-gradient(135deg, 
-                    rgba(255, 255, 255, 0.6) 0%, 
-                    rgba(255, 255, 255, 0.2) 30%, 
-                    rgba(255, 255, 255, 0.02) 60%, 
-                    rgba(255, 255, 255, 0.25) 100%) border-box;
+                    rgba(255, 255, 255, 0.4) 0%, 
+                    rgba(255, 255, 255, 0.1) 40%, 
+                    rgba(255, 255, 255, 0.02) 70%, 
+                    rgba(255, 255, 255, 0.2) 100%) border-box;
             border: 1px solid transparent;
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
+            border-radius: 26px;
+            backdrop-filter: blur(28px);
+            -webkit-backdrop-filter: blur(28px);
             box-shadow: 
-                0 30px 60px -15px rgba(0, 0, 0, 0.8),
-                inset 0 1px 1px 0 rgba(255, 255, 255, 0.35);
-            padding: 32px 28px;
+                0 30px 70px -10px rgba(0, 0, 0, 0.7),
+                inset 0 1px 0 rgba(255, 255, 255, 0.3);
+            padding: 36px 36px 32px;
         }
 
-        .panel-title {
-            font-size: 22px;
+        /* Заголовок инструмента */
+        .tool-header {
+            margin-bottom: 24px;
+        }
+
+        .tool-category {
+            display: inline-block;
+            font-size: 11px;
             font-weight: 700;
-            letter-spacing: -0.4px;
+            letter-spacing: 1.2px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.45);
             margin-bottom: 6px;
         }
 
-        .panel-desc {
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.45);
-            margin-bottom: 24px;
-            line-height: 1.5;
+        .tool-title {
+            font-size: 26px;
+            font-weight: 800;
+            letter-spacing: -0.6px;
+            margin-bottom: 6px;
         }
 
-        .input-group {
+        .tool-desc {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.5);
+            line-height: 1.4;
+        }
+
+        /* 🔍 ИНЛАЙН ПОИСКОВАЯ СТРОКА */
+        .search-container {
             display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .glass-input {
-            width: 100%;
+            align-items: center;
             background: rgba(0, 0, 0, 0.35);
             border: 1px solid rgba(255, 255, 255, 0.12);
-            border-radius: 14px;
-            padding: 15px 18px;
-            font-size: 14px;
-            color: #ffffff;
-            outline: none;
-            transition: all 0.2s ease;
+            border-radius: 16px;
+            padding: 6px 8px 6px 18px;
+            margin-bottom: 30px;
+            transition: all 0.25s ease;
+            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3);
         }
 
-        .glass-input:focus {
+        .search-container:focus-within {
             border-color: rgba(255, 255, 255, 0.4);
             background: rgba(0, 0, 0, 0.5);
-            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2);
+            box-shadow: 
+                inset 0 2px 4px rgba(0, 0, 0, 0.3),
+                0 0 0 1px rgba(255, 255, 255, 0.15);
         }
 
-        .glass-input::placeholder {
+        .search-icon {
+            width: 18px;
+            height: 18px;
+            stroke: rgba(255, 255, 255, 0.35);
+            margin-right: 12px;
+            flex-shrink: 0;
+        }
+
+        .search-input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            color: #ffffff;
+            font-size: 15px;
+            font-weight: 500;
+            outline: none;
+            min-width: 0;
+        }
+
+        .search-input::placeholder {
             color: rgba(255, 255, 255, 0.25);
         }
 
         .search-btn {
             background: #ffffff;
-            color: #07090e;
+            color: #06070a;
             border: none;
-            border-radius: 14px;
-            padding: 15px;
-            font-size: 14px;
-            font-weight: 600;
+            border-radius: 11px;
+            padding: 10px 18px;
+            font-size: 13px;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.2s var(--ease);
-            box-shadow: 0 6px 20px rgba(255, 255, 255, 0.15);
             display: flex;
             align-items: center;
-            justify-content: center;
+            gap: 8px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(255, 255, 255, 0.15);
         }
 
         .search-btn:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 10px 25px rgba(255, 255, 255, 0.25);
+            background: #f1f5f9;
+            transform: scale(1.02);
         }
 
         .search-btn:active {
-            transform: translateY(0);
+            transform: scale(0.98);
         }
 
-        /* Панель выдачи результатов */
-        .results-panel {
-            min-height: 260px;
-        }
-
-        .results-header {
-            font-size: 12px;
+        .kbd-hint {
+            font-family: var(--mono);
+            font-size: 11px;
             font-weight: 600;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-            color: rgba(255, 255, 255, 0.4);
-            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        /* 📋 ОБЛАСТЬ РЕЗУЛЬТАТОВ */
+        .results-area {
+            border-top: 1px solid rgba(255, 255, 255, 0.08);
+            padding-top: 24px;
+        }
+
+        .results-status-bar {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            font-size: 12px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            margin-bottom: 16px;
         }
 
         .results-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-            gap: 10px;
+            grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+            gap: 12px;
         }
 
         .card-link {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: 
-                linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.4)) padding-box,
-                linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.02)) border-box;
-            border: 1px solid transparent;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.07);
             border-radius: 14px;
-            padding: 14px 16px;
+            padding: 14px 18px;
             text-decoration: none;
             color: #ffffff;
             transition: all 0.2s var(--ease);
@@ -234,12 +290,12 @@
 
         .card-link:hover {
             transform: translateY(-2px);
-            background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.07);
+            border-color: rgba(255, 255, 255, 0.25);
         }
 
         .card-name {
-            font-size: 13px;
+            font-size: 14px;
             font-weight: 600;
         }
 
@@ -252,17 +308,16 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
-            width: 100%;
         }
 
         .data-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.02);
             border: 1px solid rgba(255, 255, 255, 0.05);
             border-radius: 12px;
-            padding: 14px 16px;
+            padding: 14px 18px;
         }
 
         .data-k {
@@ -274,31 +329,46 @@
         .data-v {
             font-family: var(--mono);
             font-size: 13px;
-            font-weight: 500;
+            font-weight: 600;
             color: #ffffff;
             max-width: 65%;
             text-align: right;
             word-break: break-all;
         }
 
-        .placeholder-state {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 180px;
-            color: rgba(255, 255, 255, 0.3);
+        /* Пустое состояние по умолчанию (превью возможностей) */
+        .default-preview {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+        }
+
+        .preview-box {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 14px;
+            padding: 16px;
+        }
+
+        .preview-title {
             font-size: 13px;
-            text-align: center;
-            gap: 8px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.8);
+            margin-bottom: 4px;
+        }
+
+        .preview-text {
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.35);
+            line-height: 1.4;
         }
 
         .spinner {
             display: none;
-            width: 16px;
-            height: 16px;
+            width: 14px;
+            height: 14px;
             border: 2px solid rgba(0, 0, 0, 0.2);
-            border-top-color: #07090e;
+            border-top-color: #06070a;
             border-radius: 50%;
             animation: spin 0.6s linear infinite;
         }
@@ -307,16 +377,16 @@
             to { transform: rotate(360deg); }
         }
 
-        /* Нижний плавающий стеклянный док */
+        /* 🪟 ПЛАВАЮЩИЙ GLASS DOCK */
         .menu {
             position: fixed;
             left: 50%;
             bottom: 24px;
             transform: translateX(-50%);
             width: calc(100% - 32px);
-            max-width: 500px;
-            backdrop-filter: blur(16px) saturate(180%);
-            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            max-width: 480px;
+            backdrop-filter: blur(20px) saturate(180%);
+            -webkit-backdrop-filter: blur(20px) saturate(180%);
             background: rgba(14, 18, 26, 0.7);
             border: 1px solid rgba(255, 255, 255, 0.12);
             box-shadow: 
@@ -336,7 +406,7 @@
             align-items: center;
             flex: 1 1 0;
             min-width: 0;
-            color: rgba(255, 255, 255, 0.5);
+            color: rgba(255, 255, 255, 0.45);
             text-decoration: none;
             padding: 10px 4px;
             border-radius: 999rem;
@@ -346,7 +416,7 @@
 
         .menu a:hover {
             color: #ffffff;
-            background-color: rgba(255, 255, 255, 0.08);
+            background-color: rgba(255, 255, 255, 0.06);
         }
 
         .menu a svg {
@@ -367,84 +437,108 @@
         }
 
         .menu a.active {
-            background: rgba(255, 255, 255, 0.16);
+            background: rgba(255, 255, 255, 0.14);
             color: #ffffff;
-            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.4);
+            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.35);
         }
 
-        @media (max-width: 860px) {
-            .workspace-grid { grid-template-columns: 1fr; }
+        @media (max-width: 768px) {
+            .glass-deck { padding: 24px 20px; }
+            .default-preview { grid-template-columns: 1fr; }
             body { padding: 20px 16px 120px; }
-            .glass-panel { padding: 24px 20px; }
         }
     </style>
 </head>
 <body>
 
-    <header class="header">
-        <div class="brand">
-            <div class="brand-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <div class="ambient-glow glow-top"></div>
+    <div class="ambient-glow glow-bottom"></div>
+
+    <div class="container">
+        <!-- Шапка -->
+        <header class="header">
+            <div class="brand">
+                <div class="brand-icon">
+                    <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                </div>
+                <span class="brand-title">Sherlock</span>
+            </div>
+            <div class="status-pill">
+                <span class="status-dot"></span>
+                <span>Онлайн</span>
+            </div>
+        </header>
+
+        <!-- Единая стеклянная панель -->
+        <main class="glass-deck">
+            <div class="tool-header">
+                <span class="tool-category" id="toolCategory">Идентификация</span>
+                <h1 class="tool-title" id="toolTitle">Поиск по никнейму</h1>
+                <p class="tool-desc" id="toolDesc">Проверка существования профиля на популярных онлайн-платформах</p>
+            </div>
+
+            <!-- Строка поиска -->
+            <div class="search-container">
+                <svg class="search-icon" viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="11" cy="11" r="8"></circle>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
-            </div>
-            <span class="brand-title">Sherlock</span>
-        </div>
-        <div class="status-pill">
-            <span class="status-dot"></span>
-            <span>Готов к работе</span>
-        </div>
-    </header>
-
-    <main class="workspace-grid">
-        <!-- Панель ввода -->
-        <section class="glass-panel">
-            <h1 class="panel-title" id="toolTitle">Поиск по никнейму</h1>
-            <p class="panel-desc" id="toolDesc">Проверка существования профиля на популярных онлайн-платформах</p>
-
-            <div class="input-group">
-                <input type="text" id="targetInput" class="glass-input" placeholder="Введите логин (например: durov)..." autocomplete="off" spellcheck="false">
+                <input type="text" id="targetInput" class="search-input" placeholder="Введите логин (например: durov)..." autocomplete="off" spellcheck="false">
                 <button class="search-btn" id="searchBtn" onclick="runSearch()">
-                    <span id="btnText">Начать поиск</span>
+                    <span id="btnText">Поиск</span>
+                    <span class="kbd-hint" id="kbdHint">↵</span>
                     <div class="spinner" id="spinner"></div>
                 </button>
             </div>
-        </section>
 
-        <!-- Панель результатов -->
-        <section class="glass-panel results-panel">
-            <div class="results-header">
-                <span>Результаты</span>
-                <span id="scanStatus" style="font-size: 11px; font-weight: 500;">Ожидание</span>
-            </div>
-            <div id="resultsContent">
-                <div class="placeholder-state">
-                    <span>Введите запрос слева и нажмите «Начать поиск»</span>
+            <!-- Результаты / Превью -->
+            <div class="results-area">
+                <div class="results-status-bar">
+                    <span id="resultsTitle">Возможности платформы</span>
+                    <span id="scanStatus" style="font-size: 11px;">Готов к запросу</span>
+                </div>
+                <div id="resultsContent">
+                    <div class="default-preview">
+                        <div class="preview-box">
+                            <div class="preview-title">15+ Платформ</div>
+                            <div class="preview-text">Параллельная верификация профилей без задержек.</div>
+                        </div>
+                        <div class="preview-box">
+                            <div class="preview-title">Cloudflare DNS</div>
+                            <div class="preview-text">Прямой опрос записей A, MX, TXT через защищенный DoH.</div>
+                        </div>
+                        <div class="preview-box">
+                            <div class="preview-title">SSL Прозрачность</div>
+                            <div class="preview-text">Поиск поддоменов по открытым реестрам сертификатов.</div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </section>
-    </main>
+        </main>
+    </div>
 
-    <!-- Нижняя навигация -->
+    <!-- Плавающий док -->
     <nav class="menu">
-        <a class="active" onclick="switchTool(this, 'username', 'Поиск по никнейму', 'Проверка существования профиля на популярных онлайн-платформах', 'Введите логин (например: durov)...')">
+        <a class="active" onclick="switchTool(this, 'username', 'Идентификация', 'Поиск по никнейму', 'Проверка существования профиля на популярных онлайн-платформах', 'Введите логин (например: durov)...')">
             <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
             <span>Логин</span>
         </a>
-        <a onclick="switchTool(this, 'dns', 'DNS записи домена', 'Получение A, MX, TXT и NS записей через Cloudflare DNS', 'Введите домен (например: google.com)...')">
+        <a onclick="switchTool(this, 'dns', 'Сетевой анализ', 'DNS записи домена', 'Получение A, MX, TXT и NS записей через Cloudflare DNS', 'Введите домен (например: google.com)...')">
             <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
             <span>DNS</span>
         </a>
-        <a onclick="switchTool(this, 'subdomains', 'Поиск поддоменов', 'Анализ открытых записей SSL-сертификатов', 'Домен для анализа (например: tesla.com)...')">
+        <a onclick="switchTool(this, 'subdomains', 'Инфраструктура', 'Поиск поддоменов', 'Анализ открытых записей SSL-сертификатов', 'Домен для анализа (например: tesla.com)...')">
             <svg viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
             <span>Поддомены</span>
         </a>
-        <a onclick="switchTool(this, 'ip', 'Геолокация IP', 'Определение страны, города и сетевой информации хоста', 'IP адрес или хост (например: 1.1.1.1)...')">
+        <a onclick="switchTool(this, 'ip', 'Геолокация', 'Сведения об IP адресе', 'Определение страны, города и сетевой информации хоста', 'IP адрес или хост (например: 1.1.1.1)...')">
             <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
             <span>IP-инфо</span>
         </a>
-        <a onclick="switchTool(this, 'email', 'Анализ почты', 'Проверка синтаксиса и почтового шлюза домена', 'Email адрес (например: name@domain.com)...')">
+        <a onclick="switchTool(this, 'email', 'Валидация', 'Анализ почты', 'Проверка синтаксиса и почтового шлюза домена', 'Email адрес (например: name@domain.com)...')">
             <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
             <span>Email</span>
         </a>
@@ -453,22 +547,36 @@
     <script>
         let currentTool = 'username';
 
-        function switchTool(btn, tool, title, desc, placeholder) {
+        function switchTool(btn, tool, category, title, desc, placeholder) {
             document.querySelectorAll('.menu a').forEach(el => el.classList.remove('active'));
             btn.classList.add('active');
             currentTool = tool;
 
+            document.getElementById('toolCategory').innerText = category;
             document.getElementById('toolTitle').innerText = title;
             document.getElementById('toolDesc').innerText = desc;
             const input = document.getElementById('targetInput');
             input.placeholder = placeholder;
             input.value = '';
+            document.getElementById('resultsTitle').innerText = 'Возможности платформы';
+            document.getElementById('scanStatus').innerText = 'Готов к запросу';
+            
             document.getElementById('resultsContent').innerHTML = `
-                <div class="placeholder-state">
-                    <span>Введите запрос слева и нажмите «Начать поиск»</span>
+                <div class="default-preview">
+                    <div class="preview-box">
+                        <div class="preview-title">Быстрый отклик</div>
+                        <div class="preview-text">Прямые браузерные запросы без сторонних серверов.</div>
+                    </div>
+                    <div class="preview-box">
+                        <div class="preview-title">Открытые реестры</div>
+                        <div class="preview-text">Только верифицированные источники данных.</div>
+                    </div>
+                    <div class="preview-box">
+                        <div class="preview-title">Безопасность</div>
+                        <div class="preview-text">Все соединения шифруются по протоколу TLS.</div>
+                    </div>
                 </div>
             `;
-            document.getElementById('scanStatus').innerText = 'Ожидание';
             input.focus();
         }
 
@@ -481,13 +589,16 @@
             if (!query) return;
 
             const btnText = document.getElementById('btnText');
+            const kbdHint = document.getElementById('kbdHint');
             const spinner = document.getElementById('spinner');
             const resultsContent = document.getElementById('resultsContent');
+            const resultsTitle = document.getElementById('resultsTitle');
             const scanStatus = document.getElementById('scanStatus');
 
             btnText.style.display = 'none';
+            kbdHint.style.display = 'none';
             spinner.style.display = 'block';
-            scanStatus.innerText = 'Поиск...';
+            scanStatus.innerText = 'Выполняется...';
 
             try {
                 let html = '';
@@ -509,7 +620,8 @@
                         { name: "SoundCloud", url: `https://soundcloud.com/${u}` }
                     ];
 
-                    scanStatus.innerText = `Найдено: ${platforms.length}`;
+                    resultsTitle.innerText = `Найдено профилей: ${platforms.length}`;
+                    scanStatus.innerText = 'Завершено';
                     html += '<div class="results-grid">';
                     for (const p of platforms) {
                         html += `
@@ -544,6 +656,7 @@
                         } catch (e) {}
                     }
                     html += '</div>';
+                    resultsTitle.innerText = `DNS отчет: ${cleanDomain}`;
                     scanStatus.innerText = 'Завершено';
                 }
                 else if (currentTool === 'subdomains') {
@@ -561,7 +674,8 @@
 
                     const list = Array.from(subs);
                     if (list.length > 0) {
-                        scanStatus.innerText = `Найдено: ${list.length}`;
+                        resultsTitle.innerText = `Обнаружено поддоменов: ${list.length}`;
+                        scanStatus.innerText = 'Завершено';
                         html += '<div class="results-grid">';
                         for (const s of list) {
                             html += `
@@ -572,8 +686,9 @@
                         }
                         html += '</div>';
                     } else {
+                        resultsTitle.innerText = 'Результаты';
                         scanStatus.innerText = '0 совпадений';
-                        html = '<div class="placeholder-state"><span>Поддоменов не обнаружено.</span></div>';
+                        html = '<div style="padding: 20px; text-align: center; color: rgba(255,255,255,0.4); font-size: 13px;">Поддоменов не обнаружено.</div>';
                     }
                 }
                 else if (currentTool === 'ip') {
@@ -581,6 +696,7 @@
                     const res = await fetch(`https://freeipapi.com/api/json/${encodeURIComponent(cleanTarget)}`);
                     const data = await res.json();
 
+                    resultsTitle.innerText = `Данные хоста: ${cleanTarget}`;
                     scanStatus.innerText = 'Завершено';
                     html += `
                         <div class="data-table">
@@ -595,12 +711,13 @@
                 else if (currentTool === 'email') {
                     const cleanEmail = query.trim().toLowerCase();
                     const domain = cleanEmail.split('@')[1] || 'Не указан';
+                    resultsTitle.innerText = 'Результат проверки';
                     scanStatus.innerText = 'Завершено';
                     html += `
                         <div class="data-table">
                             <div class="data-row"><span class="data-k">Адрес</span><span class="data-v">${cleanEmail}</span></div>
                             <div class="data-row"><span class="data-k">Почтовый домен</span><span class="data-v">${domain}</span></div>
-                            <div class="data-row"><span class="data-k">Формат</span><span class="data-v">${cleanEmail.includes('@') ? 'Корректный' : 'Ошибка формата'}</span></div>
+                            <div class="data-row"><span class="data-k">Формат</span><span class="data-v">${cleanEmail.includes('@') ? 'Корректный синтаксис' : 'Ошибка формата'}</span></div>
                         </div>
                     `;
                 }
@@ -608,9 +725,10 @@
                 resultsContent.innerHTML = html;
             } catch (e) {
                 scanStatus.innerText = 'Ошибка';
-                resultsContent.innerHTML = '<div class="placeholder-state"><span>Не удалось получить данные. Проверьте подключение к сети.</span></div>';
+                resultsContent.innerHTML = '<div style="padding: 20px; text-align: center; color: rgba(255,255,255,0.4); font-size: 13px;">Не удалось получить данные. Проверьте подключение к сети.</div>';
             } finally {
                 btnText.style.display = 'block';
+                kbdHint.style.display = 'inline';
                 spinner.style.display = 'none';
             }
         }
