@@ -3,67 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sherlock Cyber Intelligence</title>
+    <title>Sherlock</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
     <style>
         :root {
-            --font-main: 'Plus Jakarta Sans', -apple-system, sans-serif;
-            --font-mono: 'JetBrains Mono', monospace;
-            --ease-spring: cubic-bezier(0.16, 1, 0.3, 1);
-            --cyan: #38bdf8;
-            --emerald: #34d399;
-            --amber: #fbbf24;
-            --red: #f87171;
+            --font: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            --mono: 'JetBrains Mono', monospace;
+            --ease: cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: var(--font-main);
+            font-family: var(--font);
             -webkit-tap-highlight-color: transparent;
         }
 
         body {
-            background-color: #04060a;
+            background-color: #07090e;
+            background-image: 
+                radial-gradient(circle at 50% 0%, #151a24 0%, transparent 55%),
+                radial-gradient(circle at 100% 100%, #0d1017 0%, transparent 40%);
             color: #ffffff;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            padding: 24px 24px 130px;
-            position: relative;
-            overflow-x: hidden;
+            padding: 32px 24px 120px;
         }
 
-        /* 📡 РАДАРНЫЙ ФОН */
-        #radarCanvas {
-            position: fixed;
-            top: 0;
-            left: 0;
+        /* Верхняя панель */
+        .header {
             width: 100%;
-            height: 100%;
-            z-index: 1;
-            pointer-events: none;
-            opacity: 0.35;
-        }
-
-        /* 🔝 ВЕРХНИЙ БАР */
-        .top-navbar {
-            width: 100%;
-            max-width: 1200px;
+            max-width: 1080px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 12px 0 20px;
+            padding-bottom: 24px;
             border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-            margin-bottom: 28px;
-            z-index: 10;
+            margin-bottom: 32px;
         }
 
-        .brand-header {
+        .brand {
             display: flex;
             align-items: center;
             gap: 12px;
@@ -73,45 +57,35 @@
             width: 32px;
             height: 32px;
             border-radius: 10px;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.03));
-            border: 1px solid rgba(255, 255, 255, 0.25);
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.15);
             display: flex;
             align-items: center;
             justify-content: center;
-            box-shadow: 0 0 20px rgba(56, 189, 248, 0.2);
         }
 
         .brand-icon svg {
-            width: 18px;
-            height: 18px;
-            stroke: var(--cyan);
+            width: 17px;
+            height: 17px;
+            stroke: #ffffff;
         }
 
-        .brand-name {
-            font-size: 19px;
-            font-weight: 800;
+        .brand-title {
+            font-size: 18px;
+            font-weight: 700;
             letter-spacing: -0.3px;
         }
 
-        .system-telemetry {
-            display: flex;
-            align-items: center;
-            gap: 14px;
-            font-family: var(--font-mono);
-            font-size: 11px;
-            color: rgba(255, 255, 255, 0.5);
-        }
-
-        .status-badge {
+        .status-pill {
             display: inline-flex;
             align-items: center;
-            gap: 6px;
-            font-size: 11px;
-            font-weight: 600;
-            color: #ffffff;
-            background: rgba(52, 211, 153, 0.12);
-            border: 1px solid rgba(52, 211, 153, 0.35);
-            padding: 5px 12px;
+            gap: 8px;
+            font-size: 12px;
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.7);
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            padding: 6px 14px;
             border-radius: 99rem;
         }
 
@@ -119,100 +93,79 @@
             width: 6px;
             height: 6px;
             border-radius: 50%;
-            background: var(--emerald);
-            box-shadow: 0 0 8px var(--emerald);
-            animation: pulse 2s infinite ease-in-out;
+            background: #22c55e;
+            box-shadow: 0 0 8px #22c55e;
         }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 0.4; }
-            50% { opacity: 1; }
-        }
-
-        /* 💻 ШИРОКИЙ ДВУХКОЛОНОЧНЫЙ DASHBOARD */
-        .dashboard-grid {
+        /* Двухколоночный интерфейс */
+        .workspace-grid {
             width: 100%;
-            max-width: 1200px;
+            max-width: 1080px;
             display: grid;
-            grid-template-columns: 410px 1fr;
+            grid-template-columns: 380px 1fr;
             gap: 24px;
             align-items: start;
-            z-index: 10;
         }
 
-        /* 🍏 GLASS ПАНЕЛИ */
+        /* Стеклянные панели */
         .glass-panel {
             position: relative;
-            border-radius: 26px;
+            border-radius: 24px;
             background: 
-                linear-gradient(150deg, rgba(13, 18, 28, 0.78) 0%, rgba(6, 9, 15, 0.92) 100%) padding-box,
+                linear-gradient(150deg, rgba(17, 21, 30, 0.7) 0%, rgba(9, 11, 16, 0.85) 100%) padding-box,
                 linear-gradient(135deg, 
-                    rgba(255, 255, 255, 0.75) 0%, 
-                    rgba(56, 189, 248, 0.35) 25%, 
+                    rgba(255, 255, 255, 0.6) 0%, 
+                    rgba(255, 255, 255, 0.2) 30%, 
                     rgba(255, 255, 255, 0.02) 60%, 
-                    rgba(255, 255, 255, 0.3) 100%) border-box;
+                    rgba(255, 255, 255, 0.25) 100%) border-box;
             border: 1px solid transparent;
-            backdrop-filter: blur(32px);
-            -webkit-backdrop-filter: blur(32px);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
             box-shadow: 
-                0 30px 60px -15px rgba(0, 0, 0, 0.95),
-                inset 0 1px 1px 0 rgba(255, 255, 255, 0.4),
-                inset 0 -1px 1px 0 rgba(255, 255, 255, 0.08);
+                0 30px 60px -15px rgba(0, 0, 0, 0.8),
+                inset 0 1px 1px 0 rgba(255, 255, 255, 0.35);
             padding: 32px 28px;
         }
 
-        .view-tag {
-            font-family: var(--font-mono);
-            font-size: 11px;
+        .panel-title {
+            font-size: 22px;
             font-weight: 700;
-            color: var(--cyan);
-            letter-spacing: 1.5px;
-            text-transform: uppercase;
+            letter-spacing: -0.4px;
             margin-bottom: 6px;
         }
 
-        .view-title {
-            font-size: 24px;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            margin-bottom: 8px;
-        }
-
-        .view-desc {
+        .panel-desc {
             font-size: 13px;
             color: rgba(255, 255, 255, 0.45);
-            margin-bottom: 22px;
+            margin-bottom: 24px;
             line-height: 1.5;
         }
 
-        .search-group {
+        .input-group {
             display: flex;
             flex-direction: column;
-            gap: 14px;
+            gap: 12px;
         }
 
         .glass-input {
             width: 100%;
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.14);
-            border-radius: 16px;
-            padding: 16px 18px;
-            font-family: var(--font-mono);
+            background: rgba(0, 0, 0, 0.35);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 14px;
+            padding: 15px 18px;
             font-size: 14px;
             color: #ffffff;
             outline: none;
             transition: all 0.2s ease;
-            box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
         }
 
         .glass-input:focus {
-            border-color: var(--cyan);
-            background: rgba(0, 0, 0, 0.7);
-            box-shadow: 0 0 20px rgba(56, 189, 248, 0.25);
+            border-color: rgba(255, 255, 255, 0.4);
+            background: rgba(0, 0, 0, 0.5);
+            box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2);
         }
 
         .glass-input::placeholder {
-            font-family: var(--font-main);
             color: rgba(255, 255, 255, 0.25);
         }
 
@@ -220,66 +173,48 @@
             background: #ffffff;
             color: #07090e;
             border: none;
-            border-radius: 16px;
-            padding: 16px;
+            border-radius: 14px;
+            padding: 15px;
             font-size: 14px;
-            font-weight: 700;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s var(--ease-spring);
-            box-shadow: 0 8px 24px rgba(255, 255, 255, 0.25);
+            transition: all 0.2s var(--ease);
+            box-shadow: 0 6px 20px rgba(255, 255, 255, 0.15);
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
         }
 
         .search-btn:hover {
-            transform: scale(1.015);
-            box-shadow: 0 12px 30px rgba(255, 255, 255, 0.4);
+            transform: translateY(-1px);
+            box-shadow: 0 10px 25px rgba(255, 255, 255, 0.25);
         }
 
         .search-btn:active {
-            transform: scale(0.98);
+            transform: translateY(0);
         }
 
-        /* 📋 ПРАВАЯ ПАНЕЛЬ: РЕЗУЛЬТАТЫ */
+        /* Панель выдачи результатов */
         .results-panel {
-            min-height: 420px;
-            display: flex;
-            flex-direction: column;
+            min-height: 260px;
         }
 
         .results-header {
             font-size: 12px;
-            font-weight: 700;
-            letter-spacing: 0.8px;
+            font-weight: 600;
+            letter-spacing: 0.5px;
             text-transform: uppercase;
             color: rgba(255, 255, 255, 0.4);
             margin-bottom: 16px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding-bottom: 14px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
         }
-
-        .terminal-log {
-            font-family: var(--font-mono);
-            font-size: 12px;
-            line-height: 1.6;
-            color: rgba(255, 255, 255, 0.6);
-            margin-bottom: 16px;
-            display: none;
-        }
-
-        .log-success { color: var(--emerald); }
-        .log-info { color: var(--cyan); }
-        .log-warn { color: var(--amber); }
 
         .results-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(210px, 1fr));
-            gap: 12px;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 10px;
         }
 
         .card-link {
@@ -287,32 +222,30 @@
             justify-content: space-between;
             align-items: center;
             background: 
-                linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.5)) padding-box,
-                linear-gradient(135deg, rgba(255, 255, 255, 0.15), rgba(255, 255, 255, 0.02)) border-box;
+                linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.4)) padding-box,
+                linear-gradient(135deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.02)) border-box;
             border: 1px solid transparent;
             border-radius: 14px;
             padding: 14px 16px;
             text-decoration: none;
             color: #ffffff;
-            transition: all 0.2s var(--ease-spring);
+            transition: all 0.2s var(--ease);
         }
 
         .card-link:hover {
             transform: translateY(-2px);
             background: rgba(255, 255, 255, 0.08);
-            border-color: var(--cyan);
-            box-shadow: 0 4px 20px rgba(56, 189, 248, 0.2);
+            border-color: rgba(255, 255, 255, 0.3);
         }
 
         .card-name {
-            font-size: 14px;
+            font-size: 13px;
             font-weight: 600;
         }
 
         .card-action {
-            font-family: var(--font-mono);
-            font-size: 11px;
-            color: var(--cyan);
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.4);
         }
 
         .data-table {
@@ -326,23 +259,22 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(0, 0, 0, 0.35);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.05);
             border-radius: 12px;
-            padding: 13px 16px;
+            padding: 14px 16px;
         }
 
         .data-k {
-            font-family: var(--font-mono);
-            font-size: 12px;
-            font-weight: 600;
+            font-size: 13px;
+            font-weight: 500;
             color: rgba(255, 255, 255, 0.45);
         }
 
         .data-v {
-            font-family: var(--font-mono);
+            font-family: var(--mono);
             font-size: 13px;
-            font-weight: 600;
+            font-weight: 500;
             color: #ffffff;
             max-width: 65%;
             text-align: right;
@@ -350,22 +282,21 @@
         }
 
         .placeholder-state {
-            flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
+            min-height: 180px;
             color: rgba(255, 255, 255, 0.3);
             font-size: 13px;
             text-align: center;
-            gap: 12px;
-            min-height: 240px;
+            gap: 8px;
         }
 
         .spinner {
             display: none;
-            width: 18px;
-            height: 18px;
+            width: 16px;
+            height: 16px;
             border: 2px solid rgba(0, 0, 0, 0.2);
             border-top-color: #07090e;
             border-radius: 50%;
@@ -376,22 +307,21 @@
             to { transform: rotate(360deg); }
         }
 
-        /* 🪟 ПЛАВАЮЩИЙ GLASS DOCK */
+        /* Нижний плавающий стеклянный док */
         .menu {
             position: fixed;
             left: 50%;
             bottom: 24px;
             transform: translateX(-50%);
             width: calc(100% - 32px);
-            max-width: 540px;
-            backdrop-filter: blur(18px) saturate(180%) contrast(140%);
-            -webkit-backdrop-filter: blur(18px) saturate(180%) contrast(140%);
-            background: rgba(10, 14, 22, 0.75);
-            border: 1px solid rgba(255, 255, 255, 0.16);
+            max-width: 500px;
+            backdrop-filter: blur(16px) saturate(180%);
+            -webkit-backdrop-filter: blur(16px) saturate(180%);
+            background: rgba(14, 18, 26, 0.7);
+            border: 1px solid rgba(255, 255, 255, 0.12);
             box-shadow: 
-                0 25px 50px rgba(0, 0, 0, 0.8),
-                inset 0 1px 1px rgba(255, 255, 255, 0.4),
-                inset 0 -1px 1px rgba(255, 255, 255, 0.1);
+                0 20px 40px rgba(0, 0, 0, 0.6),
+                inset 0 1px 1px rgba(255, 255, 255, 0.3);
             padding: 6px;
             border-radius: 99rem;
             display: flex;
@@ -406,12 +336,12 @@
             align-items: center;
             flex: 1 1 0;
             min-width: 0;
-            color: rgba(255, 255, 255, 0.45);
+            color: rgba(255, 255, 255, 0.5);
             text-decoration: none;
             padding: 10px 4px;
             border-radius: 999rem;
             cursor: pointer;
-            transition: all 0.18s var(--ease-spring);
+            transition: all 0.18s var(--ease);
         }
 
         .menu a:hover {
@@ -420,8 +350,8 @@
         }
 
         .menu a svg {
-            width: 1.3rem;
-            height: 1.3rem;
+            width: 1.25rem;
+            height: 1.25rem;
             stroke: currentColor;
             fill: none;
             stroke-width: 2;
@@ -430,179 +360,115 @@
         }
 
         .menu a span {
-            font-size: 0.72rem;
+            font-size: 0.75rem;
             font-weight: 600;
             line-height: 1;
             margin-top: 5px;
         }
 
         .menu a.active {
-            background: rgba(255, 255, 255, 0.18);
+            background: rgba(255, 255, 255, 0.16);
             color: #ffffff;
-            box-shadow: 
-                inset 0 1px 1px rgba(255, 255, 255, 0.5),
-                0 4px 14px rgba(0, 0, 0, 0.5);
+            box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.4);
         }
 
         @media (max-width: 860px) {
-            .dashboard-grid { grid-template-columns: 1fr; }
-            body { padding: 16px 16px 120px; }
+            .workspace-grid { grid-template-columns: 1fr; }
+            body { padding: 20px 16px 120px; }
             .glass-panel { padding: 24px 20px; }
-            .system-telemetry { display: none; }
         }
     </style>
 </head>
 <body>
 
-    <!-- 📡 Live Radar Canvas -->
-    <canvas id="radarCanvas"></canvas>
-
-    <!-- 🔝 ХЕДЕР С ТЕЛЕМЕТРИЕЙ -->
-    <header class="top-navbar">
-        <div class="brand-header">
+    <header class="header">
+        <div class="brand">
             <div class="brand-icon">
-                <svg viewBox="0 0 24 24" fill="none" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="11" cy="11" r="8"></circle>
                     <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
                 </svg>
             </div>
-            <span class="brand-name">Sherlock</span>
+            <span class="brand-title">Sherlock</span>
         </div>
-        <div class="system-telemetry">
-            <span>SOCKETS // ASYNC</span>
-            <span>DNS // CLOUDFLARE_DOH</span>
-            <div class="status-badge">
-                <span class="status-dot"></span>
-                <span>Active Nodes</span>
-            </div>
+        <div class="status-pill">
+            <span class="status-dot"></span>
+            <span>Готов к работе</span>
         </div>
     </header>
 
-    <!-- 💻 ШИРОКИЙ ДВУХКОЛОНОЧНЫЙ ТЕРМИНАЛ -->
-    <main class="dashboard-grid">
-        <!-- ЛЕВАЯ КОЛОНКА -->
+    <main class="workspace-grid">
+        <!-- Панель ввода -->
         <section class="glass-panel">
-            <div class="view-tag" id="viewTag">TARGET PROFILER</div>
-            <h1 class="view-title" id="viewTitle">Поиск по никнейму</h1>
-            <p class="view-desc" id="viewDesc">Мгновенный опрос открытых платформ и сопоставление цифрового следа</p>
+            <h1 class="panel-title" id="toolTitle">Поиск по никнейму</h1>
+            <p class="panel-desc" id="toolDesc">Проверка существования профиля на популярных онлайн-платформах</p>
 
-            <div class="search-group">
-                <input type="text" id="targetInput" class="glass-input" placeholder="Введите логин (durov, alex)..." autocomplete="off" spellcheck="false">
+            <div class="input-group">
+                <input type="text" id="targetInput" class="glass-input" placeholder="Введите логин (например: durov)..." autocomplete="off" spellcheck="false">
                 <button class="search-btn" id="searchBtn" onclick="runSearch()">
-                    <span id="btnText">Запустить сканирование</span>
+                    <span id="btnText">Начать поиск</span>
                     <div class="spinner" id="spinner"></div>
                 </button>
             </div>
         </section>
 
-        <!-- ПРАВАЯ КОЛОНКА (МОНИТОР) -->
+        <!-- Панель результатов -->
         <section class="glass-panel results-panel">
             <div class="results-header">
-                <span>Монитор данных</span>
-                <span id="scanStatus" style="font-family: var(--font-mono); font-size: 11px; color: var(--cyan);">ОЖИДАНИЕ ЦЕЛИ</span>
+                <span>Результаты</span>
+                <span id="scanStatus" style="font-size: 11px; font-weight: 500;">Ожидание</span>
             </div>
-            <div id="terminalLog" class="terminal-log"></div>
             <div id="resultsContent">
                 <div class="placeholder-state">
-                    <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-                    <span>Задайте цель слева для запуска глубокого сетевого анализа</span>
+                    <span>Введите запрос слева и нажмите «Начать поиск»</span>
                 </div>
             </div>
         </section>
     </main>
 
-    <!-- 🪟 ПЛАВАЮЩИЙ GLASS DOCK (SVG) -->
+    <!-- Нижняя навигация -->
     <nav class="menu">
-        <a class="active" onclick="switchTool(this, 'username', 'TARGET PROFILER', 'Поиск по никнейму', 'Мгновенный опрос открытых платформ и сопоставление цифрового следа', 'Введите никнейм (durov, alex)...')">
+        <a class="active" onclick="switchTool(this, 'username', 'Поиск по никнейму', 'Проверка существования профиля на популярных онлайн-платформах', 'Введите логин (например: durov)...')">
             <svg viewBox="0 0 24 24"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
             <span>Логин</span>
         </a>
-        <a onclick="switchTool(this, 'dns', 'DNS TOPOLOGY', 'DNS и сеть домена', 'Прямой опрос Cloudflare DoH (A, AAAA, MX, TXT, NS)', 'Введите домен (google.com)...')">
+        <a onclick="switchTool(this, 'dns', 'DNS записи домена', 'Получение A, MX, TXT и NS записей через Cloudflare DNS', 'Введите домен (например: google.com)...')">
             <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
             <span>DNS</span>
         </a>
-        <a onclick="switchTool(this, 'subdomains', 'CERTIFICATE OSINT', 'Поиск поддоменов', 'Парсинг логов прозрачности SSL-сертификатов (crt.sh)', 'Домен для поиска (tesla.com)...')">
+        <a onclick="switchTool(this, 'subdomains', 'Поиск поддоменов', 'Анализ открытых записей SSL-сертификатов', 'Домен для анализа (например: tesla.com)...')">
             <svg viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
-            <span>Субдомены</span>
+            <span>Поддомены</span>
         </a>
-        <a onclick="switchTool(this, 'ip', 'GEOINT & BGP', 'Геолокация IP', 'Определение ASN, провайдера, страны, города и координат', 'IP адрес или хост (1.1.1.1)...')">
+        <a onclick="switchTool(this, 'ip', 'Геолокация IP', 'Определение страны, города и сетевой информации хоста', 'IP адрес или хост (например: 1.1.1.1)...')">
             <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
             <span>IP-инфо</span>
         </a>
-        <a onclick="switchTool(this, 'email', 'MAIL FOOTPRINT', 'Анализ почты', 'Проверка синтаксиса, MX-шлюза и профиля Gravatar', 'Email адрес (target@mail.com)...')">
+        <a onclick="switchTool(this, 'email', 'Анализ почты', 'Проверка синтаксиса и почтового шлюза домена', 'Email адрес (например: name@domain.com)...')">
             <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path><polyline points="22,6 12,13 2,6"></polyline></svg>
             <span>Email</span>
         </a>
     </nav>
 
     <script>
-        // 📡 Радарная анимация
-        const canvas = document.getElementById('radarCanvas');
-        const ctx = canvas.getContext('2d');
-        let angle = 0;
-
-        function resize() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resize);
-        resize();
-
-        function drawRadar() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            const cx = canvas.width / 2;
-            const cy = canvas.height / 2;
-            const r = Math.min(canvas.width, canvas.height) * 0.45;
-
-            ctx.strokeStyle = 'rgba(56, 189, 248, 0.05)';
-            ctx.lineWidth = 1;
-            for (let i = 1; i <= 4; i++) {
-                ctx.beginPath();
-                ctx.arc(cx, cy, (r / 4) * i, 0, Math.PI * 2);
-                ctx.stroke();
-            }
-
-            ctx.save();
-            ctx.translate(cx, cy);
-            ctx.rotate(angle);
-            const grad = ctx.createLinearGradient(0, 0, r, 0);
-            grad.addColorStop(0, 'rgba(56, 189, 248, 0.15)');
-            grad.addColorStop(1, 'transparent');
-            ctx.fillStyle = grad;
-            ctx.beginPath();
-            ctx.moveTo(0, 0);
-            ctx.arc(0, 0, r, 0, Math.PI / 3);
-            ctx.closePath();
-            ctx.fill();
-            ctx.restore();
-
-            angle += 0.015;
-            requestAnimationFrame(drawRadar);
-        }
-        drawRadar();
-
-        // 🎛 Логика переключения инструментов
         let currentTool = 'username';
 
-        function switchTool(btn, tool, tag, title, desc, placeholder) {
+        function switchTool(btn, tool, title, desc, placeholder) {
             document.querySelectorAll('.menu a').forEach(el => el.classList.remove('active'));
             btn.classList.add('active');
             currentTool = tool;
 
-            document.getElementById('viewTag').innerText = tag;
-            document.getElementById('viewTitle').innerText = title;
-            document.getElementById('viewDesc').innerText = desc;
+            document.getElementById('toolTitle').innerText = title;
+            document.getElementById('toolDesc').innerText = desc;
             const input = document.getElementById('targetInput');
             input.placeholder = placeholder;
             input.value = '';
-            document.getElementById('terminalLog').style.display = 'none';
             document.getElementById('resultsContent').innerHTML = `
                 <div class="placeholder-state">
-                    <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="8" x2="12" y2="12"></line><line x1="12" y1="16" x2="12.01" y2="16"></line></svg>
-                    <span>Задайте цель слева для запуска глубокого сетевого анализа</span>
+                    <span>Введите запрос слева и нажмите «Начать поиск»</span>
                 </div>
             `;
-            document.getElementById('scanStatus').innerText = 'ОЖИДАНИЕ ЦЕЛИ';
+            document.getElementById('scanStatus').innerText = 'Ожидание';
             input.focus();
         }
 
@@ -610,7 +476,6 @@
             if (e.key === 'Enter') runSearch();
         });
 
-        // 🧠 Автономные браузерные OSINT-движки
         async function runSearch() {
             const query = document.getElementById('targetInput').value.trim();
             if (!query) return;
@@ -619,22 +484,16 @@
             const spinner = document.getElementById('spinner');
             const resultsContent = document.getElementById('resultsContent');
             const scanStatus = document.getElementById('scanStatus');
-            const terminalLog = document.getElementById('terminalLog');
 
             btnText.style.display = 'none';
             spinner.style.display = 'block';
-            scanStatus.innerText = 'СКАНИРОВАНИЕ...';
-            terminalLog.style.display = 'block';
-            terminalLog.innerHTML = `<span class="log-info">[+] Инициализация целевого объекта: ${query}</span><br>`;
+            scanStatus.innerText = 'Поиск...';
 
             try {
                 let html = '';
 
-                // 1. Поиск по логину
                 if (currentTool === 'username') {
                     const u = query.replace('@', '');
-                    terminalLog.innerHTML += `<span class="log-info">[+] Опрос открытых платформ по идентификатору...</span><br>`;
-                    
                     const platforms = [
                         { name: "GitHub", url: `https://github.com/${u}` },
                         { name: "Telegram", url: `https://t.me/${u}` },
@@ -650,25 +509,20 @@
                         { name: "SoundCloud", url: `https://soundcloud.com/${u}` }
                     ];
 
-                    terminalLog.innerHTML += `<span class="log-success">[✓] Сформирована матрица из ${platforms.length} профилей</span><br>`;
-                    scanStatus.innerText = `НАЙДЕНО: ${platforms.length}`;
-
+                    scanStatus.innerText = `Найдено: ${platforms.length}`;
                     html += '<div class="results-grid">';
                     for (const p of platforms) {
                         html += `
                             <a href="${p.url}" target="_blank" class="card-link">
                                 <span class="card-name">${p.name}</span>
-                                <span class="card-action">ОТКРЫТЬ ↗</span>
+                                <span class="card-action">Открыть ↗</span>
                             </a>
                         `;
                     }
                     html += '</div>';
                 }
-
-                // 2. DNS
                 else if (currentTool === 'dns') {
                     const cleanDomain = query.replace('https://', '').replace('http://', '').split('/')[0].trim();
-                    terminalLog.innerHTML += `<span class="log-info">[+] Запрос DNS-записей через Cloudflare DoH...</span><br>`;
                     const types = ['A', 'AAAA', 'MX', 'TXT', 'NS'];
                     html += '<div class="data-table">';
 
@@ -682,7 +536,7 @@
                                 const vals = data.Answer.map(a => a.data).join(', ');
                                 html += `
                                     <div class="data-row">
-                                        <span class="data-k">${t} RECORD</span>
+                                        <span class="data-k">${t} запись</span>
                                         <span class="data-v">${vals}</span>
                                     </div>
                                 `;
@@ -690,14 +544,10 @@
                         } catch (e) {}
                     }
                     html += '</div>';
-                    terminalLog.innerHTML += `<span class="log-success">[✓] Топология домена успешно определена</span><br>`;
-                    scanStatus.innerText = 'УСПЕШНО';
+                    scanStatus.innerText = 'Завершено';
                 }
-
-                // 3. Поддомены crt.sh
                 else if (currentTool === 'subdomains') {
                     const cleanDomain = query.replace('https://', '').replace('http://', '').split('/')[0].trim();
-                    terminalLog.innerHTML += `<span class="log-info">[+] Парсинг глобальных логов SSL (crt.sh)...</span><br>`;
                     const res = await fetch(`https://crt.sh/?q=%25.${encodeURIComponent(cleanDomain)}&output=json`);
                     const data = await res.json();
                     const subs = new Set();
@@ -711,65 +561,54 @@
 
                     const list = Array.from(subs);
                     if (list.length > 0) {
-                        terminalLog.innerHTML += `<span class="log-success">[✓] Обнаружено уникальных субдоменов: ${list.length}</span><br>`;
-                        scanStatus.innerText = `НАЙДЕНО: ${list.length}`;
+                        scanStatus.innerText = `Найдено: ${list.length}`;
                         html += '<div class="results-grid">';
                         for (const s of list) {
                             html += `
                                 <div class="card-link" style="cursor: default;">
-                                    <span class="card-name" style="font-family: var(--font-mono); font-size: 13px;">${s}</span>
+                                    <span class="card-name" style="font-family: var(--mono); font-size: 13px;">${s}</span>
                                 </div>
                             `;
                         }
                         html += '</div>';
                     } else {
-                        terminalLog.innerHTML += `<span class="log-warn">[!] Открытых записей сертификатов не обнаружено</span><br>`;
-                        scanStatus.innerText = '0 СОВПАДЕНИЙ';
-                        html = '<div class="placeholder-state"><span>Поддоменов не найдено.</span></div>';
+                        scanStatus.innerText = '0 совпадений';
+                        html = '<div class="placeholder-state"><span>Поддоменов не обнаружено.</span></div>';
                     }
                 }
-
-                // 4. IP Geointel
                 else if (currentTool === 'ip') {
                     const cleanTarget = query.replace('https://', '').replace('http://', '').split('/')[0].trim();
-                    terminalLog.innerHTML += `<span class="log-info">[+] Опрос спутникового гео-шлюза FreeIPAPI...</span><br>`;
                     const res = await fetch(`https://freeipapi.com/api/json/${encodeURIComponent(cleanTarget)}`);
                     const data = await res.json();
 
-                    terminalLog.innerHTML += `<span class="log-success">[✓] Координаты и провайдер зафиксированы</span><br>`;
-                    scanStatus.innerText = 'УСПЕШНО';
+                    scanStatus.innerText = 'Завершено';
                     html += `
                         <div class="data-table">
-                            <div class="data-row"><span class="data-k">IP ADDRESS</span><span class="data-v">${data.ipAddress || cleanTarget}</span></div>
-                            <div class="data-row"><span class="data-k">COUNTRY</span><span class="data-v">${data.countryName || '—'}</span></div>
-                            <div class="data-row"><span class="data-k">CITY</span><span class="data-v">${data.cityName || '—'}</span></div>
-                            <div class="data-row"><span class="data-k">ZIP CODE</span><span class="data-v">${data.zipCode || '—'}</span></div>
-                            <div class="data-row"><span class="data-k">PROTOCOL</span><span class="data-v">${data.ipVersion ? 'IPv' + data.ipVersion : '—'}</span></div>
+                            <div class="data-row"><span class="data-k">IP адрес</span><span class="data-v">${data.ipAddress || cleanTarget}</span></div>
+                            <div class="data-row"><span class="data-k">Страна</span><span class="data-v">${data.countryName || '—'}</span></div>
+                            <div class="data-row"><span class="data-k">Город</span><span class="data-v">${data.cityName || '—'}</span></div>
+                            <div class="data-row"><span class="data-k">Индекс</span><span class="data-v">${data.zipCode || '—'}</span></div>
+                            <div class="data-row"><span class="data-k">Версия IP</span><span class="data-v">${data.ipVersion ? 'IPv' + data.ipVersion : '—'}</span></div>
                         </div>
                     `;
                 }
-
-                // 5. Email
                 else if (currentTool === 'email') {
                     const cleanEmail = query.trim().toLowerCase();
                     const domain = cleanEmail.split('@')[1] || 'Не указан';
-                    terminalLog.innerHTML += `<span class="log-info">[+] Анализ почтового шлюза и домена ${domain}...</span><br>`;
-                    terminalLog.innerHTML += `<span class="log-success">[✓] Синтаксический анализ завершен</span><br>`;
-                    scanStatus.innerText = 'УСПЕШНО';
+                    scanStatus.innerText = 'Завершено';
                     html += `
                         <div class="data-table">
-                            <div class="data-row"><span class="data-k">EMAIL</span><span class="data-v">${cleanEmail}</span></div>
-                            <div class="data-row"><span class="data-k">MAIL DOMAIN</span><span class="data-v">${domain}</span></div>
-                            <div class="data-row"><span class="data-k">FORMAT STATUS</span><span class="data-v">${cleanEmail.includes('@') ? 'Корректный' : 'Ошибка формата'}</span></div>
+                            <div class="data-row"><span class="data-k">Адрес</span><span class="data-v">${cleanEmail}</span></div>
+                            <div class="data-row"><span class="data-k">Почтовый домен</span><span class="data-v">${domain}</span></div>
+                            <div class="data-row"><span class="data-k">Формат</span><span class="data-v">${cleanEmail.includes('@') ? 'Корректный' : 'Ошибка формата'}</span></div>
                         </div>
                     `;
                 }
 
                 resultsContent.innerHTML = html;
             } catch (e) {
-                terminalLog.innerHTML += `<span class="log-warn">[!] Ошибка при обращении к целевому шлюзу</span><br>`;
-                scanStatus.innerText = 'ОШИБКА';
-                resultsContent.innerHTML = '<div class="placeholder-state"><span>Не удалось получить ответ от открытых серверов. Проверьте интернет.</span></div>';
+                scanStatus.innerText = 'Ошибка';
+                resultsContent.innerHTML = '<div class="placeholder-state"><span>Не удалось получить данные. Проверьте подключение к сети.</span></div>';
             } finally {
                 btnText.style.display = 'block';
                 spinner.style.display = 'none';
