@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Sherlock</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -35,7 +35,8 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        body {
+        html, body {
+            width: 100%;
             background-color: var(--bg);
             background-image: none;
             color: var(--text-main);
@@ -80,7 +81,7 @@
             }
         }
 
-        /* 🪟 ВЫЕЗЖАЮЩАЯ СЛЕВА ПАНЕЛЬ С ГЛАЙДЕРОМ */
+        /* 🪟 ЗАТЕМНЕНИЕ ФОНА ПРИ ОТКРЫТИИ МЕНЮ */
         .drawer-overlay {
             position: fixed;
             inset: 0;
@@ -88,22 +89,25 @@
             backdrop-filter: blur(12px);
             opacity: 0;
             visibility: hidden;
-            transition: all 0.3s var(--ease);
+            pointer-events: none;
+            transition: opacity 0.3s var(--ease), visibility 0.3s;
             z-index: 100;
         }
 
         .drawer-overlay.active {
             opacity: 1;
             visibility: visible;
+            pointer-events: auto;
         }
 
+        /* 🚫 БОЛЬШЕ НИКАКИХ ТЕНЕЙ ПО БОКАМ: в закрытом виде тень отключена */
         .side-drawer {
             position: fixed;
             top: 0;
             left: 0;
             bottom: 0;
             width: 280px;
-            background: rgba(11, 13, 17, 0.96);
+            background: rgba(11, 13, 17, 0.98);
             border-right: 1px solid var(--border);
             backdrop-filter: blur(30px);
             z-index: 110;
@@ -111,12 +115,15 @@
             display: flex;
             flex-direction: column;
             transform: translateX(-100%);
-            transition: transform 0.3s var(--ease);
-            box-shadow: 20px 0 60px rgba(0, 0, 0, 0.9);
+            visibility: hidden;
+            box-shadow: none; /* Тень полностью выключена */
+            transition: transform 0.3s var(--ease), visibility 0.3s, box-shadow 0.3s;
         }
 
         .side-drawer.active {
             transform: translateX(0);
+            visibility: visible;
+            box-shadow: 20px 0 60px rgba(0, 0, 0, 0.9); /* Появляется ТОЛЬКО когда открыто */
         }
 
         .drawer-head {
@@ -317,7 +324,7 @@
             user-select: none;
         }
 
-        /* 🖱️ НА ПК ПРИ НАВЕДЕНИИ — ТОЛЬКО ЗАТЕМНЯЕТСЯ, БЕЗ ПОВТОРНОЙ ПОДСВЕТКИ */
+        /* 🖱️ ТОЛЬКО НА ПК: ЗАТЕМНЯЕТСЯ ПРИ НАВЕДЕНИИ */
         @media (hover: hover) and (pointer: fine) {
             .menu-style-btn:hover {
                 filter: brightness(0.85);
@@ -325,7 +332,7 @@
             }
         }
 
-        /* 📱 НА ТЕЛЕФОНЕ — ПОЛНАЯ СТАТИКА, НИКАКИХ ИЗМЕНЕНИЙ ПРИ НАЖАТИИ */
+        /* 📱 НА ТЕЛЕФОНЕ: ПОЛНАЯ СТАТИЧНОСТЬ */
         @media (hover: none) {
             .menu-style-btn,
             .menu-style-btn:active,
