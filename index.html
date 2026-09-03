@@ -6,7 +6,8 @@
     <title>Sherlock</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <!-- Подключаем Unbounded (широкий растянутый шрифт) -->
+    <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;800;900&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
     <style>
         :root {
@@ -14,16 +15,14 @@
             --main-color-opacity: rgba(247, 228, 121, 0.12);
             --total-radio: 5;
 
-            --bg: #090a0d;
-            --surface: rgba(18, 20, 26, 0.6);
-            --surface-hover: rgba(24, 27, 36, 0.85);
+            --bg: #08090c;
+            --surface: rgba(18, 20, 27, 0.6);
             --border: rgba(255, 255, 255, 0.08);
-            --border-hover: rgba(255, 255, 255, 0.18);
 
             --text-main: #f0f2f5;
-            --text-muted: #555965;
+            --text-muted: #525663;
 
-            --font-title: 'Space Grotesk', sans-serif;
+            --font-stretched: 'Unbounded', sans-serif;
             --font-ui: 'Inter', -apple-system, sans-serif;
             --font-mono: 'JetBrains Mono', monospace;
             --ease: cubic-bezier(0.16, 1, 0.3, 1);
@@ -40,8 +39,8 @@
         body {
             background-color: var(--bg);
             background-image: 
-                radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, 0.02) 0%, transparent 60%),
-                linear-gradient(180deg, #090a0d 0%, #060709 100%);
+                radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, 0.015) 0%, transparent 60%),
+                linear-gradient(180deg, #08090c 0%, #050608 100%);
             background-attachment: fixed;
             color: var(--text-main);
             min-height: 100vh;
@@ -52,7 +51,7 @@
             position: relative;
         }
 
-        /* 🔘 ЧИСТАЯ СТАТИЧНАЯ SVG КНОПКА МЕНЮ (ПЛАВНОЕ СВЕЧЕНИЕ БЕЗ ЗУМА) */
+        /* 🔘 ЧИСТАЯ СТАТИЧНАЯ SVG КНОПКА МЕНЮ */
         .hud-menu-btn {
             position: fixed;
             top: 28px;
@@ -66,7 +65,7 @@
             align-items: center;
             justify-content: center;
             color: rgba(255, 255, 255, 0.35);
-            transition: color 0.35s ease, filter 0.35s ease;
+            transition: color 0.3s ease, filter 0.3s ease;
         }
 
         .hud-menu-btn svg {
@@ -106,7 +105,7 @@
             left: 0;
             bottom: 0;
             width: 280px;
-            background: rgba(12, 14, 18, 0.95);
+            background: rgba(11, 13, 17, 0.95);
             border-right: 1px solid var(--border);
             backdrop-filter: blur(30px);
             z-index: 110;
@@ -132,10 +131,10 @@
         }
 
         .drawer-brand {
-            font-family: var(--font-title);
-            font-size: 14px;
-            font-weight: 700;
-            letter-spacing: 0.08em;
+            font-family: var(--font-stretched);
+            font-size: 12px;
+            font-weight: 800;
+            letter-spacing: 0.05em;
             color: var(--main-color);
             text-transform: uppercase;
         }
@@ -243,7 +242,7 @@
         .radio-container input:nth-of-type(4):checked ~ .glider-container .glider { transform: translateY(300%); }
         .radio-container input:nth-of-type(5):checked ~ .glider-container .glider { transform: translateY(400%); }
 
-        /* ⎯⎯⎯ ОТКРЫТАЯ РАБОЧАЯ ОБЛАСТЬ (БЕЗ ПЛАШКИ) ⎯⎯⎯ */
+        /* ⎯⎯⎯ ОТКРЫТАЯ РАБОЧАЯ ОБЛАСТЬ ⎯⎯⎯ */
         .workspace {
             width: 100%;
             max-width: 680px;
@@ -251,20 +250,20 @@
             padding: 110px 20px 80px;
             display: flex;
             flex-direction: column;
-            gap: 32px;
+            gap: 28px;
         }
 
         .title-block {
             display: flex;
             flex-direction: column;
-            gap: 4px;
         }
 
+        /* 🌟 ТОТ САМЫЙ РАСТЯНУТЫЙ И ТОЛСТЫЙ ШРИФТ */
         .main-title {
-            font-family: var(--font-title);
-            font-size: 30px;
-            font-weight: 700;
-            letter-spacing: -0.02em;
+            font-family: var(--font-stretched);
+            font-size: 26px;
+            font-weight: 900;
+            letter-spacing: -0.01em;
             color: #ffffff;
             text-transform: uppercase;
         }
@@ -276,6 +275,7 @@
             width: 100%;
         }
 
+        /* 🚫 ПОЛЕ ВВОДА: НИКАКОЙ ПОДСВЕТКИ, ОБВОДКИ ИЛИ ВСПЛЫВАНИЯ */
         .field-input {
             flex: 1;
             height: 44px;
@@ -286,71 +286,43 @@
             color: #ffffff;
             font-size: 14px;
             outline: none;
-            transition: border-color 0.25s ease, background 0.25s ease;
+            transition: none;
         }
 
         .field-input:focus {
-            border-color: var(--border-hover);
-            background: var(--surface-hover);
+            outline: none;
+            box-shadow: none;
+            border-color: var(--border); /* Цвет остается полностью статичным */
+            background: var(--surface);
         }
 
         .field-input::placeholder {
             color: rgba(255, 255, 255, 0.25);
         }
 
-        /* 🛡️ МЕТАЛЛИЧЕСКАЯ КНОПКА С БЛИКОМ (ПОЛНАЯ СТАТИКА) */
-        .metal-btn {
-            position: relative;
-            background: linear-gradient(180deg, #2a2d36 0%, #1b1d24 100%);
-            border: 1px solid rgba(255, 255, 255, 0.12);
+        /* 🌟 КНОПКА В ТОЧНОМ СТИЛЕ ПУНКТОВ МЕНЮ (СТАТИЧНАЯ) */
+        .menu-style-btn {
+            background: var(--surface);
+            border: 1px solid var(--border);
             border-radius: 10px;
             height: 44px;
             padding: 0 24px;
-            color: #e5e7eb;
-            font-size: 13px;
+            color: #606472;
+            font-size: 13.5px;
             font-weight: 600;
-            letter-spacing: 0.04em;
+            letter-spacing: 0.02em;
             cursor: pointer;
-            overflow: hidden;
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            box-shadow: 
-                inset 0 1px 0 rgba(255, 255, 255, 0.2),
-                inset 0 -1px 0 rgba(0, 0, 0, 0.6),
-                0 2px 4px rgba(0, 0, 0, 0.4);
-            transition: border-color 0.25s ease, background 0.25s ease, color 0.25s ease;
+            transition: color 0.25s ease, border-color 0.25s ease, background 0.25s ease;
         }
 
-        /* Световой блик (полоса) */
-        .metal-btn::after {
-            content: "";
-            position: absolute;
-            top: 0;
-            left: -120%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(
-                115deg,
-                transparent 30%,
-                rgba(255, 255, 255, 0.15) 48%,
-                rgba(255, 255, 255, 0.28) 50%,
-                rgba(255, 255, 255, 0.15) 52%,
-                transparent 70%
-            );
-            pointer-events: none;
-            transition: left 0.55s ease;
-        }
-
-        .metal-btn:hover::after {
-            left: 120%;
-        }
-
-        .metal-btn:hover {
-            border-color: rgba(255, 255, 255, 0.25);
-            background: linear-gradient(180deg, #323540 0%, #20222a 100%);
-            color: #ffffff;
+        .menu-style-btn:hover {
+            color: var(--main-color);
+            border-color: rgba(247, 228, 121, 0.25);
+            background: linear-gradient(90deg, rgba(247, 228, 121, 0.04) 0%, var(--surface) 100%);
         }
 
         /* 📋 РЕЗУЛЬТАТЫ */
@@ -388,12 +360,11 @@
             text-decoration: none;
             font-size: 13px;
             font-weight: 500;
-            transition: background 0.2s ease, border-color 0.2s ease;
+            transition: border-color 0.2s ease;
         }
 
         .deck-card:hover {
-            background: var(--surface-hover);
-            border-color: var(--border-hover);
+            border-color: rgba(255, 255, 255, 0.16);
         }
 
         .deck-card svg {
@@ -422,15 +393,10 @@
             align-items: center;
             padding: 13px 18px;
             border-bottom: 1px solid var(--border);
-            transition: background 0.15s ease;
         }
 
         .data-row:last-child {
             border-bottom: none;
-        }
-
-        .data-row:hover {
-            background: rgba(255, 255, 255, 0.02);
         }
 
         .data-key {
@@ -490,7 +456,7 @@
             width: 14px;
             height: 14px;
             border: 2px solid rgba(255, 255, 255, 0.2);
-            border-top-color: #fff;
+            border-top-color: var(--main-color);
             border-radius: 50%;
             animation: spin 0.6s linear infinite;
         }
@@ -525,7 +491,7 @@
             .hud-menu-btn { top: 20px; left: 20px; }
             .workspace { padding: 90px 16px 40px; }
             .deck-grid { grid-template-columns: 1fr; }
-            .main-title { font-size: 24px; }
+            .main-title { font-size: 21px; }
         }
     </style>
 </head>
@@ -591,7 +557,7 @@
         </div>
     </aside>
 
-    <!-- 💻 ОТКРЫТАЯ РАБОЧАЯ ОБЛАСТЬ (БЕЗ ПЛАШКИ) -->
+    <!-- 💻 ОТКРЫТАЯ РАБОЧАЯ ОБЛАСТЬ -->
     <main class="workspace">
         <div class="title-block">
             <h1 class="main-title" id="toolTitle">Субдомены</h1>
@@ -599,7 +565,7 @@
 
         <div class="input-row">
             <input type="text" id="targetInput" class="field-input" placeholder="Корневой домен (например: spotify.com)..." autocomplete="off" spellcheck="false">
-            <button class="metal-btn" id="runBtn" onclick="runInvestigation()">
+            <button class="menu-style-btn" id="runBtn" onclick="runInvestigation()">
                 <span id="btnText">Поиск</span>
                 <div class="spinner" id="spinner"></div>
             </button>
