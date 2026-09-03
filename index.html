@@ -3,21 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Sherlock</title>
+    <title>Sherlock — Hub</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <!-- Широкий растянутый шрифт Unbounded -->
-    <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;800;900&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@700;800;900&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 
     <style>
         :root {
             --main-color: #f7e479;
             --main-color-opacity: rgba(247, 228, 121, 0.12);
-            --total-radio: 6;
+            --total-radio: 7;
 
-            /* 🌑 ЧИСТЫЙ СЕРЫЙ ГРАФИТ */
+            /* 🌑 ЧИСТЫЙ ГРАФИТ */
             --bg: #0c0c0e;
             --surface: rgba(26, 26, 30, 0.65);
+            --surface-hover: rgba(34, 34, 40, 0.85);
             --border: rgba(255, 255, 255, 0.08);
 
             --text-main: #f0f2f5;
@@ -83,7 +84,7 @@
             }
         }
 
-        /* 🪟 ЗАТЕМНЕНИЕ ФОНА */
+        /* 🪟 ЗАТЕМНЕНИЕ */
         .drawer-overlay {
             position: fixed;
             inset: 0;
@@ -102,7 +103,7 @@
             pointer-events: auto;
         }
 
-        /* 🚪 БОКОВАЯ ПАНЕЛЬ */
+        /* 🚪 БОКОВАЯ ШТОРКА */
         .side-drawer {
             position: fixed;
             top: 0;
@@ -134,7 +135,7 @@
             align-items: center;
             padding-bottom: 18px;
             border-bottom: 1px solid var(--border);
-            margin-bottom: 16px;
+            margin-bottom: 14px;
         }
 
         .drawer-brand {
@@ -162,9 +163,9 @@
             color: #fff;
         }
 
-        /* 🌟 ЛАЗЕРНЫЙ ГЛАЙДЕР НА 6 ПОЗИЦИЙ */
+        /* 🌟 ЛАЗЕРНЫЙ ГЛАЙДЕР НА 7 ПОЗИЦИЙ (ВКЛЮЧАЯ ХАБ) */
         .radio-container {
-            --total-radio: 6;
+            --total-radio: 7;
             display: flex;
             flex-direction: column;
             position: relative;
@@ -193,7 +194,7 @@
             height: calc(100% / var(--total-radio));
             width: 100%;
             background: linear-gradient(0deg, rgba(0,0,0,0) 0%, var(--main-color) 50%, rgba(0,0,0,0) 100%);
-            transition: transform 0.4s cubic-bezier(0.37, 1.4, 0.66, 1);
+            transition: transform 0.35s cubic-bezier(0.37, 1.4, 0.66, 1);
         }
 
         .radio-container .glider-container .glider::before {
@@ -219,10 +220,10 @@
 
         .radio-container label {
             cursor: pointer;
-            padding: 0.85rem 1.1rem;
+            padding: 0.78rem 1.1rem;
             position: relative;
             color: #686873;
-            font-size: 13.5px;
+            font-size: 13px;
             font-weight: 600;
             display: flex;
             align-items: center;
@@ -249,16 +250,174 @@
         .radio-container input:nth-of-type(4):checked ~ .glider-container .glider { transform: translateY(300%); }
         .radio-container input:nth-of-type(5):checked ~ .glider-container .glider { transform: translateY(400%); }
         .radio-container input:nth-of-type(6):checked ~ .glider-container .glider { transform: translateY(500%); }
+        .radio-container input:nth-of-type(7):checked ~ .glider-container .glider { transform: translateY(600%); }
 
-        /* ⎯⎯⎯ РАБОЧАЯ ОБЛАСТЬ ⎯⎯⎯ */
+        /* ⎯⎯⎯ КОНТЕЙНЕРЫ ЭКРАНОВ ⎯⎯⎯ */
         .workspace {
             width: 100%;
-            max-width: 680px;
+            max-width: 720px;
             margin: 0 auto;
-            padding: 110px 20px 80px;
+            padding: 100px 20px 80px;
             display: flex;
             flex-direction: column;
             gap: 28px;
+        }
+
+        /* 🏛️ 1. ЭКРАН ГЛАВНОГО МЕНЮ (ХАБ) */
+        .hub-view {
+            display: flex;
+            flex-direction: column;
+            gap: 36px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .hub-header {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .hub-title {
+            font-family: var(--font-stretched);
+            font-size: 38px;
+            font-weight: 900;
+            letter-spacing: -0.02em;
+            color: #ffffff;
+            text-transform: uppercase;
+            line-height: 1.1;
+        }
+
+        .hub-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-family: var(--font-mono);
+            font-size: 11.5px;
+            color: var(--text-muted);
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+        }
+
+        .hub-status-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background: var(--main-color);
+            box-shadow: 0 0 8px var(--main-color);
+        }
+
+        /* ТАКТИЧЕСКАЯ МАТРИЦА 6 МОДУЛЕЙ */
+        .hub-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        .hub-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 22px 20px;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            min-height: 130px;
+            transition: border-color 0.2s ease, background 0.2s ease;
+            user-select: none;
+        }
+
+        .hub-card-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .hub-card-icon {
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            transition: color 0.2s ease;
+        }
+
+        .hub-card-icon svg {
+            width: 20px;
+            height: 20px;
+            stroke-width: 2;
+            stroke: currentColor;
+            fill: none;
+        }
+
+        .hub-card-idx {
+            font-family: var(--font-mono);
+            font-size: 11px;
+            color: var(--text-muted);
+            letter-spacing: 0.05em;
+        }
+
+        .hub-card-body {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            margin-top: 18px;
+        }
+
+        .hub-card-name {
+            font-family: var(--font-stretched);
+            font-size: 14px;
+            font-weight: 800;
+            letter-spacing: 0.02em;
+            color: var(--text-main);
+            text-transform: uppercase;
+            transition: color 0.2s ease;
+        }
+
+        .hub-card-desc {
+            font-size: 12px;
+            color: var(--text-muted);
+            line-height: 1.4;
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+            .hub-card:hover {
+                border-color: rgba(247, 228, 121, 0.28);
+                background: var(--surface-hover);
+            }
+            .hub-card:hover .hub-card-icon {
+                color: var(--main-color);
+            }
+            .hub-card:hover .hub-card-name {
+                color: var(--main-color);
+            }
+        }
+
+        /* 🛠️ 2. ЭКРАН ИНСТРУМЕНТА */
+        .tool-view {
+            display: none;
+            flex-direction: column;
+            gap: 28px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .back-nav-btn {
+            background: transparent;
+            border: none;
+            color: var(--text-muted);
+            font-size: 12px;
+            font-family: var(--font-mono);
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 0;
+            align-self: flex-start;
+            transition: color 0.2s ease;
+        }
+
+        .back-nav-btn:hover {
+            color: var(--main-color);
         }
 
         .title-block {
@@ -515,9 +674,16 @@
             opacity: 1;
         }
 
-        @media (max-width: 600px) {
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 640px) {
             .hud-menu-btn { top: 20px; left: 20px; }
-            .workspace { padding: 90px 16px 40px; }
+            .workspace { padding: 84px 16px 40px; }
+            .hub-grid { grid-template-columns: 1fr; }
+            .hub-title { font-size: 28px; }
             .deck-grid { grid-template-columns: 1fr; }
             .main-title { font-size: 21px; }
         }
@@ -536,10 +702,10 @@
 
     <div class="drawer-overlay" id="drawerOverlay" onclick="toggleMenu()"></div>
 
-    <!-- ВЫЕЗЖАЮЩАЯ СЛЕВА ПАНЕЛЬ (6 ПУНКТОВ) -->
+    <!-- ВЫЕЗЖАЮЩАЯ СЛЕВА ПАНЕЛЬ (ХАБ + 6 ИНСТРУМЕНТОВ) -->
     <aside class="side-drawer" id="sideDrawer">
         <div class="drawer-head">
-            <span class="drawer-brand">Инструменты</span>
+            <span class="drawer-brand">Терминал</span>
             <button class="drawer-close" onclick="toggleMenu()">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -549,39 +715,50 @@
         </div>
 
         <div class="radio-container">
-            <input type="radio" id="tool-sub" name="osint-radio" value="subdomains" checked onchange="selectTool(this)">
+            <!-- 🏠 ГЛАВНОЕ МЕНЮ (ХАБ) -->
+            <input type="radio" id="tool-home" name="osint-radio" value="home" checked onchange="handleNavSelect(this)">
+            <label for="tool-home">
+                <svg viewBox="0 0 24 24"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>
+                <span>Главный Хаб</span>
+            </label>
+
+            <!-- 1. СУБДОМЕНЫ -->
+            <input type="radio" id="tool-sub" name="osint-radio" value="subdomains" onchange="handleNavSelect(this)">
             <label for="tool-sub">
                 <svg viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
                 <span>Субдомены</span>
             </label>
 
-            <!-- ✈️ ПО TELEGRAM (ВМЕСТО НИКНЕЙМА) -->
-            <input type="radio" id="tool-tg" name="osint-radio" value="telegram" onchange="selectTool(this)">
+            <!-- 2. TELEGRAM -->
+            <input type="radio" id="tool-tg" name="osint-radio" value="telegram" onchange="handleNavSelect(this)">
             <label for="tool-tg">
                 <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
                 <span>По TELEGRAM</span>
             </label>
 
-            <!-- 📞 ПО НОМЕРУ (НОВАЯ ФУНКЦИЯ) -->
-            <input type="radio" id="tool-phone" name="osint-radio" value="phone" onchange="selectTool(this)">
+            <!-- 3. НОМЕР -->
+            <input type="radio" id="tool-phone" name="osint-radio" value="phone" onchange="handleNavSelect(this)">
             <label for="tool-phone">
                 <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
                 <span>По номеру</span>
             </label>
 
-            <input type="radio" id="tool-dns" name="osint-radio" value="dns" onchange="selectTool(this)">
+            <!-- 4. DNS -->
+            <input type="radio" id="tool-dns" name="osint-radio" value="dns" onchange="handleNavSelect(this)">
             <label for="tool-dns">
                 <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
                 <span>DNS записи</span>
             </label>
 
-            <input type="radio" id="tool-ip" name="osint-radio" value="ip" onchange="selectTool(this)">
+            <!-- 5. IP -->
+            <input type="radio" id="tool-ip" name="osint-radio" value="ip" onchange="handleNavSelect(this)">
             <label for="tool-ip">
                 <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
                 <span>IP хост</span>
             </label>
 
-            <input type="radio" id="tool-mail" name="osint-radio" value="email" onchange="selectTool(this)">
+            <!-- 6. EMAIL -->
+            <input type="radio" id="tool-mail" name="osint-radio" value="email" onchange="handleNavSelect(this)">
             <label for="tool-mail">
                 <svg viewBox="0 0 24 24"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
                 <span>Почтовый адрес</span>
@@ -593,33 +770,139 @@
         </div>
     </aside>
 
-    <!-- 💻 ОТКРЫТАЯ РАБОЧАЯ ОБЛАСТЬ -->
+    <!-- 💻 ОСНОВНАЯ РАБОЧАЯ ОБЛАСТЬ -->
     <main class="workspace">
-        <div class="title-block">
-            <h1 class="main-title" id="toolTitle">Субдомены</h1>
-        </div>
 
-        <div class="input-row">
-            <input type="text" id="targetInput" class="field-input" placeholder="Корневой домен (например: spotify.com)..." autocomplete="off" spellcheck="false">
-            <button class="menu-style-btn" id="runBtn" onclick="runInvestigation()">
-                <span id="btnText">Поиск</span>
-                <div class="spinner" id="spinner"></div>
-            </button>
-        </div>
-
-        <!-- РЕЗУЛЬТАТЫ -->
-        <div class="results-section">
-            <div class="meta-line" id="statusLine">Ожидание</div>
-            <div id="resultsViewport">
-                <div class="blank-state">Укажите цель для инициализации поиска</div>
+        <!-- 🏛️ 1. ЭКРАН ГЛАВНОГО ХАБА (ВСТРЕЧАЕТ ПРИ ВХОДЕ) -->
+        <section class="hub-view" id="hubView">
+            <div class="hub-header">
+                <h1 class="hub-title">SHERLOCK</h1>
+                <div class="hub-meta">
+                    <div class="hub-status-dot"></div>
+                    <span>КОНСОЛЬ РАЗВЕДКИ // ВЫБЕРИТЕ МОДУЛЬ</span>
+                </div>
             </div>
-        </div>
+
+            <div class="hub-grid">
+                <!-- 01 СУБДОМЕНЫ -->
+                <div class="hub-card" onclick="openTool('subdomains')">
+                    <div class="hub-card-top">
+                        <div class="hub-card-icon">
+                            <svg viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                        </div>
+                        <span class="hub-card-idx">// 01</span>
+                    </div>
+                    <div class="hub-card-body">
+                        <div class="hub-card-name">Субдомены</div>
+                        <div class="hub-card-desc">Глобальный поиск по SSL-сертификатам crt.sh</div>
+                    </div>
+                </div>
+
+                <!-- 02 TELEGRAM -->
+                <div class="hub-card" onclick="openTool('telegram')">
+                    <div class="hub-card-top">
+                        <div class="hub-card-icon">
+                            <svg viewBox="0 0 24 24"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+                        </div>
+                        <span class="hub-card-idx">// 02</span>
+                    </div>
+                    <div class="hub-card-body">
+                        <div class="hub-card-name">По TELEGRAM</div>
+                        <div class="hub-card-desc">TGStat, Telemetr, предпросмотр постов и Web</div>
+                    </div>
+                </div>
+
+                <!-- 03 НОМЕР -->
+                <div class="hub-card" onclick="openTool('phone')">
+                    <div class="hub-card-top">
+                        <div class="hub-card-icon">
+                            <svg viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                        </div>
+                        <span class="hub-card-idx">// 03</span>
+                    </div>
+                    <div class="hub-card-body">
+                        <div class="hub-card-name">По номеру</div>
+                        <div class="hub-card-desc">Парсинг оператора, стран и чаты WhatsApp/TG</div>
+                    </div>
+                </div>
+
+                <!-- 04 DNS -->
+                <div class="hub-card" onclick="openTool('dns')">
+                    <div class="hub-card-top">
+                        <div class="hub-card-icon">
+                            <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"></circle><line x1="2" y1="12" x2="22" y2="12"></line><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path></svg>
+                        </div>
+                        <span class="hub-card-idx">// 04</span>
+                    </div>
+                    <div class="hub-card-body">
+                        <div class="hub-card-name">DNS записи</div>
+                        <div class="hub-card-desc">Резолв A, MX, TXT через Cloudflare DoH</div>
+                    </div>
+                </div>
+
+                <!-- 05 IP -->
+                <div class="hub-card" onclick="openTool('ip')">
+                    <div class="hub-card-top">
+                        <div class="hub-card-icon">
+                            <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path><circle cx="12" cy="10" r="3"></circle></svg>
+                        </div>
+                        <span class="hub-card-idx">// 05</span>
+                    </div>
+                    <div class="hub-card-body">
+                        <div class="hub-card-name">IP хост</div>
+                        <div class="hub-card-desc">Геолокация, провайдер ASN и сетевая зона</div>
+                    </div>
+                </div>
+
+                <!-- 06 EMAIL -->
+                <div class="hub-card" onclick="openTool('email')">
+                    <div class="hub-card-top">
+                        <div class="hub-card-icon">
+                            <svg viewBox="0 0 24 24"><rect width="20" height="16" x="2" y="4" rx="2"></rect><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path></svg>
+                        </div>
+                        <span class="hub-card-idx">// 06</span>
+                    </div>
+                    <div class="hub-card-body">
+                        <div class="hub-card-name">Почтовый адрес</div>
+                        <div class="hub-card-desc">Проверка валидности синтаксиса и MX узла</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 🛠️ 2. ЭКРАН ИНСТРУМЕНТА (ОТКРЫВАЕТСЯ ПРИ ВЫБОРЕ) -->
+        <section class="tool-view" id="toolView">
+            <button class="back-nav-btn" onclick="openHome()">
+                <span>← Главное меню</span>
+            </button>
+
+            <div class="title-block">
+                <h1 class="main-title" id="toolTitle">Субдомены</h1>
+            </div>
+
+            <div class="input-row">
+                <input type="text" id="targetInput" class="field-input" placeholder="Цель поиска..." autocomplete="off" spellcheck="false">
+                <button class="menu-style-btn" id="runBtn" onclick="runInvestigation()">
+                    <span id="btnText">Поиск</span>
+                    <div class="spinner" id="spinner"></div>
+                </button>
+            </div>
+
+            <!-- РЕЗУЛЬТАТЫ -->
+            <div class="results-section">
+                <div class="meta-line" id="statusLine">Ожидание</div>
+                <div id="resultsViewport">
+                    <div class="blank-state">Укажите цель для инициализации поиска</div>
+                </div>
+            </div>
+        </section>
+
     </main>
 
     <div class="toast" id="toast">Скопировано в буфер</div>
 
     <script>
-        let currentTool = 'subdomains';
+        let currentNav = 'home';
 
         const toolConfig = {
             subdomains: {
@@ -658,9 +941,35 @@
             menuBtn.classList.toggle('active', isOpen);
         }
 
-        function selectTool(radio) {
-            currentTool = radio.value;
-            const c = toolConfig[currentTool];
+        // Переключение из боковой шторки
+        function handleNavSelect(radio) {
+            const val = radio.value;
+            if (val === 'home') {
+                openHome();
+            } else {
+                openTool(val);
+            }
+            setTimeout(toggleMenu, 160);
+        }
+
+        // Открыть Главный Хаб
+        function openHome() {
+            currentNav = 'home';
+            document.getElementById('hubView').style.display = 'flex';
+            document.getElementById('toolView').style.display = 'none';
+
+            // Синхронизируем радио-селектор
+            const r = document.getElementById('tool-home');
+            if (r) r.checked = true;
+        }
+
+        // Открыть Конкретный Инструмент
+        function openTool(toolKey) {
+            currentNav = toolKey;
+            const c = toolConfig[toolKey];
+
+            document.getElementById('hubView').style.display = 'none';
+            document.getElementById('toolView').style.display = 'flex';
 
             document.getElementById('toolTitle').innerText = c.title;
 
@@ -673,7 +982,17 @@
                 <div class="blank-state">Укажите цель для инициализации поиска</div>
             `;
 
-            setTimeout(toggleMenu, 160);
+            // Синхронизируем радио-селектор в меню
+            const radioMap = {
+                subdomains: 'tool-sub',
+                telegram: 'tool-tg',
+                phone: 'tool-phone',
+                dns: 'tool-dns',
+                ip: 'tool-ip',
+                email: 'tool-mail'
+            };
+            const targetRadio = document.getElementById(radioMap[toolKey]);
+            if (targetRadio) targetRadio.checked = true;
         }
 
         function copyData(val) {
@@ -687,7 +1006,6 @@
             if (e.key === 'Enter') runInvestigation();
         });
 
-        // Функция парсинга и определения номеров
         function parsePhoneNumber(raw) {
             const digits = raw.replace(/\D/g, '');
             let country = 'Международный / Неизвестно';
@@ -733,7 +1051,7 @@
                 let html = '';
 
                 // ✈️ 1. TELEGRAM
-                if (currentTool === 'telegram') {
+                if (currentNav === 'telegram') {
                     const u = query.replace('@', '').trim();
                     const tgHub = [
                         { name: "Telegram Профиль", sub: `t.me/${u}`, url: `https://t.me/${u}` },
@@ -762,8 +1080,8 @@
                     }
                     html += '</div>';
                 }
-                // 📞 2. ПО НОМЕРУ ТЕЛЕФОНА
-                else if (currentTool === 'phone') {
+                // 📞 2. ПО НОМЕРУ
+                else if (currentNav === 'phone') {
                     const info = parsePhoneNumber(query);
                     statusLine.innerText = `Номер: +${info.digits}`;
 
@@ -813,7 +1131,7 @@
                     html += '</div>';
                 }
                 // 🌐 3. СУБДОМЕНЫ
-                else if (currentTool === 'subdomains') {
+                else if (currentNav === 'subdomains') {
                     const cleanDomain = query.replace('https://', '').replace('http://', '').split('/')[0].trim();
                     const res = await fetch(`https://crt.sh/?q=%25.${encodeURIComponent(cleanDomain)}&output=json`);
                     const data = await res.json();
@@ -848,7 +1166,7 @@
                     }
                 }
                 // 📡 4. DNS
-                else if (currentTool === 'dns') {
+                else if (currentNav === 'dns') {
                     const cleanDomain = query.replace('https://', '').replace('http://', '').split('/')[0].trim();
                     const types = ['A', 'AAAA', 'MX', 'TXT', 'NS'];
                     let found = 0;
@@ -887,7 +1205,7 @@
                     }
                 }
                 // 📍 5. IP
-                else if (currentTool === 'ip') {
+                else if (currentNav === 'ip') {
                     const cleanTarget = query.replace('https://', '').replace('http://', '').split('/')[0].trim();
                     const res = await fetch(`https://freeipapi.com/api/json/${encodeURIComponent(cleanTarget)}`);
                     const data = await res.json();
@@ -919,7 +1237,7 @@
                     html += '</div>';
                 }
                 // ✉️ 6. EMAIL
-                else if (currentTool === 'email') {
+                else if (currentNav === 'email') {
                     const cleanEmail = query.trim().toLowerCase();
                     const domain = cleanEmail.split('@')[1] || '—';
                     const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail);
