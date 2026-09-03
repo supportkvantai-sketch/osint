@@ -6,7 +6,7 @@
     <title>Sherlock</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 
     <style>
         :root {
@@ -14,12 +14,16 @@
             --main-color-opacity: rgba(247, 228, 121, 0.12);
             --total-radio: 5;
 
-            /* Переменные из твоего сниппета */
-            --login-box-color: #1a1a1e;
-            --input-color: #26272e;
-            --button-color: #2e303a;
             --bg: #090a0d;
+            --surface: rgba(18, 20, 26, 0.6);
+            --surface-hover: rgba(24, 27, 36, 0.85);
+            --border: rgba(255, 255, 255, 0.08);
+            --border-hover: rgba(255, 255, 255, 0.18);
 
+            --text-main: #f0f2f5;
+            --text-muted: #555965;
+
+            --font-title: 'Space Grotesk', sans-serif;
             --font-ui: 'Inter', -apple-system, sans-serif;
             --font-mono: 'JetBrains Mono', monospace;
             --ease: cubic-bezier(0.16, 1, 0.3, 1);
@@ -35,56 +39,55 @@
 
         body {
             background-color: var(--bg);
-            background-image: radial-gradient(circle at 50% 15%, rgba(247, 228, 121, 0.04) 0%, transparent 50%),
-                              radial-gradient(circle at 50% 90%, rgba(20, 24, 36, 0.6) 0%, transparent 60%);
+            background-image: 
+                radial-gradient(ellipse at 50% 0%, rgba(255, 255, 255, 0.02) 0%, transparent 60%),
+                linear-gradient(180deg, #090a0d 0%, #060709 100%);
             background-attachment: fixed;
-            color: #ffffff;
+            color: var(--text-main);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: flex-start;
             overflow-x: hidden;
             position: relative;
         }
 
-        /* 🔘 ЧИСТАЯ SVG КНОПКА МЕНЮ (ПЛАВНЫЙ ПЕРЕХОД В ЖЕЛТЫЙ) */
-        .menu-trigger {
+        /* 🔘 ЧИСТАЯ СТАТИЧНАЯ SVG КНОПКА МЕНЮ (ПЛАВНОЕ СВЕЧЕНИЕ БЕЗ ЗУМА) */
+        .hud-menu-btn {
             position: fixed;
-            top: 24px;
-            left: 24px;
+            top: 28px;
+            left: 28px;
             z-index: 90;
             background: transparent;
             border: none;
+            padding: 6px;
             cursor: pointer;
-            padding: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: rgba(255, 255, 255, 0.4);
-            transition: color 0.3s var(--ease), filter 0.3s var(--ease), transform 0.3s var(--ease);
+            color: rgba(255, 255, 255, 0.35);
+            transition: color 0.35s ease, filter 0.35s ease;
         }
 
-        .menu-trigger svg {
-            width: 26px;
-            height: 26px;
-            stroke-width: 2.2;
+        .hud-menu-btn svg {
+            width: 24px;
+            height: 24px;
+            stroke-width: 2;
             stroke: currentColor;
             fill: none;
         }
 
-        .menu-trigger:hover,
-        .menu-trigger.active {
+        .hud-menu-btn:hover,
+        .hud-menu-btn.active {
             color: var(--main-color);
-            filter: drop-shadow(0 0 10px rgba(247, 228, 121, 0.6));
-            transform: scale(1.08);
+            filter: drop-shadow(0 0 8px rgba(247, 228, 121, 0.5));
         }
 
         /* 🪟 ВЫЕЗЖАЮЩАЯ СЛЕВА ПАНЕЛЬ С ГЛАЙДЕРОМ */
         .drawer-overlay {
             position: fixed;
             inset: 0;
-            background: rgba(0, 0, 0, 0.7);
+            background: rgba(0, 0, 0, 0.75);
             backdrop-filter: blur(12px);
             opacity: 0;
             visibility: hidden;
@@ -103,32 +106,33 @@
             left: 0;
             bottom: 0;
             width: 280px;
-            background: rgba(14, 15, 20, 0.92);
-            border-right: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(12, 14, 18, 0.95);
+            border-right: 1px solid var(--border);
             backdrop-filter: blur(30px);
             z-index: 110;
-            padding: 30px 18px;
+            padding: 32px 20px;
             display: flex;
             flex-direction: column;
             transform: translateX(-100%);
-            transition: transform 0.35s var(--ease);
-            box-shadow: 20px 0 50px rgba(0, 0, 0, 0.8);
+            transition: transform 0.3s var(--ease);
+            box-shadow: 20px 0 60px rgba(0, 0, 0, 0.9);
         }
 
         .side-drawer.active {
             transform: translateX(0);
         }
 
-        .drawer-top {
+        .drawer-head {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding-bottom: 20px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            border-bottom: 1px solid var(--border);
             margin-bottom: 20px;
         }
 
         .drawer-brand {
+            font-family: var(--font-title);
             font-size: 14px;
             font-weight: 700;
             letter-spacing: 0.08em;
@@ -139,7 +143,7 @@
         .drawer-close {
             background: transparent;
             border: none;
-            color: rgba(255, 255, 255, 0.4);
+            color: var(--text-muted);
             cursor: pointer;
             display: flex;
             align-items: center;
@@ -183,7 +187,7 @@
             height: calc(100% / var(--total-radio));
             width: 100%;
             background: linear-gradient(0deg, rgba(0,0,0,0) 0%, var(--main-color) 50%, rgba(0,0,0,0) 100%);
-            transition: transform 0.45s cubic-bezier(0.37, 1.4, 0.66, 1);
+            transition: transform 0.4s cubic-bezier(0.37, 1.4, 0.66, 1);
         }
 
         .radio-container .glider-container .glider::before {
@@ -211,13 +215,13 @@
             cursor: pointer;
             padding: 1rem 1.1rem;
             position: relative;
-            color: #6c707d;
+            color: #606472;
             font-size: 13.5px;
             font-weight: 600;
             display: flex;
             align-items: center;
             gap: 12px;
-            transition: all 0.25s ease-in-out;
+            transition: color 0.25s ease;
             user-select: none;
         }
 
@@ -239,237 +243,212 @@
         .radio-container input:nth-of-type(4):checked ~ .glider-container .glider { transform: translateY(300%); }
         .radio-container input:nth-of-type(5):checked ~ .glider-container .glider { transform: translateY(400%); }
 
-        /* ⎯⎯⎯ ЦЕНТРАЛЬНАЯ ОБЛАСТЬ ⎯⎯⎯ */
-        .main-wrapper {
+        /* ⎯⎯⎯ ОТКРЫТАЯ РАБОЧАЯ ОБЛАСТЬ (БЕЗ ПЛАШКИ) ⎯⎯⎯ */
+        .workspace {
             width: 100%;
-            max-width: 640px;
+            max-width: 680px;
             margin: 0 auto;
-            padding: 100px 20px 80px;
+            padding: 110px 20px 80px;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            gap: 24px;
+            gap: 32px;
         }
 
-        /* 🌟 ТОТ САМЫЙ КОМПОНЕНТ ИЗ ТВОЕГО СНИППЕТА */
-        .container {
+        .title-block {
             display: flex;
-            justify-content: center;
-            align-items: center;
-            position: relative;
-            overflow: hidden;
-            background: var(--login-box-color);
-            border-radius: 24px;
-            width: 100%;
-            padding: 1.5px; /* Зазор для вращающейся линии */
-            z-index: 8;
-            box-shadow:
-                0 4px 8px rgba(0, 0, 0, 0.3),
-                0 8px 16px rgba(0, 0, 0, 0.3),
-                0 0 10px rgba(255, 255, 255, 0.08),
-                0 0 20px rgba(255, 255, 255, 0.04);
+            flex-direction: column;
+            gap: 4px;
         }
 
-        .container::before {
+        .main-title {
+            font-family: var(--font-title);
+            font-size: 30px;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: #ffffff;
+            text-transform: uppercase;
+        }
+
+        /* 🔍 СТРОКА ВВОДА */
+        .input-row {
+            display: flex;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .field-input {
+            flex: 1;
+            height: 44px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 0 16px;
+            color: #ffffff;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.25s ease, background 0.25s ease;
+        }
+
+        .field-input:focus {
+            border-color: var(--border-hover);
+            background: var(--surface-hover);
+        }
+
+        .field-input::placeholder {
+            color: rgba(255, 255, 255, 0.25);
+        }
+
+        /* 🛡️ МЕТАЛЛИЧЕСКАЯ КНОПКА С БЛИКОМ (ПОЛНАЯ СТАТИКА) */
+        .metal-btn {
+            position: relative;
+            background: linear-gradient(180deg, #2a2d36 0%, #1b1d24 100%);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 10px;
+            height: 44px;
+            padding: 0 24px;
+            color: #e5e7eb;
+            font-size: 13px;
+            font-weight: 600;
+            letter-spacing: 0.04em;
+            cursor: pointer;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 
+                inset 0 1px 0 rgba(255, 255, 255, 0.2),
+                inset 0 -1px 0 rgba(0, 0, 0, 0.6),
+                0 2px 4px rgba(0, 0, 0, 0.4);
+            transition: border-color 0.25s ease, background 0.25s ease, color 0.25s ease;
+        }
+
+        /* Световой блик (полоса) */
+        .metal-btn::after {
             content: "";
             position: absolute;
-            width: 200%;
-            height: 200%;
-            z-index: -2;
-            background: conic-gradient(
-                from 45deg,
-                transparent 75%,
-                var(--main-color) 92%,
-                #ffffff 98%,
-                transparent 100%
+            top: 0;
+            left: -120%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                115deg,
+                transparent 30%,
+                rgba(255, 255, 255, 0.15) 48%,
+                rgba(255, 255, 255, 0.28) 50%,
+                rgba(255, 255, 255, 0.15) 52%,
+                transparent 70%
             );
-            animation: spin 4s linear infinite;
+            pointer-events: none;
+            transition: left 0.55s ease;
         }
 
-        @keyframes spin {
-            100% {
-                transform: rotate(360deg);
-            }
+        .metal-btn:hover::after {
+            left: 120%;
         }
 
-        .login-box {
-            background: var(--login-box-color);
-            border-radius: 23px;
-            padding: 30px 28px;
-            width: 100%;
-            position: relative;
-            z-index: 10;
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            box-shadow:
-                inset 0 40px 60px -8px rgba(255, 255, 255, 0.12),
-                inset 4px 0 12px -6px rgba(255, 255, 255, 0.12),
-                inset 0 0 12px -4px rgba(255, 255, 255, 0.12);
+        .metal-btn:hover {
+            border-color: rgba(255, 255, 255, 0.25);
+            background: linear-gradient(180deg, #323540 0%, #20222a 100%);
+            color: #ffffff;
         }
 
-        .form {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            flex-direction: column;
-            gap: 14px;
-            width: 100%;
-        }
-
-        .header {
-            width: 100%;
-            text-align: center;
-            font-size: 22px;
-            font-weight: 700;
-            padding: 4px;
-            color: white;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            letter-spacing: 0.04em;
-            text-transform: uppercase;
-        }
-
-        .input {
-            width: 100%;
-            padding: 13px 16px;
-            border: 1px solid transparent;
-            border-radius: 12px;
-            background: var(--input-color);
-            color: white;
-            outline: none;
-            font-size: 14px;
-            transition: all 0.25s;
-        }
-
-        .input:focus {
-            border: 1px solid #fff;
-            box-shadow: 0 0 12px rgba(255, 255, 255, 0.15);
-        }
-
-        .button {
-            width: 100%;
-            height: 44px;
-            border: none;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            background: var(--button-color);
-            color: white;
-            transition: 0.3s;
-            box-shadow:
-                inset 0px 3px 6px -4px rgba(255, 255, 255, 0.6),
-                inset 0px -3px 6px -2px rgba(0, 0, 0, 0.8);
-        }
-
-        .button:hover {
-            background: rgba(255, 255, 255, 0.25);
-            box-shadow:
-                inset 0px 3px 6px rgba(255, 255, 255, 0.6),
-                inset 0px -3px 6px rgba(0, 0, 0, 0.8),
-                0px 0px 10px rgba(255, 255, 255, 0.1);
-        }
-
-        .button:active {
-            transform: scale(0.98);
-        }
-
-        /* ⎯⎯⎯ ВЫВОД РЕЗУЛЬТАТОВ ⎯⎯⎯ */
-        .results-container {
-            width: 100%;
+        /* 📋 РЕЗУЛЬТАТЫ */
+        .results-section {
             display: flex;
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
+            padding-top: 10px;
         }
 
-        .status-line {
-            display: flex;
-            justify-content: space-between;
+        .meta-line {
             font-family: var(--font-mono);
             font-size: 11px;
-            color: rgba(255, 255, 255, 0.4);
+            color: var(--text-muted);
+            letter-spacing: 0.06em;
             text-transform: uppercase;
-            letter-spacing: 0.05em;
-            padding: 0 4px;
         }
 
-        /* Карточки выдачи в стиле коробки */
+        /* СЕТКА (СУБДОМЕНЫ / ПРОФИЛИ) — СТАТИКА */
         .deck-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-            gap: 10px;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 8px;
         }
 
         .deck-card {
-            background: var(--input-color);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 14px;
-            padding: 14px 16px;
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 13px 16px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            color: white;
+            color: #ffffff;
             text-decoration: none;
             font-size: 13px;
             font-weight: 500;
-            transition: all 0.2s;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
+            transition: background 0.2s ease, border-color 0.2s ease;
         }
 
         .deck-card:hover {
-            background: var(--button-color);
-            border-color: rgba(255, 255, 255, 0.25);
-            transform: translateY(-2px);
+            background: var(--surface-hover);
+            border-color: var(--border-hover);
         }
 
         .deck-card svg {
             width: 13px;
             height: 13px;
-            stroke: rgba(255, 255, 255, 0.4);
+            stroke: var(--text-muted);
+            flex-shrink: 0;
+            transition: stroke 0.2s ease;
         }
 
-        /* Строки таблицы для DNS/IP/Email */
-        .table-box {
-            background: var(--input-color);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 14px;
+        .deck-card:hover svg {
+            stroke: #ffffff;
+        }
+
+        /* ТАБЛИЦА (DNS / IP / EMAIL) — СТАТИКА */
+        .data-table {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 10px;
             overflow: hidden;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.3);
         }
 
-        .table-row {
+        .data-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
             padding: 13px 18px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            border-bottom: 1px solid var(--border);
+            transition: background 0.15s ease;
         }
 
-        .table-row:last-child {
+        .data-row:last-child {
             border-bottom: none;
         }
 
-        .table-key {
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.5);
+        .data-row:hover {
+            background: rgba(255, 255, 255, 0.02);
         }
 
-        .table-val-wrap {
+        .data-key {
+            font-size: 13px;
+            color: var(--text-muted);
+        }
+
+        .data-val-group {
             display: flex;
             align-items: center;
             gap: 10px;
             max-width: 65%;
         }
 
-        .table-val {
+        .data-val {
             font-family: var(--font-mono);
             font-size: 13px;
-            color: white;
+            color: #ffffff;
             word-break: break-all;
             text-align: right;
         }
@@ -477,17 +456,17 @@
         .copy-btn {
             background: transparent;
             border: none;
-            color: rgba(255, 255, 255, 0.4);
+            color: var(--text-muted);
             cursor: pointer;
             display: flex;
             align-items: center;
             padding: 4px;
             border-radius: 4px;
-            transition: color 0.15s;
+            transition: color 0.15s ease;
         }
 
         .copy-btn:hover {
-            color: var(--main-color);
+            color: #ffffff;
         }
 
         .copy-btn svg {
@@ -498,61 +477,62 @@
             fill: none;
         }
 
-        .blank-text {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 40px 0;
-            color: rgba(255, 255, 255, 0.3);
+        .blank-state {
+            padding: 50px 0;
+            color: var(--text-muted);
             font-size: 13px;
             font-family: var(--font-mono);
+            text-align: center;
         }
 
         .spinner {
             display: none;
-            width: 15px;
-            height: 15px;
+            width: 14px;
+            height: 14px;
             border: 2px solid rgba(255, 255, 255, 0.2);
             border-top-color: #fff;
             border-radius: 50%;
             animation: spin 0.6s linear infinite;
         }
 
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
         .toast {
             position: fixed;
             bottom: 24px;
             left: 50%;
-            transform: translateX(-50%) translateY(20px);
+            transform: translateX(-50%);
             background: #ffffff;
-            color: #000000;
+            color: #090a0d;
             font-size: 12px;
             font-weight: 600;
             padding: 8px 18px;
-            border-radius: 99px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.7);
+            border-radius: 6px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
             opacity: 0;
             pointer-events: none;
-            transition: all 0.25s var(--ease);
+            transition: opacity 0.25s ease;
             z-index: 120;
         }
 
         .toast.show {
             opacity: 1;
-            transform: translateX(-50%) translateY(0);
         }
 
         @media (max-width: 600px) {
-            .menu-trigger { top: 18px; left: 18px; }
-            .main-wrapper { padding: 80px 16px 40px; }
+            .hud-menu-btn { top: 20px; left: 20px; }
+            .workspace { padding: 90px 16px 40px; }
             .deck-grid { grid-template-columns: 1fr; }
-            .login-box { padding: 24px 20px; }
+            .main-title { font-size: 24px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- 🔘 ЧИСТАЯ МИНИМАЛИСТИЧНАЯ SVG КНОПКА МЕНЮ -->
-    <button class="menu-trigger" id="menuBtn" onclick="toggleMenu()" title="Открыть меню">
+    <!-- 🔘 ЧИСТАЯ СТАТИЧНАЯ ИКОНКА МЕНЮ -->
+    <button class="hud-menu-btn" id="menuBtn" onclick="toggleMenu()" title="Инструменты">
         <svg viewBox="0 0 24 24" stroke-linecap="round" stroke-linejoin="round">
             <line x1="3" y1="6" x2="21" y2="6"></line>
             <line x1="3" y1="12" x2="16" y2="12"></line>
@@ -560,12 +540,11 @@
         </svg>
     </button>
 
-    <!-- ТЕМНЫЙ ФОН МЕНЮ -->
     <div class="drawer-overlay" id="drawerOverlay" onclick="toggleMenu()"></div>
 
-    <!-- ВЫЕЗЖАЮЩАЯ СЛЕВА ПАНЕЛЬ С ЛАЗЕРНЫМ ГЛАЙДЕРОМ -->
+    <!-- ВЫЕЗЖАЮЩАЯ СЛЕВА ПАНЕЛЬ С ГЛАЙДЕРОМ -->
     <aside class="side-drawer" id="sideDrawer">
-        <div class="drawer-top">
+        <div class="drawer-head">
             <span class="drawer-brand">Инструменты</span>
             <button class="drawer-close" onclick="toggleMenu()">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -612,29 +591,25 @@
         </div>
     </aside>
 
-    <!-- 💻 ТОЧНАЯ РЕАЛИЗАЦИЯ ТВОЕГО СНИППЕТА -->
-    <main class="main-wrapper">
-        <div class="container">
-            <div class="login-box">
-                <div class="form">
-                    <div class="header" id="boxTitle">Субдомены</div>
-                    <input type="text" id="targetInput" class="input" placeholder="Корневой домен (например: spotify.com)..." autocomplete="off" spellcheck="false">
-                    <button class="button" id="submitBtn" onclick="runInvestigation()">
-                        <span id="btnText">Поиск</span>
-                        <div class="spinner" id="spinner"></div>
-                    </button>
-                </div>
-            </div>
+    <!-- 💻 ОТКРЫТАЯ РАБОЧАЯ ОБЛАСТЬ (БЕЗ ПЛАШКИ) -->
+    <main class="workspace">
+        <div class="title-block">
+            <h1 class="main-title" id="toolTitle">Субдомены</h1>
         </div>
 
-        <!-- 📋 РЕЗУЛЬТАТЫ -->
-        <div class="results-container">
-            <div class="status-line">
-                <span id="statusCount">Ожидание ввода</span>
-                <span id="statusCode">STANDBY</span>
-            </div>
+        <div class="input-row">
+            <input type="text" id="targetInput" class="field-input" placeholder="Корневой домен (например: spotify.com)..." autocomplete="off" spellcheck="false">
+            <button class="metal-btn" id="runBtn" onclick="runInvestigation()">
+                <span id="btnText">Поиск</span>
+                <div class="spinner" id="spinner"></div>
+            </button>
+        </div>
+
+        <!-- РЕЗУЛЬТАТЫ -->
+        <div class="results-section">
+            <div class="meta-line" id="statusLine">Ожидание</div>
             <div id="resultsViewport">
-                <div class="blank-text">— Введите цель выше для запуска анализа —</div>
+                <div class="blank-state">Укажите цель для инициализации поиска</div>
             </div>
         </div>
     </main>
@@ -681,19 +656,18 @@
             currentTool = radio.value;
             const c = toolConfig[currentTool];
 
-            document.getElementById('boxTitle').innerText = c.title;
+            document.getElementById('toolTitle').innerText = c.title;
 
             const input = document.getElementById('targetInput');
             input.placeholder = c.placeholder;
             input.value = '';
 
-            document.getElementById('statusCount').innerText = 'Ожидание ввода';
-            document.getElementById('statusCode').innerText = 'STANDBY';
+            document.getElementById('statusLine').innerText = 'Ожидание';
             document.getElementById('resultsViewport').innerHTML = `
-                <div class="blank-text">— Введите цель выше для запуска анализа —</div>
+                <div class="blank-state">Укажите цель для инициализации поиска</div>
             `;
 
-            setTimeout(toggleMenu, 180);
+            setTimeout(toggleMenu, 160);
             input.focus();
         }
 
@@ -701,7 +675,7 @@
             navigator.clipboard.writeText(val);
             const toast = document.getElementById('toast');
             toast.classList.add('show');
-            setTimeout(() => toast.classList.remove('show'), 1600);
+            setTimeout(() => toast.classList.remove('show'), 1500);
         }
 
         document.getElementById('targetInput').addEventListener('keydown', (e) => {
@@ -715,12 +689,11 @@
             const btnText = document.getElementById('btnText');
             const spinner = document.getElementById('spinner');
             const resultsViewport = document.getElementById('resultsViewport');
-            const statusCount = document.getElementById('statusCount');
-            const statusCode = document.getElementById('statusCode');
+            const statusLine = document.getElementById('statusLine');
 
             btnText.style.display = 'none';
             spinner.style.display = 'block';
-            statusCode.innerText = 'PROCESSING...';
+            statusLine.innerText = 'Обработка запроса...';
 
             try {
                 let html = '';
@@ -740,8 +713,7 @@
 
                     const list = Array.from(subSet);
                     if (list.length > 0) {
-                        statusCount.innerText = `НАЙДЕНО: ${list.length} ПОДДОМЕНОВ`;
-                        statusCode.innerText = 'COMPLETE';
+                        statusLine.innerText = `Найдено: ${list.length} поддоменов`;
 
                         html += '<div class="deck-grid">';
                         for (const sub of list) {
@@ -757,9 +729,8 @@
                         }
                         html += '</div>';
                     } else {
-                        html = '<div class="blank-text">В открытых реестрах записей не обнаружено</div>';
-                        statusCount.innerText = '0 СОВПАДЕНИЙ';
-                        statusCode.innerText = 'EMPTY';
+                        html = '<div class="blank-state">В открытых реестрах записей не обнаружено</div>';
+                        statusLine.innerText = '0 результатов';
                     }
                 }
                 else if (currentTool === 'username') {
@@ -779,8 +750,7 @@
                         { name: "SoundCloud", url: `https://soundcloud.com/${u}` }
                     ];
 
-                    statusCount.innerText = `ПЛАТФОРМ: ${platforms.length}`;
-                    statusCode.innerText = 'COMPLETE';
+                    statusLine.innerText = `Платформ: ${platforms.length}`;
 
                     html += '<div class="deck-grid">';
                     for (const p of platforms) {
@@ -812,10 +782,10 @@
                                 found++;
                                 const valStr = data.Answer.map(a => a.data).join(', ');
                                 rows += `
-                                    <div class="table-row">
-                                        <span class="table-key">${t}</span>
-                                        <div class="table-val-wrap">
-                                            <span class="table-val">${valStr}</span>
+                                    <div class="data-row">
+                                        <span class="data-key">${t}</span>
+                                        <div class="data-val-group">
+                                            <span class="data-val">${valStr}</span>
                                             <button class="copy-btn" title="Копировать" onclick="copyData('${valStr.replace(/'/g, "\\'")}')">
                                                 <svg viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>
                                             </button>
@@ -827,13 +797,11 @@
                     }
 
                     if (found > 0) {
-                        html = `<div class="table-box">${rows}</div>`;
-                        statusCount.innerText = `ДОМЕН: ${cleanDomain}`;
-                        statusCode.innerText = 'RESOLVED';
+                        html = `<div class="data-table">${rows}</div>`;
+                        statusLine.innerText = `Домен: ${cleanDomain}`;
                     } else {
-                        html = '<div class="blank-text">Записи DNS не обнаружены</div>';
-                        statusCount.innerText = '0 СОВПАДЕНИЙ';
-                        statusCode.innerText = 'EMPTY';
+                        html = '<div class="blank-state">Записи DNS не обнаружены</div>';
+                        statusLine.innerText = '0 результатов';
                     }
                 }
                 else if (currentTool === 'ip') {
@@ -841,8 +809,7 @@
                     const res = await fetch(`https://freeipapi.com/api/json/${encodeURIComponent(cleanTarget)}`);
                     const data = await res.json();
 
-                    statusCount.innerText = `IP: ${cleanTarget}`;
-                    statusCode.innerText = 'RESOLVED';
+                    statusLine.innerText = `IP: ${cleanTarget}`;
 
                     const rows = [
                         ['IP Хоста', data.ipAddress || cleanTarget],
@@ -852,13 +819,13 @@
                         ['Версия IP', data.ipVersion ? `IPv${data.ipVersion}` : '—']
                     ];
 
-                    html += '<div class="table-box">';
+                    html += '<div class="data-table">';
                     rows.forEach(([k, v]) => {
                         html += `
-                            <div class="table-row">
-                                <span class="table-key">${k}</span>
-                                <div class="table-val-wrap">
-                                    <span class="table-val">${v}</span>
+                            <div class="data-row">
+                                <span class="data-key">${k}</span>
+                                <div class="data-val-group">
+                                    <span class="data-val">${v}</span>
                                     <button class="copy-btn" onclick="copyData('${v}')">
                                         <svg viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>
                                     </button>
@@ -873,22 +840,21 @@
                     const domain = cleanEmail.split('@')[1] || '—';
                     const isValid = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(cleanEmail);
 
-                    statusCount.innerText = cleanEmail;
-                    statusCode.innerText = 'PARSED';
+                    statusLine.innerText = cleanEmail;
 
                     const rows = [
                         ['Целевой адрес', cleanEmail],
                         ['Доменная зона', domain],
-                        ['Формат RFC 5322', isValid ? 'ВАЛИДЕН' : 'ОШИБКА ФОРМАТА']
+                        ['Формат RFC 5322', isValid ? 'Валиден' : 'Ошибка формата']
                     ];
 
-                    html += '<div class="table-box">';
+                    html += '<div class="data-table">';
                     rows.forEach(([k, v]) => {
                         html += `
-                            <div class="table-row">
-                                <span class="table-key">${k}</span>
-                                <div class="table-val-wrap">
-                                    <span class="table-val">${v}</span>
+                            <div class="data-row">
+                                <span class="data-key">${k}</span>
+                                <div class="data-val-group">
+                                    <span class="data-val">${v}</span>
                                     <button class="copy-btn" onclick="copyData('${v}')">
                                         <svg viewBox="0 0 24 24"><rect width="14" height="14" x="8" y="8" rx="2" ry="2"></rect><path d="M4 16c-1.1 0-2-.9-2-2V4c0-1.1.9-2 2-2h10c1.1 0 2 .9 2 2"></path></svg>
                                     </button>
@@ -901,8 +867,8 @@
 
                 resultsViewport.innerHTML = html;
             } catch (e) {
-                statusCode.innerText = 'FAILURE';
-                resultsViewport.innerHTML = '<div class="blank-text">Сетевая ошибка или блок шлюза API</div>';
+                statusLine.innerText = 'Ошибка';
+                resultsViewport.innerHTML = '<div class="blank-state">Сетевая ошибка или блок шлюза API</div>';
             } finally {
                 btnText.style.display = 'block';
                 spinner.style.display = 'none';
