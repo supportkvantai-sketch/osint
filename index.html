@@ -103,7 +103,7 @@
             pointer-events: auto;
         }
 
-        /* 🚪 БОКОВАЯ ШТОРКА (МЕНЮ) */
+        /* 🚪 БОКОВАЯ ШТОРКА */
         .side-drawer {
             position: fixed;
             top: 0;
@@ -292,10 +292,12 @@
             animation: marqueeDiag 150s linear infinite;
         }
 
+        /* Нечетные ряды */
         .tape-row:nth-child(odd) .tape-track {
             animation-delay: 0s;
         }
 
+        /* Четные ряды (сдвиг вперед) */
         .tape-row:nth-child(even) .tape-track {
             animation-delay: -6.5s;
         }
@@ -319,7 +321,7 @@
             100% { transform: translate3d(0, 0, 0); }
         }
 
-        /* 3D Металлические сферы (только для ПК) */
+        /* 3D Металлические сферы (для ПК) */
         .metal-orb {
             position: absolute;
             border-radius: 50%;
@@ -394,7 +396,7 @@
             width: 100%;
             max-width: 1120px;
             margin: 0 auto;
-            padding: 110px 24px 80px;
+            padding: 100px 24px 80px;
             min-height: 100vh;
         }
 
@@ -491,7 +493,9 @@
             }
         }
 
-        /* ПРАВАЯ ЧАСТЬ: СМАРТФОН */
+        /* ==========================================================================
+           📱 ПРАВАЯ ЧАСТЬ: ПОЛНОЦЕННЫЙ РЕАЛИСТИЧНЫЙ СМАРТФОН С ПРАВИЛЬНЫМИ ПРОПОРЦИЯМИ
+           ========================================================================== */
         .hero-right {
             position: relative;
             z-index: 3;
@@ -502,27 +506,28 @@
 
         .mockup-backdrop-glow {
             position: absolute;
-            width: 340px;
-            height: 340px;
+            width: 360px;
+            height: 360px;
             border-radius: 50%;
             background: radial-gradient(circle, rgba(247, 228, 121, 0.04) 0%, rgba(26, 26, 30, 0.35) 65%, transparent 70%);
             z-index: 1;
             pointer-events: none;
         }
 
+        /* 📱 НАСТОЯЩИЙ ПОЛНОРАЗМЕРНЫЙ СМАРТФОН С ПРАВИЛЬНОЙ ВЫСОТОЙ (540px) */
         .device-phone {
             position: relative;
             z-index: 2;
             width: 290px;
-            height: 490px;
+            height: 540px; /* Полноценный нормальный размер смартфона */
             background: #0c0c0e;
-            border: 3px solid #23242b;
-            border-radius: 38px;
-            padding: 14px 16px 20px;
+            border: 3.5px solid #22232a;
+            border-radius: 42px;
+            padding: 14px 16px 14px;
             display: flex;
             flex-direction: column;
-            gap: 16px;
-            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.8), inset 0 1px 0 rgba(255, 255, 255, 0.06);
+            justify-content: space-between;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.85), inset 0 1px 0 rgba(255, 255, 255, 0.06);
             overflow: hidden;
         }
 
@@ -533,21 +538,23 @@
             font-family: var(--font-mono);
             font-size: 11px;
             color: #71717a;
-            padding: 0 4px 4px;
+            padding: 0 4px;
         }
 
         .phone-island {
-            width: 72px;
+            width: 76px;
             height: 18px;
             border-radius: 99px;
             background: #000000;
         }
 
+        /* Контент внутри телефона */
         .phone-content {
             display: flex;
             flex-direction: column;
             gap: 16px;
-            padding-top: 6px;
+            flex: 1;
+            padding-top: 14px;
         }
 
         .mini-brand-row {
@@ -613,13 +620,37 @@
             letter-spacing: 0.05em;
         }
 
-        .mini-blank-state {
-            padding: 65px 0;
+        /* Центрированный пустой статус с аккуратной иконкой */
+        .mini-blank-center {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1;
+            gap: 8px;
             color: var(--text-muted);
-            font-size: 10.5px;
+            font-size: 11px;
             font-family: var(--font-mono);
             text-align: center;
             line-height: 1.4;
+            padding: 20px 0;
+        }
+
+        .mini-blank-center svg {
+            width: 22px;
+            height: 22px;
+            stroke: var(--text-muted);
+            stroke-width: 1.5;
+            opacity: 0.5;
+        }
+
+        /* 🔘 НИЖНЯЯ ПОЛОСКА СВАЙПА (HOME BAR) */
+        .phone-home-indicator {
+            width: 110px;
+            height: 4px;
+            border-radius: 99px;
+            background: rgba(255, 255, 255, 0.2);
+            margin: 6px auto 2px;
         }
 
         /* ⎯⎯⎯ ТЕРМИНАЛ ИНСТРУМЕНТА ⎯⎯⎯ */
@@ -882,23 +913,21 @@
             to { opacity: 1; }
         }
 
-        /* 📱 МОБИЛЬНАЯ АДАПТАЦИЯ (ИСПРАВЛЕНО: НИЧЕГО НЕ НАЕЗЖАЕТ И НЕ СЪЕЗЖАЕТ) */
+        /* 📱 МОБИЛЬНАЯ АДАПТАЦИЯ (ИДЕАЛЬНЫЙ БАЛАНС С ПОЛНЫМ СМАРТФОНОМ) */
         @media (max-width: 900px) {
             .metal-orb {
                 display: none !important;
             }
 
-            /* Кнопка меню не перекрывает текст */
             .hud-menu-btn {
-                top: 16px;
-                left: 16px;
+                top: 18px;
+                left: 18px;
             }
 
-            /* Главный экран помещается без срезов */
             .landing-view {
                 grid-template-columns: 1fr;
-                gap: 28px;
-                padding: 72px 16px 36px;
+                gap: 36px;
+                padding: 76px 16px 50px;
                 min-height: auto;
             }
 
@@ -936,42 +965,25 @@
             .hero-right {
                 order: 2;
                 width: 100%;
-                margin-top: 6px;
+                margin-top: 10px;
             }
 
-            /* Компактный аккуратный телефон без пустоты */
+            /* 📱 ПОЛНОЦЕННЫЙ НОРМАЛЬНЫЙ СМАРТФОН 520px НА МОБИЛКЕ */
             .device-phone {
-                width: 100%;
-                max-width: 290px;
-                height: auto;
-                min-height: 230px;
-                border-radius: 30px;
-                padding: 12px 14px 16px;
-                gap: 12px;
-            }
-
-            .phone-content {
-                gap: 12px;
-                padding-top: 0;
-            }
-
-            .mini-blank-state {
-                padding: 24px 0 10px;
-                font-size: 11px;
+                width: 285px;
+                height: 520px;
+                border-radius: 38px;
             }
 
             .mockup-backdrop-glow {
-                display: none;
+                width: 300px;
+                height: 300px;
             }
 
-            /* Рабочий терминал */
+            /* Терминал */
             .workspace-view {
-                padding: 72px 16px 40px;
+                padding: 76px 16px 44px;
                 gap: 20px;
-            }
-
-            .back-nav-btn {
-                margin-bottom: 2px;
             }
 
             .main-title {
@@ -1007,7 +1019,7 @@
 
     <div class="drawer-overlay" id="drawerOverlay" onclick="toggleMenu()"></div>
 
-    <!-- ⚡ СИНХРОНИЗИРОВАННЫЙ ШАХМАТНЫЙ КОНВЕЙЕР -->
+    <!-- ⚡ СИНХРОНИЗИРОВАННЫЙ ШАХМАТНЫЙ КОНВЕЙЕР (150s + ПРОЗРАЧНОСТЬ 60%) -->
     <div class="ambient-fixed-layer">
         <div class="diagonal-marquee-box">
             <div class="tape-row"><div class="tape-track"><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div></div></div>
@@ -1099,7 +1111,7 @@
     </aside>
 
     <!-- ==========================================================================
-         🏛️ 1. ГЛАВНЫЙ ЭКРАН (АДАПТИРОВАН БЕЗ СРЕЗОВ)
+         🏛️ 1. ГЛАВНЫЙ ЭКРАН (С ПОЛНОЦЕННЫМ ВЫСОКИМ СМАРТФОНОМ)
          ========================================================================== -->
     <main class="landing-view" id="landingView">
         
@@ -1125,17 +1137,19 @@
             </div>
         </div>
 
-        <!-- ПРАВАЯ ЧАСТЬ: КОМПАКТНЫЙ СМАРТФОН БЕЗ ПУСТОГО ПРОВАЛА -->
+        <!-- ПРАВАЯ ЧАСТЬ: ПОЛНОРАЗМЕРНЫЙ СМАРТФОН С ИСТИННЫМИ ПРОПОРЦИЯМИ (540px) -->
         <div class="hero-right">
             <div class="mockup-backdrop-glow"></div>
 
             <div class="device-phone">
+                <!-- ВЕРХ: СТАТУС-БАР + DYNAMIC ISLAND -->
                 <div class="phone-status-bar">
                     <span>13:42</span>
                     <div class="phone-island"></div>
                     <span>100%</span>
                 </div>
 
+                <!-- ЦЕНТР: НАШ ПОЛНОЦЕННЫЙ САЙТ С ВВОДОМ И СТАТУСОМ -->
                 <div class="phone-content">
                     <div class="mini-brand-row">
                         <svg class="mini-menu-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -1148,16 +1162,25 @@
                     <div class="mini-title">ПО TELEGRAM</div>
 
                     <div class="mini-input-row">
-                        <input type="text" class="mini-field" placeholder="Юзернейм цели..." readonly>
+                        <input type="text" class="mini-field" placeholder="Юзернейм цели..." readonly tabindex="-1">
                         <div class="mini-btn">Поиск</div>
                     </div>
 
                     <div class="mini-meta-line">Ожидание</div>
 
-                    <div class="mini-blank-state">
-                        Укажите цель для инициализации поиска
+                    <!-- Аккуратный сбалансированный центр без пустого провала -->
+                    <div class="mini-blank-center">
+                        <svg viewBox="0 0 24 24" fill="none" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                        <span>Укажите цель для инициализации поиска</span>
                     </div>
                 </div>
+
+                <!-- НИЗ: СИСТЕМНАЯ ПОЛОСА HOME BAR ДЛЯ ПОЛНОТЫ ОБРАЗА СМАРТФОНА -->
+                <div class="phone-home-indicator"></div>
             </div>
         </div>
 
