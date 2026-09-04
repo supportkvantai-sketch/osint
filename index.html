@@ -253,7 +253,7 @@
         .radio-container input:nth-of-type(7):checked ~ .glider-container .glider { transform: translateY(600%); }
 
         /* ==========================================================================
-           ⚡ ФОНОВЫЙ ТЕКСТ OSINT
+           ⚡ МЕДЛЕННЫЙ И ПРОЗРАЧНЫЙ ФОНОВЫЙ ТЕКСТ OSINT
            ========================================================================== */
         .ambient-fixed-layer {
             position: fixed;
@@ -319,7 +319,7 @@
             100% { transform: translate3d(0, 0, 0); }
         }
 
-        /* 3D Металлические сферы (ТОЛЬКО ДЛЯ ПК) */
+        /* 3D Металлические сферы (только для ПК) */
         .metal-orb {
             position: absolute;
             border-radius: 50%;
@@ -640,7 +640,7 @@
             background: transparent;
             border: none;
             color: var(--text-muted);
-            font-size: 11.5px;
+            font-size: 12px;
             font-family: var(--font-mono);
             letter-spacing: 0.05em;
             text-transform: uppercase;
@@ -882,30 +882,32 @@
             to { opacity: 1; }
         }
 
-        /* 📱 ЧЕТКАЯ АДАПТАЦИЯ ПОД СМАРТФОНЫ (ШАРЫ СКРЫТЫ, ИНПУТ НЕ ЖМЕТСЯ) */
+        /* 📱 МОБИЛЬНАЯ АДАПТАЦИЯ (ИСПРАВЛЕНО: НИЧЕГО НЕ НАЕЗЖАЕТ И НЕ СЪЕЗЖАЕТ) */
         @media (max-width: 900px) {
-            /* 🚫 ПОЛНОСТЬЮ СКРЫВАЕМ 3D-ШАРЫ НА ТЕЛЕФОНЕ, ЧТОБЫ НЕ ПЕРЕКРЫВАЛИ КОНТЕНТ */
             .metal-orb {
                 display: none !important;
             }
 
+            /* Кнопка меню не перекрывает текст */
             .hud-menu-btn {
-                top: 18px;
-                left: 18px;
+                top: 16px;
+                left: 16px;
             }
 
+            /* Главный экран помещается без срезов */
             .landing-view {
                 grid-template-columns: 1fr;
-                gap: 36px;
-                padding: 76px 16px 44px;
+                gap: 28px;
+                padding: 72px 16px 36px;
+                min-height: auto;
             }
 
-            .hero-right {
-                order: 2;
+            .hero-left {
+                gap: 16px;
             }
 
             .hero-title {
-                font-size: 24px;
+                font-size: 26px;
                 line-height: 1.25;
             }
 
@@ -916,6 +918,7 @@
 
             .hero-desc {
                 font-size: 13.5px;
+                line-height: 1.5;
             }
 
             .hero-actions {
@@ -930,25 +933,49 @@
                 height: 44px;
             }
 
+            .hero-right {
+                order: 2;
+                width: 100%;
+                margin-top: 6px;
+            }
+
+            /* Компактный аккуратный телефон без пустоты */
             .device-phone {
-                width: 270px;
-                height: 450px;
-                border-radius: 34px;
+                width: 100%;
+                max-width: 290px;
+                height: auto;
+                min-height: 230px;
+                border-radius: 30px;
+                padding: 12px 14px 16px;
+                gap: 12px;
+            }
+
+            .phone-content {
+                gap: 12px;
+                padding-top: 0;
+            }
+
+            .mini-blank-state {
+                padding: 24px 0 10px;
+                font-size: 11px;
             }
 
             .mockup-backdrop-glow {
-                width: 280px;
-                height: 280px;
+                display: none;
             }
 
-            /* Рабочий терминал на телефоне */
+            /* Рабочий терминал */
             .workspace-view {
-                padding: 76px 16px 44px;
+                padding: 72px 16px 40px;
                 gap: 20px;
             }
 
+            .back-nav-btn {
+                margin-bottom: 2px;
+            }
+
             .main-title {
-                font-size: 21px;
+                font-size: 22px;
             }
 
             .field-input {
@@ -956,14 +983,9 @@
                 font-size: 13.5px;
             }
 
-            /* Кнопка чуть компактнее, давая больше места для ввода */
             .menu-style-btn {
                 padding: 0 18px;
                 font-size: 13px;
-            }
-
-            .data-row {
-                padding: 12px 14px;
             }
 
             .deck-grid {
@@ -988,45 +1010,25 @@
     <!-- ⚡ СИНХРОНИЗИРОВАННЫЙ ШАХМАТНЫЙ КОНВЕЙЕР -->
     <div class="ambient-fixed-layer">
         <div class="diagonal-marquee-box">
-            <!-- 1 -->
             <div class="tape-row"><div class="tape-track"><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div></div></div>
-            <!-- 2 -->
             <div class="tape-row"><div class="tape-track"><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div></div></div>
-            <!-- 3 -->
             <div class="tape-row"><div class="tape-track"><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div></div></div>
-            <!-- 4 -->
             <div class="tape-row"><div class="tape-track"><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div></div></div>
-            <!-- 5 -->
             <div class="tape-row"><div class="tape-track"><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div></div></div>
-            <!-- 6 -->
             <div class="tape-row"><div class="tape-track"><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div></div></div>
-            <!-- 7 -->
             <div class="tape-row"><div class="tape-track"><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div></div></div>
-            <!-- 8 -->
             <div class="tape-row"><div class="tape-track"><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div></div></div>
-            <!-- 9 -->
             <div class="tape-row"><div class="tape-track"><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div></div></div>
-            <!-- 10 -->
             <div class="tape-row"><div class="tape-track"><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div></div></div>
-            <!-- 11 -->
             <div class="tape-row"><div class="tape-track"><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div></div></div>
-            <!-- 12 -->
             <div class="tape-row"><div class="tape-track"><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div></div></div>
-            <!-- 13 -->
             <div class="tape-row"><div class="tape-track"><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div></div></div>
-            <!-- 14 -->
             <div class="tape-row"><div class="tape-track"><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div></div></div>
-            <!-- 15 -->
             <div class="tape-row"><div class="tape-track"><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div></div></div>
-            <!-- 16 -->
             <div class="tape-row"><div class="tape-track"><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div></div></div>
-            <!-- 17 -->
             <div class="tape-row"><div class="tape-track"><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div></div></div>
-            <!-- 18 -->
             <div class="tape-row"><div class="tape-track"><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div></div></div>
-            <!-- 19 -->
             <div class="tape-row"><div class="tape-track"><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div></div></div>
-            <!-- 20 -->
             <div class="tape-row"><div class="tape-track"><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div><div class="tape-words">OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • OSINT • <span>OSINT</span> • OSINT • </div></div></div>
         </div>
 
@@ -1097,7 +1099,7 @@
     </aside>
 
     <!-- ==========================================================================
-         🏛️ 1. ГЛАВНЫЙ ЭКРАН
+         🏛️ 1. ГЛАВНЫЙ ЭКРАН (АДАПТИРОВАН БЕЗ СРЕЗОВ)
          ========================================================================== -->
     <main class="landing-view" id="landingView">
         
@@ -1118,12 +1120,12 @@
                     <span style="font-family: var(--font-mono);">→</span>
                 </button>
                 <button class="btn-secondary" onclick="toggleMenu()">
-                    <span>Все инструменты</span>
+                    <span>Все модули</span>
                 </button>
             </div>
         </div>
 
-        <!-- ПРАВАЯ ЧАСТЬ: СМАРТФОН -->
+        <!-- ПРАВАЯ ЧАСТЬ: КОМПАКТНЫЙ СМАРТФОН БЕЗ ПУСТОГО ПРОВАЛА -->
         <div class="hero-right">
             <div class="mockup-backdrop-glow"></div>
 
